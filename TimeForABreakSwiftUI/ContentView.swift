@@ -64,13 +64,7 @@ struct TimerView: View {
     
 }
 
-struct ActionsView: View {
-    
-    var body: some View {
-        Text("Actions coming soon")
 
-    }
-}
 
 struct OptionsView: View {
     @EnvironmentObject var timer: TimerModel
@@ -106,7 +100,7 @@ struct ContentView: View {
                     Text("START")
                 }
                 .buttonStyle(StandardButton())
-                NavigationLink(destination: ActionsView()) {
+                NavigationLink(destination: ActionListView()) {
                     Text("ACTIONS")
                 }
                 .buttonStyle(StandardButton())
