@@ -15,20 +15,39 @@ struct ActionListView: View {
             List(sections, id: \.id) { section in
                 Section(header: Text(section.categoryName))
                     {
-                        List (section.breakActions) { item in
-                        HStack {
-                            Text(item.title)
-                                .font(.title2)
-                            Text(item.duration.formatted() + " min")
-                                .font(.subheadline)
-                        }
-                        .frame(height: 60)
-                        }
-                        .frame(height: 80*CGFloat(section.breakActions.count))
-                        
+                        ForEach(section.breakActions) {
+                            item in
+                            HStack {
+                                Text(item.title)
+                                    .font(.title2)
+                                Text(item.duration.formatted() + " min")
+                                    .font(.subheadline)
+                                    .frame(width: 40, alignment: .trailing)
+                                    .background(Color.yellow)
+                            }
+                            .swipeActions(edge: .trailing, allowsFullSwipe: false)
+                            {
+                                Button(role: .destructive) {
+                                    print("Archiving item")
+                                } label: {
+                                    Label("Archive", systemImage: "trash.fill")
+                                }
+
+                            }
+                            .swipeActions(edge: .leading, allowsFullSwipe: false)
+                            {
+                                Button() {
+                                    print("Pinning item")
+                                } label: {
+                                    Label("Pin", systemImage: "pin.fill")
+                                }
+                                .tint(Color.yellow)
+                            }
                     }
             }
-            .navigationTitle("Break Actions")
+            
         }
+            .navigationTitle("Break Actions")
     }
+}
 }
