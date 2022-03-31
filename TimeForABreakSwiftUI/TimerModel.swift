@@ -8,9 +8,9 @@
 import SwiftUI
 
 class TimerModel : ObservableObject {
-    @Published var workTimeTotalSeconds : Int = 2334
-    @Published var breakTimeTotalSeconds : Int = 300
-    @Published var currentTimeRemaining : Int = 1800
+    @Published var workTimeTotalSeconds : Int = 120
+    @Published var breakTimeTotalSeconds : Int = 60
+    @Published var currentTimeRemaining : Int = 120
     
     @Published var binaryDescendingTime : Int = 0
     

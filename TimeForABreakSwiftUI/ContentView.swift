@@ -67,20 +67,46 @@ struct TimerView: View {
 
 
 struct OptionsView: View {
-    @EnvironmentObject var timer: TimerModel
-    @State private var seconds : Int = 0
+    @EnvironmentObject var timerModel: TimerModel
+    var workMinutes : Int
+    var breakMinutes : Int
     
     var body: some View {
         VStack {
-            Text("Options")
-                .font(Font.title)
-            Stepper("\(seconds) seconds", value: $seconds, in: 0...2000, step: 60) {_ in
-                self.timer.workTimeTotalSeconds = seconds
+            Text("Work time")
+                .font(.title2)
+            Stepper("\(workMinutes) minutes", value: $timerModel.workTimeTotalSeconds, in: 2...4000, step: 60) {_ in
+
             }
-            //Slider(value: Float(timer.workTimeTotalSeconds), in: 0...timer.workTimeTotalSeconds, step: 60)
-            Text("Work time in seconds is \(String(format: "%.0f",timer.workTimeTotalSeconds))")
+            .frame(width: 200)
+            
+            Text("Break time")
+                .font(.title2)
+            Stepper("\(breakMinutes) minutes", value: $timerModel.breakTimeTotalSeconds, in: 0...1000, step: 60) {_ in
+                
+            }
+            .frame(width: 200)
+//            Button(action: {
+//                let workSec = workMinutes*60
+//                let breakSec = breakMinutes*60
+//                if (workSec != timerModel.workTimeTotalSeconds
+//                    || breakSec != timerModel.breakTimeTotalSeconds) {
+//                    timerModel.workTimeTotalSeconds = workSec
+//                    timerModel.currentTimeRemaining = workSec
+//                    timerModel.breakTimeTotalSeconds = breakSec
+//                }
+//            }) {
+//                HStack(spacing: 15){
+//                    Text("Save")
+//                        .foregroundColor(.white)
+//                }
+//                .padding(.vertical)
+//                .frame(width: (UIScreen.main.bounds.width / 2))
+//                .background(Color.purple)
+//                .clipShape(Capsule())
+//                .shadow(radius: 5)
+//            }
             //Slider(value: timer.breakTimeTotalSeconds, in: 0...timer.breakTimeTotalSeconds, step: 60)
-            Text("Break time in seconds is \(String(format: "%.0f",timer.breakTimeTotalSeconds))")
         }
     }
 }
@@ -96,7 +122,7 @@ struct ContentView: View {
         NavigationView {
             VStack {
                 Text("time \(timerModel.workTimeTotalSeconds)")
-                NavigationLink(destination: TimerView()) {
+                NavigationLink(destination: TimerCountView()) {
                     Text("START")
                 }
                 .buttonStyle(StandardButton())
@@ -104,7 +130,7 @@ struct ContentView: View {
                     Text("ACTIONS")
                 }
                 .buttonStyle(StandardButton())
-                NavigationLink(destination: OptionsView()) {
+                NavigationLink(destination: OptionsView(workMinutes: timerModel.workTimeTotalSeconds/60, breakMinutes: timerModel.breakTimeTotalSeconds/60)) {
                     Text("OPTIONS")
                 }
                 .buttonStyle(StandardButton())

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4E2FEF9F27F5533200A02DF2 /* TimerCountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2FEF9E27F5533200A02DF2 /* TimerCountView.swift */; };
 		4EA7BD0B27F2B88500B9C348 /* ActionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA7BD0A27F2B88500B9C348 /* ActionListView.swift */; };
 		4EA7BD0E27F2B96A00B9C348 /* DataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA7BD0D27F2B96A00B9C348 /* DataProvider.swift */; };
 		4EA7BD1027F2B97A00B9C348 /* BreakAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA7BD0F27F2B97A00B9C348 /* BreakAction.swift */; };
@@ -19,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4E2FEF9E27F5533200A02DF2 /* TimerCountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerCountView.swift; sourceTree = "<group>"; };
 		4EA7BD0A27F2B88500B9C348 /* ActionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionListView.swift; sourceTree = "<group>"; };
 		4EA7BD0D27F2B96A00B9C348 /* DataProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataProvider.swift; sourceTree = "<group>"; };
 		4EA7BD0F27F2B97A00B9C348 /* BreakAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BreakAction.swift; sourceTree = "<group>"; };
@@ -78,6 +80,7 @@
 				4EDAFE5827E9A53D00FFB703 /* Assets.xcassets */,
 				4EDAFE5A27E9A53D00FFB703 /* Preview Content */,
 				4EE2469527F0454C0099CE24 /* TimerModel.swift */,
+				4E2FEF9E27F5533200A02DF2 /* TimerCountView.swift */,
 			);
 			path = TimeForABreakSwiftUI;
 			sourceTree = "<group>";
@@ -172,6 +175,7 @@
 				4EA7BD0B27F2B88500B9C348 /* ActionListView.swift in Sources */,
 				4EDAFE5727E9A53C00FFB703 /* ContentView.swift in Sources */,
 				4EE2469627F0454C0099CE24 /* TimerModel.swift in Sources */,
+				4E2FEF9F27F5533200A02DF2 /* TimerCountView.swift in Sources */,
 				4EDAFE5527E9A53C00FFB703 /* TimeForABreakSwiftUIApp.swift in Sources */,
 				4EA7BD1027F2B97A00B9C348 /* BreakAction.swift in Sources */,
 				4EE2468F27EFE0C20099CE24 /* StandardButton.swift in Sources */,
