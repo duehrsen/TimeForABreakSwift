@@ -11,9 +11,21 @@ class DataProvider {
     static var data : [BreakActionSection] = []
     
     static func mockData() -> [BreakActionSection] {
+        var regularActions: [BreakAction] = []
         var relaxActions:  [BreakAction] = []
         var cleanActions: [BreakAction] = []
         var exerciseActions: [BreakAction] = []
+        
+        regularActions.append(
+        BreakAction(title: "Water plants", desc: "Add some water or food to house plants", duration: 4, category: "regular"))
+        regularActions.append(
+        BreakAction(title: "Prepare the trash", desc: "Bundle up the garbage", duration: 5, category: "regular"))
+        regularActions.append(
+        BreakAction(title: "Take out the trash", desc: "Take out the trash", duration: 5, category: "regular"))
+        regularActions.append(
+        BreakAction(title: "Check the mail", desc: "Retrieve the mail and put important mail in an easy to find location", duration: 5, category: "regular"))
+        
+        let regularSection = BreakActionSection(categoryName: "Regular", breakActions: regularActions)
         
         relaxActions.append(
         BreakAction(title: "Look into distance", desc: "Look at an an object at least 50 m away for 20 seconds", duration: 2, category: "relax"))
@@ -42,7 +54,7 @@ class DataProvider {
         let exerciseSection = BreakActionSection(categoryName: "Exercise", breakActions: exerciseActions)
         
         data = [
-            relaxSection, cleanSection, exerciseSection
+            regularSection, relaxSection, cleanSection, exerciseSection
         ]
         
         return data

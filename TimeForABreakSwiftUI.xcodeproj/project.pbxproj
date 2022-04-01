@@ -11,6 +11,8 @@
 		4EA7BD0B27F2B88500B9C348 /* ActionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA7BD0A27F2B88500B9C348 /* ActionListView.swift */; };
 		4EA7BD0E27F2B96A00B9C348 /* DataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA7BD0D27F2B96A00B9C348 /* DataProvider.swift */; };
 		4EA7BD1027F2B97A00B9C348 /* BreakAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA7BD0F27F2B97A00B9C348 /* BreakAction.swift */; };
+		4EC68BA127F6D2BF00AFD70B /* OptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC68BA027F6D2BF00AFD70B /* OptionsView.swift */; };
+		4EC68BA327F6D35100AFD70B /* TimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC68BA227F6D35100AFD70B /* TimerView.swift */; };
 		4EDAFE5527E9A53C00FFB703 /* TimeForABreakSwiftUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EDAFE5427E9A53C00FFB703 /* TimeForABreakSwiftUIApp.swift */; };
 		4EDAFE5727E9A53C00FFB703 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EDAFE5627E9A53C00FFB703 /* ContentView.swift */; };
 		4EDAFE5927E9A53D00FFB703 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4EDAFE5827E9A53D00FFB703 /* Assets.xcassets */; };
@@ -24,6 +26,8 @@
 		4EA7BD0A27F2B88500B9C348 /* ActionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionListView.swift; sourceTree = "<group>"; };
 		4EA7BD0D27F2B96A00B9C348 /* DataProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataProvider.swift; sourceTree = "<group>"; };
 		4EA7BD0F27F2B97A00B9C348 /* BreakAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BreakAction.swift; sourceTree = "<group>"; };
+		4EC68BA027F6D2BF00AFD70B /* OptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsView.swift; sourceTree = "<group>"; };
+		4EC68BA227F6D35100AFD70B /* TimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerView.swift; sourceTree = "<group>"; };
 		4EDAFE5127E9A53C00FFB703 /* TimeForABreakSwiftUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TimeForABreakSwiftUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EDAFE5427E9A53C00FFB703 /* TimeForABreakSwiftUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeForABreakSwiftUIApp.swift; sourceTree = "<group>"; };
 		4EDAFE5627E9A53C00FFB703 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -48,6 +52,7 @@
 			isa = PBXGroup;
 			children = (
 				4EA7BD0F27F2B97A00B9C348 /* BreakAction.swift */,
+				4EE2469527F0454C0099CE24 /* TimerModel.swift */,
 				4EA7BD0D27F2B96A00B9C348 /* DataProvider.swift */,
 			);
 			path = Data;
@@ -76,11 +81,11 @@
 				4EE2468D27EFE0970099CE24 /* UIHelpers */,
 				4EDAFE5427E9A53C00FFB703 /* TimeForABreakSwiftUIApp.swift */,
 				4EDAFE5627E9A53C00FFB703 /* ContentView.swift */,
+				4EC68BA227F6D35100AFD70B /* TimerView.swift */,
 				4EA7BD0A27F2B88500B9C348 /* ActionListView.swift */,
-				4EDAFE5827E9A53D00FFB703 /* Assets.xcassets */,
-				4EDAFE5A27E9A53D00FFB703 /* Preview Content */,
-				4EE2469527F0454C0099CE24 /* TimerModel.swift */,
 				4E2FEF9E27F5533200A02DF2 /* TimerCountView.swift */,
+				4EC68BA027F6D2BF00AFD70B /* OptionsView.swift */,
+				4EDAFE5A27E9A53D00FFB703 /* Preview Content */,
 			);
 			path = TimeForABreakSwiftUI;
 			sourceTree = "<group>";
@@ -88,6 +93,7 @@
 		4EDAFE5A27E9A53D00FFB703 /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
+				4EDAFE5827E9A53D00FFB703 /* Assets.xcassets */,
 				4EDAFE5B27E9A53D00FFB703 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
@@ -171,9 +177,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4EC68BA327F6D35100AFD70B /* TimerView.swift in Sources */,
 				4EA7BD0E27F2B96A00B9C348 /* DataProvider.swift in Sources */,
 				4EA7BD0B27F2B88500B9C348 /* ActionListView.swift in Sources */,
 				4EDAFE5727E9A53C00FFB703 /* ContentView.swift in Sources */,
+				4EC68BA127F6D2BF00AFD70B /* OptionsView.swift in Sources */,
 				4EE2469627F0454C0099CE24 /* TimerModel.swift in Sources */,
 				4E2FEF9F27F5533200A02DF2 /* TimerCountView.swift in Sources */,
 				4EDAFE5527E9A53C00FFB703 /* TimeForABreakSwiftUIApp.swift in Sources */,

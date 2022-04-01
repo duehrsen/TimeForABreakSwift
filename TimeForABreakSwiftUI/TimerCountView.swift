@@ -8,14 +8,11 @@
 import SwiftUI
 
 struct TimerCountView: View {
-    @EnvironmentObject var timerModel : TimerModel
+    @ObservedObject var timerModel : TimerModel
     @State var started = false
     @State var to : CGFloat = 1
     @State var time = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-    
-    
-    
-    
+      
     func convertSecondsToTime(timeinSeconds : Int) -> String {
         let minutes = timeinSeconds / 60
         let seconds = timeinSeconds % 60
@@ -104,8 +101,8 @@ struct TimerCountView: View {
     }
 }
 
-struct TimerCountView_Previews: PreviewProvider {
-    static var previews: some View {
-        TimerCountView()
-    }
-}
+//struct TimerCountView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        TimerCountView()
+//    }
+//}
