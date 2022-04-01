@@ -7,26 +7,6 @@
 
 import SwiftUI
 
-class ActionViewModel: ObservableObject {
-    @Published var sections : [BreakActionSection] = []
-    
-    func getData() {
-        sections = DataProvider.mockData()
-    }
-    
-    func deleteAction(index: IndexSet) {
-        sections.remove(atOffsets: index)
-    }
-    
-    func add(action: String) {
-        print("in it with string \(action)")
-        if var section = sections.first(where: {$0.categoryName.contains("Regular") }) {
-            let newAction = BreakAction(title: action, desc: action, duration: 3, category: "regular")
-            section.breakActions.append(newAction)
-        }
-    }
-    
-}
 
 struct ActionListView: View {
     
@@ -38,16 +18,15 @@ struct ActionListView: View {
             VStack {
                 HStack {
                     TextField("Add breaktime action", text: $actionString)
-                    Image(systemName: "mic.fill")
                 }
                 .frame(width: 200, height: 45, alignment: .center)
                 .padding(.horizontal, 40)
-                .background(Color(.systemGray)
+                .background(Color(.lightGray)
                     .cornerRadius(30))
                 .foregroundColor(Color.white)
                 
                 Button(action: {
-                        actionVM.add(action: actionString)
+                    actionVM.add(action: actionString)
                     
                 }) {
                     HStack(spacing: 15){
@@ -59,54 +38,31 @@ struct ActionListView: View {
                     .background(
                         Capsule()
                             .stroke(Color.purple, lineWidth: 2)
-                        )
+                    )
                     .shadow(radius: 5)
-
+                    
                 }
                 
-                List(actionVM.sections, id: \.id) { section in
-                    Section(header: Text(section.categoryName))
-                        {
-                            ForEach(section.breakActions) {
-                                item in
-                                HStack {
-                                    Text(item.title)
-                                        .font(.title2)
-                                    Text(item.duration.formatted() + " min")
-                                        .font(.subheadline)
-                                        .frame(width: 40, alignment: .trailing)
-                                        .background(Color.yellow)
-                                }
-//                                .swipeActions(edge: .trailing, allowsFullSwipe: false)
-//                                {
-//                                    Button(role: .destructive) {
-//
-//                                    } label: {
-//                                        Label("Archive", systemImage: "trash.fill")
-//                                    }
-//
-//                                }
-//                                .swipeActions(edge: .leading, allowsFullSwipe: false)
-//                                {
-//                                    Button() {
-//                                        print("Pinning item")
-//                                    } label: {
-//                                        Label("Pin", systemImage: "pin.fill")
-//                                    }
-//                                    .tint(Color.yellow)
-//                                }
-                                
-                        }
-                            //.onDelete(perform: actionVM.deleteAction)
-                            
+                List {
+                    ForEach(actionVM.actions, id: \.id) {
+                    item in
+                    HStack {
+                        Text(item.title)
+                            .font(.title2)
+                        Text(item.duration.formatted() + " min")
+                            .font(.subheadline)
+                            .frame(width: 40, alignment: .trailing)
+                            .background(Color.yellow)
+                    }
                 }
-                
+                    .onDelete(perform: actionVM.deleteAction)
             }
-                .navigationTitle("Break Actions")
-                .onAppear() {
-                    actionVM.getData()
-                }
-            }
+            
+        }
+        .navigationTitle("Break Actions")
+        .onAppear() {
+            actionVM.getData()
+        }
     }
 }
 }
