@@ -20,7 +20,7 @@ struct ContentView: View {
             VStack {
                 Text("Time for a Break")
                     .font(.custom("Kailasa", size: 40))
-                NavigationLink(destination: TimerCountView(timerModel: timerModel)) {
+                NavigationLink(destination: TimerCountView()) {
                     Text("START")
                 }
                 .buttonStyle(StandardButton())

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TimerCountView: View {
-    @ObservedObject var timerModel : TimerModel
+    @EnvironmentObject var timerModel : TimerModel
     @EnvironmentObject var selectActions : SelectedActionsViewModel
     @State var started = false
     @State var to : CGFloat = 1
@@ -120,8 +120,8 @@ struct TimerCountView: View {
         }
 }
 
-//struct TimerCountView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        TimerCountView()
-//    }
-//}
+struct TimerCountView_Previews: PreviewProvider {
+    static var previews: some View {
+        TimerCountView()
+    }
+}
