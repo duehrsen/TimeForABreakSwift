@@ -10,59 +10,96 @@ import SwiftUI
 
 struct ActionListView: View {
     
-    @ObservedObject var actionVM : ActionViewModel = ActionViewModel()
+    @EnvironmentObject var allActionsVM : ActionViewModel
+    @EnvironmentObject var selectActions: SelectedActionsViewModel
     @State private var actionString = ""
+    @State private var durationValue = 5
+    
+    var defaultAction : BreakAction = BreakAction(title: "Get up!", desc: "Leave your chair", duration: 1, category: "relax")
+    
+    @ViewBuilder
+    func actionInfo(for action: BreakAction) -> some View {
+        HStack {
+            Text(action.title)
+                .font(.title2)
+            Text(action.duration.formatted() + " min")
+                .font(.subheadline)
+                .frame(width: 40, alignment: .trailing)
+                .background(Color.yellow)
+            }
+    }
     
     var body: some View {
-        NavigationView {
             VStack {
-                HStack {
-                    TextField("Add breaktime action", text: $actionString)
+                Text("Selected Actions")
+                    .font(.subheadline)
+                List {
+                    ForEach(selectActions.selectedActions , id: \.id) { action in
+                        actionInfo(for: action)
+                    }
                 }
-                .frame(width: 200, height: 45, alignment: .center)
-                .padding(.horizontal, 40)
-                .background(Color(.lightGray)
-                    .cornerRadius(30))
-                .foregroundColor(Color.white)
+                TextField("Add breaktime action", text: $actionString)
+                        .frame(width: 200, height: 45, alignment: .center)
+                        .padding(.horizontal, 40)
+                        .background(Color(.lightGray)
+                            .cornerRadius(30))
+                        .foregroundColor(Color.white)
+//                Picker("", selection: $durationValue){
+//                    ForEach(1...10, id:\.self) {
+//                        Text("\($0)")
+//                            .font(.subheadline)
+//                    }
+//                }
                 
                 Button(action: {
-                    actionVM.add(action: actionString)
-                    
+                    allActionsVM.add(action: actionString)
                 }) {
                     HStack(spacing: 15){
                         Text("Add Action")
-                            .foregroundColor(.purple)
+                            .foregroundColor(.blue)
                     }
                     .padding(.vertical)
                     .frame(width: (UIScreen.main.bounds.width / 2) - 55)
                     .background(
                         Capsule()
-                            .stroke(Color.purple, lineWidth: 2)
+                            .stroke(Color.blue, lineWidth: 2)
                     )
                     .shadow(radius: 5)
                     
                 }
                 
                 List {
-                    ForEach(actionVM.actions, id: \.id) {
-                    item in
-                    HStack {
-                        Text(item.title)
-                            .font(.title2)
-                        Text(item.duration.formatted() + " min")
-                            .font(.subheadline)
-                            .frame(width: 40, alignment: .trailing)
-                            .background(Color.yellow)
+                    ForEach(allActionsVM.actions, id: \.id) { action in
+                        HStack {
+                            Text(action.title)
+                                .font(.title2)
+                            Text(action.duration.formatted() + " min")
+                                .font(.subheadline)
+                                .frame(width: 40, alignment: .trailing)
+                                .background(Color.yellow)
+                            }
+                        
+
+                            .swipeActions(edge: .leading, allowsFullSwipe: false, content: {
+                                Button (action: { selectActions.add(action: action)}, label: {
+                                    Label("Add", systemImage: "plus")
+                                })
+                                .tint(Color.yellow)
+                                
+                            })
+                            
                     }
+                    
+                        //.onDelete(perform: allActionsVM.deleteAction)
+                        //.onMove(perform: allActionsVM.move)
                 }
-                    .onDelete(perform: actionVM.deleteAction)
-            }
-            
+                .onAppear() {
+                    allActionsVM.getData()
+
         }
-        .navigationTitle("Break Actions")
-        .onAppear() {
-            actionVM.getData()
+               
+
         }
     }
-}
+
 }

@@ -9,9 +9,11 @@ import SwiftUI
 
 struct TimerCountView: View {
     @ObservedObject var timerModel : TimerModel
+    @EnvironmentObject var selectActions : SelectedActionsViewModel
     @State var started = false
     @State var to : CGFloat = 1
     @State var time = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    var defaultAction : BreakAction = BreakAction(title: "Get up!", desc: "Leave your chair", duration: 1, category: "relax")
       
     func convertSecondsToTime(timeinSeconds : Int) -> String {
         let minutes = timeinSeconds / 60
@@ -21,7 +23,6 @@ struct TimerCountView: View {
     }
     
     var body: some View {
-        NavigationView {
             VStack(spacing: 60) {
                 ZStack {
                     Circle()
@@ -30,7 +31,7 @@ struct TimerCountView: View {
                         .frame(width: 280, height: 280)
                     Circle()
                         .trim(from: 0, to: self.to)
-                        .stroke(Color.purple,style: StrokeStyle(lineWidth: 35, lineCap: .round))
+                        .stroke(Color.blue,style: StrokeStyle(lineWidth: 35, lineCap: .round))
                         .frame(width: 280, height: 280)
                         .rotationEffect(.init(degrees: -90))
                     VStack {
@@ -57,7 +58,7 @@ struct TimerCountView: View {
                         }
                         .padding(.vertical)
                         .frame(width: (UIScreen.main.bounds.width / 2) - 55)
-                        .background(Color.purple)
+                        .background(Color.blue)
                         .clipShape(Capsule())
                         .shadow(radius: 5)
                     }
@@ -70,21 +71,38 @@ struct TimerCountView: View {
                     }) {
                         HStack(spacing: 15){
                             Image(systemName: "arrow.clockwise")
-                                .foregroundColor(.purple)
+                                .foregroundColor(.blue)
                             Text("Restart")
-                                .foregroundColor(.purple)
+                                .foregroundColor(.blue)
                         }
                         .padding(.vertical)
                         .frame(width: (UIScreen.main.bounds.width / 2) - 55)
                         .background(
                             Capsule()
-                                .stroke(Color.purple, lineWidth: 2)
+                                .stroke(Color.blue, lineWidth: 2)
                             )
                         .shadow(radius: 5)
 
                     }
                     
                 }
+                
+                List {
+                    ForEach(selectActions.selectedActions , id: \.id) {
+                    item in
+                    HStack {
+                        Text(item.title)
+                            .font(.title2)
+                        Text(item.duration.formatted() + " min")
+                            .font(.subheadline)
+                            .frame(width: 40, alignment: .trailing)
+                            .background(Color.yellow)
+                        }
+                    }
+                }
+                    //.onDelete(perform: selectActions.deleteAction)
+                    //.onMove(perform: selectActions.move)
+            
             }
             .onReceive(self.time) { (_) in
                 print("Tick")
@@ -94,11 +112,11 @@ struct TimerCountView: View {
                 }
                 
             }
+            .onAppear {
+                timerModel.currentTimeRemaining = timerModel.workTimeTotalSeconds
         }
-        .onAppear {
-            timerModel.currentTimeRemaining = timerModel.workTimeTotalSeconds
+
         }
-    }
 }
 
 //struct TimerCountView_Previews: PreviewProvider {

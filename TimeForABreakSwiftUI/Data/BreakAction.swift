@@ -11,13 +11,7 @@ struct BreakAction : Codable, Identifiable {
     var id = UUID()
     var title : String
     var desc : String
-    var duration : Int8
+    var duration : Int
     var category : String
     var linkurl : URL?
-}
-
-struct BreakActionSection : Identifiable {
-    var id = UUID()
-    var categoryName : String
-    var breakActions : [BreakAction]
 }

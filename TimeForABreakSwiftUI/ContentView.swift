@@ -10,13 +10,16 @@ import SwiftUI
 struct ContentView: View {
     
     @StateObject var timerModel = TimerModel()
+    @StateObject var selectActions = SelectedActionsViewModel()
+    @StateObject var allActions = ActionViewModel()
     
     @State private var action: Int? = 0
     
     var body: some View {
         NavigationView {
             VStack {
-                Text("time \(timerModel.workTimeTotalSeconds)")
+                Text("Time for a Break")
+                    .font(.custom("Kailasa", size: 40))
                 NavigationLink(destination: TimerCountView(timerModel: timerModel)) {
                     Text("START")
                 }
@@ -32,6 +35,8 @@ struct ContentView: View {
             }
         }
         .environmentObject(timerModel)
+        .environmentObject(selectActions)
+        .environmentObject(allActions)
 
     }
 }
