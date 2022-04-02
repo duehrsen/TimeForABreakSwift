@@ -48,7 +48,6 @@ struct TimerCountView: View {
                     Button(action: {
                         self.started.toggle()
                         
-                        
                     }) {
                         HStack(spacing: 15){
                             Image(systemName: self.started ? "pause.fill" : "play.fill")
@@ -98,10 +97,12 @@ struct TimerCountView: View {
                             .frame(width: 40, alignment: .trailing)
                             .background(Color.yellow)
                         }
+                    
                     }
+                    .onDelete(perform: selectActions.deleteAction)
+                    .onMove(perform: selectActions.move)
                 }
-                    //.onDelete(perform: selectActions.deleteAction)
-                    //.onMove(perform: selectActions.move)
+
             
             }
             .onReceive(self.time) { (_) in

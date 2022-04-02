@@ -25,7 +25,7 @@ class ActionViewModel: ObservableObject {
     func add(action: String = "", duration: Int = 5) {
         print("Adding default action with action title \(action) and duration \(duration)")
         let newAction = BreakAction(title: action, desc: action, duration: duration, category: "regular")
-        actions.append(newAction)
+        actions.insert(newAction, at: 0)
     }
     
 }
@@ -39,7 +39,15 @@ class SelectedActionsViewModel: ObservableObject {
     }
     
     func add(action: BreakAction) {
-        selectedActions.append(action)
+        selectedActions.insert(action, at: 0)
         print("Action added to active list. Count is \(selectedActions.count)")
+    }
+    
+    func deleteAction(index: IndexSet) {
+        selectedActions.remove(atOffsets: index)
+    }
+    
+    func move(index: IndexSet, dest: Int) {
+        selectedActions.move(fromOffsets: index, toOffset: dest)
     }
 }

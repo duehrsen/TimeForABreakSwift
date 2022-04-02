@@ -37,6 +37,8 @@ struct ActionListView: View {
                     ForEach(selectActions.selectedActions , id: \.id) { action in
                         actionInfo(for: action)
                     }
+                    .onDelete(perform: selectActions.deleteAction)
+                    .onMove(perform: selectActions.move)
                 }
                 TextField("Add breaktime action", text: $actionString)
                         .frame(width: 200, height: 45, alignment: .center)
@@ -80,7 +82,7 @@ struct ActionListView: View {
                             }
                         
 
-                            .swipeActions(edge: .leading, allowsFullSwipe: false, content: {
+                            .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
                                 Button (action: { selectActions.add(action: action)}, label: {
                                     Label("Add", systemImage: "plus")
                                 })
@@ -89,9 +91,6 @@ struct ActionListView: View {
                             })
                             
                     }
-                    
-                        //.onDelete(perform: allActionsVM.deleteAction)
-                        //.onMove(perform: allActionsVM.move)
                 }
                 .onAppear() {
                     allActionsVM.getData()
