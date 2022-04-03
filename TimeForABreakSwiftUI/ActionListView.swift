@@ -43,9 +43,7 @@ struct ActionListView: View {
                 TextField("Add breaktime action", text: $actionString)
                         .frame(width: 200, height: 45, alignment: .center)
                         .padding(.horizontal, 40)
-                        .background(Color(.lightGray)
-                            .cornerRadius(30))
-                        .foregroundColor(Color.white)
+                        .foregroundColor(Color.black)
 //                Picker("", selection: $durationValue){
 //                    ForEach(1...10, id:\.self) {
 //                        Text("\($0)")

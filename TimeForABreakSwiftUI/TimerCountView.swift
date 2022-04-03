@@ -14,6 +14,8 @@ struct TimerCountView: View {
     @State var to : CGFloat = 1
     @State var time = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     var defaultAction : BreakAction = BreakAction(title: "Get up!", desc: "Leave your chair", duration: 1, category: "relax")
+    @State var isWorkTime : Bool = true
+    
       
     func convertSecondsToTime(timeinSeconds : Int) -> String {
         let minutes = timeinSeconds / 60
@@ -23,23 +25,32 @@ struct TimerCountView: View {
     }
     
     var body: some View {
+        
+        let diameter : CGFloat = 200
+        let outofSize : CGFloat = 20
+        let timerTextSize : CGFloat = 40
+        let lineWidth : CGFloat = 30
+        
             VStack(spacing: 60) {
+                Spacer()
+                Text(isWorkTime ? "Workin' time left" : "Chillin' Time Left")
+                    .font(.largeTitle)
                 ZStack {
                     Circle()
                         .trim(from: 0, to: 1)
-                        .stroke(Color.black.opacity(0.09),style: StrokeStyle(lineWidth: 35, lineCap: .round))
-                        .frame(width: 280, height: 280)
+                        .stroke(Color.black.opacity(0.09),style: StrokeStyle(lineWidth: lineWidth, lineCap: .round))
+                        .frame(width: diameter, height: diameter)
                     Circle()
                         .trim(from: 0, to: self.to)
-                        .stroke(Color.blue,style: StrokeStyle(lineWidth: 35, lineCap: .round))
-                        .frame(width: 280, height: 280)
+                        .stroke(Color.blue,style: StrokeStyle(lineWidth: lineWidth, lineCap: .round))
+                        .frame(width: diameter, height: diameter)
                         .rotationEffect(.init(degrees: -90))
                     VStack {
                         Text("\(convertSecondsToTime(timeinSeconds:timerModel.currentTimeRemaining))")
-                            .font(.system(size: 65))
+                            .font(.system(size: timerTextSize))
                             .fontWeight(.bold)
-                        Text("out of \(convertSecondsToTime(timeinSeconds:timerModel.workTimeTotalSeconds))")
-                            .font(.title)
+                        Text("out of \(convertSecondsToTime(timeinSeconds: isWorkTime ? timerModel.workTimeTotalSeconds : timerModel.breakTimeTotalSeconds))")
+                            .font(.system(size: outofSize))
                     }
                     
                 }
@@ -63,7 +74,7 @@ struct TimerCountView: View {
                     }
                     
                     Button(action: {
-                        timerModel.currentTimeRemaining = timerModel.workTimeTotalSeconds
+                        timerModel.currentTimeRemaining = isWorkTime ? timerModel.workTimeTotalSeconds : timerModel.breakTimeTotalSeconds
                         self.started = true
                         self.to = 0
                         
@@ -110,6 +121,10 @@ struct TimerCountView: View {
                 if self.started && timerModel.currentTimeRemaining > 0 {
                     timerModel.currentTimeRemaining -= 1
                     self.to = CGFloat(timerModel.currentTimeRemaining) / CGFloat(timerModel.workTimeTotalSeconds)
+                } else if self.started {
+                    self.started.toggle()
+                    isWorkTime.toggle()
+                    timerModel.currentTimeRemaining =  isWorkTime ? timerModel.workTimeTotalSeconds : timerModel.breakTimeTotalSeconds
                 }
                 
             }

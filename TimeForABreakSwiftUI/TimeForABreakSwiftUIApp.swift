@@ -11,7 +11,10 @@ import SwiftUI
 struct TimeForABreakSwiftUIApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            TabView {
+                MainView()
+            }
+            
         }
     }
 }
