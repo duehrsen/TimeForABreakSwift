@@ -59,7 +59,7 @@ struct TimerCountView: View {
                         Text("\(convertSecondsToTime(timeinSeconds:tm.currentTimeRemaining))")
                             .font(.system(size: timerTextSize))
                             .fontWeight(.bold)
-                        Label("", systemImage: tm.started ? "play.fill" : "pause.fill")
+                        Label("", systemImage: tm.started ? "pause.fill" : "play.fill")
                             .foregroundColor(.blue)
                             .font(.system(size: playIconSize))
                         //Text("out of \(convertSecondsToTime(timeinSeconds: tm.isWorkTime ? tm.workTimeTotalSeconds : tm.breakTimeTotalSeconds))").font(.system(size: outofSize))
