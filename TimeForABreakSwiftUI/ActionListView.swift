@@ -57,9 +57,13 @@ struct ActionListView: View {
                 }
                 
                 Button(action: {
-                    allActionsVM.add(action: actionString, duration: durationValue > 0 ? durationValue : defaultTime)
-                    actionString = ""
-                    durationValue = defaultTime
+                    let actStr = actionString.trimmingCharacters(in: .whitespaces)
+                    if (actStr.count > 0)
+                    {
+                        allActionsVM.add(action: actionString, duration: durationValue > 0 ? durationValue : defaultTime)
+                        actionString = ""
+                        durationValue = defaultTime
+                    }          
                     
                 }) {
                     Label("", systemImage: "plus.app.fill")
