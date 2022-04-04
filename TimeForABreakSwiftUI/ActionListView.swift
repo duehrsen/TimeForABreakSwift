@@ -99,8 +99,11 @@ struct ActionListView: View {
                 .onAppear() {
                     if !didLoadData
                     {
-                        allActionsVM.getData()
-                        didLoadData = true
+                        if allActionsVM.actions.count < 1 {
+                            allActionsVM.getData()
+                            didLoadData = true
+                        }
+                        
                     }
                     
                 }

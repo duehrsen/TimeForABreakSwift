@@ -10,22 +10,81 @@ import SwiftUI
 class ActionViewModel: ObservableObject {
     @Published var actions : [BreakAction] = []
     
+    private static func fileURL() throws -> URL {
+        
+        try FileManager.default.url(for: .documentDirectory,
+                                    in: .userDomainMask,
+                                    appropriateFor: nil,
+                                    create: false)
+        .appendingPathComponent("breakActions.data")
+        
+    }
+    
+    static func save(actions: [BreakAction], completion: @escaping (Result<Int, Error>) -> Void) {
+        DispatchQueue.global(qos: .background).async {
+            do {
+                let data = try JSONEncoder().encode(actions)
+                let outfile = try fileURL()
+                try data.write(to: outfile)
+            } catch {
+                DispatchQueue.main.async {
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
+    
+    static func load(completion: @escaping (Result<[BreakAction], Error>)->Void) {
+        DispatchQueue.global(qos: .background).async {
+            do {
+                let fileUrl = try fileURL()
+                guard let file = try? FileHandle(forReadingFrom: fileUrl) else {
+                    DispatchQueue.main.async {
+                        completion(.success([]))
+                    }
+                    return
+                }
+                let aryActionBreaks = try JSONDecoder().decode([BreakAction].self, from: file.availableData)
+                DispatchQueue.main.async {
+                    completion(.success(aryActionBreaks))
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    completion(.failure(error))
+                }
+            }
+            
+        }
+        
+    }
+    
+    fileprivate func saveToDisk() {
+        ActionViewModel.save(actions: actions) { result in
+            if case .failure(let error) = result {
+                fatalError(error.localizedDescription)
+            }
+        }
+    }
+    
     func getData() {
         actions = DataProvider.mockData()
     }
     
     func deleteAction(index: IndexSet) {
         actions.remove(atOffsets: index)
+        saveToDisk()
     }
     
     func move(index: IndexSet, dest: Int) {
         actions.move(fromOffsets: index, toOffset: dest)
+        saveToDisk()
     }
     
     func add(action: String = "", duration: Int = 5) {
         print("Adding default action with action title \(action) and duration \(duration)")
         let newAction = BreakAction(title: action, desc: action, duration: duration, category: "regular")
         actions.insert(newAction, at: 0)
+        saveToDisk()
     }
     
 }

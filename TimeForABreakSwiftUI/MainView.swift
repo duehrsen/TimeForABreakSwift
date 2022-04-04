@@ -29,6 +29,17 @@ struct MainView: View {
                 }
 
         }
+        .onAppear {
+            ActionViewModel.load { result in
+                switch result {
+                case .failure( let error):
+                    fatalError(error.localizedDescription)
+                case .success(let loadedActions):
+                    allActions.actions = loadedActions
+                }
+            }
+            
+        }
         .environmentObject(tM)
         .environmentObject(selectActions)
         .environmentObject(allActions)
