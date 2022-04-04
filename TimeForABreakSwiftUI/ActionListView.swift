@@ -7,106 +7,98 @@
 
 import SwiftUI
 
-class ActionViewModel: ObservableObject {
-    @Published var sections : [BreakActionSection] = []
-    
-    func getData() {
-        sections = DataProvider.mockData()
-    }
-    
-    func deleteAction(index: IndexSet) {
-        sections.remove(atOffsets: index)
-    }
-    
-    func add(action: String) {
-        print("in it with string \(action)")
-        if var section = sections.first(where: {$0.categoryName.contains("Regular") }) {
-            let newAction = BreakAction(title: action, desc: action, duration: 3, category: "regular")
-            section.breakActions.append(newAction)
-        }
-    }
-    
-}
 
 struct ActionListView: View {
     
-    @ObservedObject var actionVM : ActionViewModel = ActionViewModel()
+    @EnvironmentObject var allActionsVM : ActionViewModel
+    @EnvironmentObject var selectActions: SelectedActionsViewModel
     @State private var actionString = ""
+    @State private var durationValue = 5
+    
+    var defaultAction : BreakAction = BreakAction(title: "Get up!", desc: "Leave your chair", duration: 1, category: "relax")
+    
+    @ViewBuilder
+    func actionInfo(for action: BreakAction) -> some View {
+        HStack {
+            Text(action.title)
+                .font(.title2)
+            Text(action.duration.formatted() + " min")
+                .font(.subheadline)
+                .frame(width: 40, alignment: .trailing)
+                .background(Color.yellow)
+            }
+    }
     
     var body: some View {
-        NavigationView {
             VStack {
-                HStack {
-                    TextField("Add breaktime action", text: $actionString)
-                    Image(systemName: "mic.fill")
+                List {
+                    Section("Selected Actions") {
+                    ForEach(selectActions.selectedActions , id: \.id) { action in
+                        actionInfo(for: action)
+                    }
+                    .onDelete(perform: selectActions.deleteAction)
+                    .onMove(perform: selectActions.move)
                 }
-                .frame(width: 200, height: 45, alignment: .center)
-                .padding(.horizontal, 40)
-                .background(Color(.systemGray)
-                    .cornerRadius(30))
-                .foregroundColor(Color.white)
+            }
+                TextField("Add breaktime action", text: $actionString)
+                        .frame(width: 200, height: 45, alignment: .center)
+                        .padding(.horizontal, 40)
+                        .foregroundColor(Color.black)
+//                Picker("", selection: $durationValue){
+//                    ForEach(1...10, id:\.self) {
+//                        Text("\($0)")
+//                            .font(.subheadline)
+//                    }
+//                }
                 
                 Button(action: {
-                        actionVM.add(action: actionString)
-                    
+                    allActionsVM.add(action: actionString)
                 }) {
                     HStack(spacing: 15){
                         Text("Add Action")
-                            .foregroundColor(.purple)
+                            .foregroundColor(.blue)
                     }
                     .padding(.vertical)
                     .frame(width: (UIScreen.main.bounds.width / 2) - 55)
                     .background(
                         Capsule()
-                            .stroke(Color.purple, lineWidth: 2)
-                        )
+                            .stroke(Color.blue, lineWidth: 2)
+                    )
                     .shadow(radius: 5)
-
+                    
                 }
                 
-                List(actionVM.sections, id: \.id) { section in
-                    Section(header: Text(section.categoryName))
-                        {
-                            ForEach(section.breakActions) {
-                                item in
-                                HStack {
-                                    Text(item.title)
-                                        .font(.title2)
-                                    Text(item.duration.formatted() + " min")
-                                        .font(.subheadline)
-                                        .frame(width: 40, alignment: .trailing)
-                                        .background(Color.yellow)
-                                }
-//                                .swipeActions(edge: .trailing, allowsFullSwipe: false)
-//                                {
-//                                    Button(role: .destructive) {
-//
-//                                    } label: {
-//                                        Label("Archive", systemImage: "trash.fill")
-//                                    }
-//
-//                                }
-//                                .swipeActions(edge: .leading, allowsFullSwipe: false)
-//                                {
-//                                    Button() {
-//                                        print("Pinning item")
-//                                    } label: {
-//                                        Label("Pin", systemImage: "pin.fill")
-//                                    }
-//                                    .tint(Color.yellow)
-//                                }
-                                
-                        }
-                            //.onDelete(perform: actionVM.deleteAction)
+                List {
+                    Section("Available Actions") {
+                        ForEach(allActionsVM.actions, id: \.id) { action in
+                            HStack {
+                                Text(action.title)
+                                    .font(.title2)
+                                Text(action.duration.formatted() + " min")
+                                    .font(.subheadline)
+                                    .frame(width: 40, alignment: .trailing)
+                                    .background(Color.yellow)
+                            }
                             
-                }
-                
-            }
-                .navigationTitle("Break Actions")
-                .onAppear() {
-                    actionVM.getData()
-                }
-            }
+                            
+                            .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
+                                Button (action: { selectActions.add(action: action)}, label: {
+                                    Label("Add", systemImage: "plus")
+                                })
+                                .tint(Color.yellow)
+                                
+                            })
+                            
+                        }
+                    }
+                    .onAppear() {
+                        allActionsVM.getData()
+                    }
+
+        }
+               
+
+        }
     }
-}
+
 }

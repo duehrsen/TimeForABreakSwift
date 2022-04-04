@@ -9,15 +9,18 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @StateObject var timerModel = TimerModel()
+    @StateObject var tM = TimerModel()
+    @StateObject var selectActions = SelectedActionsViewModel()
+    @StateObject var allActions = ActionViewModel()
     
     @State private var action: Int? = 0
     
     var body: some View {
         NavigationView {
             VStack {
-                Text("time \(timerModel.workTimeTotalSeconds)")
-                NavigationLink(destination: TimerCountView(timerModel: timerModel)) {
+                Text("Time for a Break")
+                    .font(.custom("Kailasa", size: 40))
+                NavigationLink(destination: TimerCountView()) {
                     Text("START")
                 }
                 .buttonStyle(StandardButton())
@@ -25,13 +28,15 @@ struct ContentView: View {
                     Text("ACTIONS")
                 }
                 .buttonStyle(StandardButton())
-                NavigationLink(destination: OptionsView(workMinutes: timerModel.workTimeTotalSeconds/60, breakMinutes: timerModel.breakTimeTotalSeconds/60)) {
+                NavigationLink(destination: OptionsView(workMinutes: tM.workTimeTotalSeconds/60, breakMinutes: tM.breakTimeTotalSeconds/60)) {
                     Text("OPTIONS")
                 }
                 .buttonStyle(StandardButton())
             }
         }
-        .environmentObject(timerModel)
+        .environmentObject(tM)
+        .environmentObject(selectActions)
+        .environmentObject(allActions)
 
     }
 }

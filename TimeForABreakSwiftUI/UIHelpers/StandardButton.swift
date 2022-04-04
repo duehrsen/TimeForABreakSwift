@@ -12,10 +12,12 @@ struct StandardButton : ButtonStyle {
         configuration
             .label
             .foregroundColor(Color.white)
-            .padding()
-            .background(Color.purple)
-            .cornerRadius(20)
-            .frame(minWidth: 150, idealWidth: 160, maxWidth: 250, minHeight: 40, idealHeight: 60, maxHeight: 80, alignment: .center)
+            .padding(.vertical)
+            .frame(width: (UIScreen.main.bounds.width / 2) - 55)
+            .background(Color.blue)
+            .clipShape(Capsule())
+            .shadow(radius: 5)
+            .lineSpacing(15)
         
     }
 }
