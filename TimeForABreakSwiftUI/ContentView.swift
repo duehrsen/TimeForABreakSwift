@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @StateObject var timerModel = TimerModel()
+    @StateObject var tM = TimerModel()
     @StateObject var selectActions = SelectedActionsViewModel()
     @StateObject var allActions = ActionViewModel()
     
@@ -28,13 +28,13 @@ struct ContentView: View {
                     Text("ACTIONS")
                 }
                 .buttonStyle(StandardButton())
-                NavigationLink(destination: OptionsView(workMinutes: timerModel.workTimeTotalSeconds/60, breakMinutes: timerModel.breakTimeTotalSeconds/60)) {
+                NavigationLink(destination: OptionsView(workMinutes: tM.workTimeTotalSeconds/60, breakMinutes: tM.breakTimeTotalSeconds/60)) {
                     Text("OPTIONS")
                 }
                 .buttonStyle(StandardButton())
             }
         }
-        .environmentObject(timerModel)
+        .environmentObject(tM)
         .environmentObject(selectActions)
         .environmentObject(allActions)
 

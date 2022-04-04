@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MainView: View {
     
-    @StateObject var timerModel = TimerModel()
+    @StateObject var tM = TimerModel()
     @StateObject var selectActions = SelectedActionsViewModel()
     @StateObject var allActions = ActionViewModel()
     
@@ -23,13 +23,13 @@ struct MainView: View {
                 .tabItem {
                     Label("Action List", systemImage:"list.bullet.circle.fill")
                 }
-            OptionsView(workMinutes: timerModel.workTimeTotalSeconds/60, breakMinutes: timerModel.breakTimeTotalSeconds/60)
+            OptionsView(workMinutes: tM.workTimeTotalSeconds/60, breakMinutes: tM.breakTimeTotalSeconds/60)
                 .tabItem {
                     Label("Options", systemImage: "gearshape.fill")
                 }
 
         }
-        .environmentObject(timerModel)
+        .environmentObject(tM)
         .environmentObject(selectActions)
         .environmentObject(allActions)
 

@@ -31,15 +31,15 @@ struct ActionListView: View {
     
     var body: some View {
             VStack {
-                Text("Selected Actions")
-                    .font(.subheadline)
                 List {
+                    Section("Selected Actions") {
                     ForEach(selectActions.selectedActions , id: \.id) { action in
                         actionInfo(for: action)
                     }
                     .onDelete(perform: selectActions.deleteAction)
                     .onMove(perform: selectActions.move)
                 }
+            }
                 TextField("Add breaktime action", text: $actionString)
                         .frame(width: 200, height: 45, alignment: .center)
                         .padding(.horizontal, 40)
@@ -69,17 +69,18 @@ struct ActionListView: View {
                 }
                 
                 List {
-                    ForEach(allActionsVM.actions, id: \.id) { action in
-                        HStack {
-                            Text(action.title)
-                                .font(.title2)
-                            Text(action.duration.formatted() + " min")
-                                .font(.subheadline)
-                                .frame(width: 40, alignment: .trailing)
-                                .background(Color.yellow)
+                    Section("Available Actions") {
+                        ForEach(allActionsVM.actions, id: \.id) { action in
+                            HStack {
+                                Text(action.title)
+                                    .font(.title2)
+                                Text(action.duration.formatted() + " min")
+                                    .font(.subheadline)
+                                    .frame(width: 40, alignment: .trailing)
+                                    .background(Color.yellow)
                             }
-                        
-
+                            
+                            
                             .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
                                 Button (action: { selectActions.add(action: action)}, label: {
                                     Label("Add", systemImage: "plus")
@@ -88,10 +89,11 @@ struct ActionListView: View {
                                 
                             })
                             
+                        }
                     }
-                }
-                .onAppear() {
-                    allActionsVM.getData()
+                    .onAppear() {
+                        allActionsVM.getData()
+                    }
 
         }
                
