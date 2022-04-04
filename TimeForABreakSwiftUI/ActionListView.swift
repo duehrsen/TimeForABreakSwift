@@ -96,6 +96,7 @@ struct ActionListView: View {
                     if !didLoadData
                     {
                         allActionsVM.getData()
+                        didLoadData = true
                     }
                     
                 }
