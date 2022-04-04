@@ -8,6 +8,11 @@
 import SwiftUI
 
 class TimerModel : ObservableObject {
+    
+    @Published var to : CGFloat = 1
+    @Published var isWorkTime : Bool = true
+    
+    
     var workTimeTotalSeconds : Int = 120 {
         willSet {
             currentTimeRemaining = workTimeTotalSeconds
@@ -31,5 +36,9 @@ class TimerModel : ObservableObject {
     
     @Published var binaryDescendingTime : Int = 0
     @Published var started : Bool = false
+    
+    func switchTimer(){
+        
+    }
     
 }

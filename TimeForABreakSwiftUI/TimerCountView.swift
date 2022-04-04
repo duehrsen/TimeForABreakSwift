@@ -8,21 +8,26 @@
 import SwiftUI
 
 struct TimerCountView: View {
-    @EnvironmentObject var timerModel : TimerModel
+    @EnvironmentObject var tm : TimerModel
     @EnvironmentObject var selectActions : SelectedActionsViewModel
-    @State var started = false
-    @State var to : CGFloat = 1
+
     @State var time = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     @State var didAppear : Bool = false
     var defaultAction : BreakAction = BreakAction(title: "Get up!", desc: "Leave your chair", duration: 1, category: "relax")
-    @State var isWorkTime : Bool = true
-    
+
     
     func convertSecondsToTime(timeinSeconds : Int) -> String {
         let minutes = timeinSeconds / 60
         let seconds = timeinSeconds % 60
         
         return String(format: "%02i:%02i", minutes,seconds)
+    }
+    
+    fileprivate func switchTimer() {
+        tm.started.toggle()
+        tm.isWorkTime.toggle()
+        tm.currentTimeRemaining =  tm.isWorkTime ? tm.workTimeTotalSeconds : tm.breakTimeTotalSeconds
+        tm.to = CGFloat(tm.currentTimeRemaining) / CGFloat(tm.isWorkTime ? tm.workTimeTotalSeconds : tm.breakTimeTotalSeconds)
     }
     
     var body: some View {
@@ -34,7 +39,7 @@ struct TimerCountView: View {
         
         VStack(spacing: 60) {
             Spacer()
-            Text(isWorkTime ? "Workin' time left" : "Chillin' Time Left")
+            Text(tm.isWorkTime ? "Workin' time left" : "Chillin' Time Left")
                 .font(.largeTitle)
             ZStack {
                 Circle()
@@ -42,15 +47,15 @@ struct TimerCountView: View {
                     .stroke(Color.black.opacity(0.09),style: StrokeStyle(lineWidth: lineWidth, lineCap: .round))
                     .frame(width: diameter, height: diameter)
                 Circle()
-                    .trim(from: 0, to: self.to)
+                    .trim(from: 0, to: tm.to)
                     .stroke(Color.blue,style: StrokeStyle(lineWidth: lineWidth, lineCap: .round))
                     .frame(width: diameter, height: diameter)
                     .rotationEffect(.init(degrees: -90))
                 VStack {
-                    Text("\(convertSecondsToTime(timeinSeconds:timerModel.currentTimeRemaining))")
+                    Text("\(convertSecondsToTime(timeinSeconds:tm.currentTimeRemaining))")
                         .font(.system(size: timerTextSize))
                         .fontWeight(.bold)
-                    Text("out of \(convertSecondsToTime(timeinSeconds: isWorkTime ? timerModel.workTimeTotalSeconds : timerModel.breakTimeTotalSeconds))")
+                    Text("out of \(convertSecondsToTime(timeinSeconds: tm.isWorkTime ? tm.workTimeTotalSeconds : tm.breakTimeTotalSeconds))")
                         .font(.system(size: outofSize))
                 }
                 
@@ -58,26 +63,26 @@ struct TimerCountView: View {
             
             HStack (spacing: 20) {
                 Button(action: {
-                    self.started.toggle()
+                    tm.started.toggle()
                     
                 }) {
                     HStack(spacing: 15){
-                        Image(systemName: self.started ? "pause.fill" : "play.fill")
+                        Image(systemName: tm.started ? "pause.fill" : "play.fill")
                             .foregroundColor(.white)
-                        Text(self.started ? "Pause" : "Play")
+                        Text(tm.started ? "Pause" : "Play")
                             .foregroundColor(.white)
                     }
                     .padding(.vertical)
-                    .frame(width: (UIScreen.main.bounds.width / 2) - 55)
+                    .frame(width: (UIScreen.main.bounds.width / 3) - 20)
                     .background(Color.blue)
                     .clipShape(Capsule())
                     .shadow(radius: 5)
                 }
                 
                 Button(action: {
-                    timerModel.currentTimeRemaining = isWorkTime ? timerModel.workTimeTotalSeconds : timerModel.breakTimeTotalSeconds
-                    self.started = true
-                    self.to = 0
+                    tm.currentTimeRemaining = tm.isWorkTime ? tm.workTimeTotalSeconds : tm.breakTimeTotalSeconds
+                    tm.started = true
+                    tm.to = 0
                     
                 }) {
                     HStack(spacing: 15){
@@ -87,10 +92,29 @@ struct TimerCountView: View {
                             .foregroundColor(.blue)
                     }
                     .padding(.vertical)
-                    .frame(width: (UIScreen.main.bounds.width / 2) - 55)
+                    .frame(width: (UIScreen.main.bounds.width / 3) - 20)
                     .background(
                         Capsule()
                             .stroke(Color.blue, lineWidth: 2)
+                    )
+                    .shadow(radius: 5)
+                    
+                }
+                
+                Button(action: {
+                    switchTimer()                    
+                }) {
+                    HStack(spacing: 15){
+                        Image(systemName: "rectangle.portrait.and.arrow.right")
+                            .foregroundColor(.green)
+                        Text("To " + (tm.isWorkTime ? "Break" : "Work"))
+                            .foregroundColor(.green)
+                    }
+                    .padding(.vertical)
+                    .frame(width: (UIScreen.main.bounds.width / 3) - 20)
+                    .background(
+                        Capsule()
+                            .stroke(Color.green, lineWidth: 2)
                     )
                     .shadow(radius: 5)
                     
@@ -122,20 +146,19 @@ struct TimerCountView: View {
             
         }
         .onReceive(self.time) { (_) in
-            print("Tick")
-            if self.started && timerModel.currentTimeRemaining > 0 {
-                timerModel.currentTimeRemaining -= 1
-                self.to = CGFloat(timerModel.currentTimeRemaining) / CGFloat(timerModel.workTimeTotalSeconds)
-            } else if self.started {
-                self.started.toggle()
-                isWorkTime.toggle()
-                timerModel.currentTimeRemaining =  isWorkTime ? timerModel.workTimeTotalSeconds : timerModel.breakTimeTotalSeconds
-                self.to = CGFloat(timerModel.currentTimeRemaining) / CGFloat(timerModel.workTimeTotalSeconds)
+            if tm.started && tm.currentTimeRemaining > 0 {
+                tm.currentTimeRemaining -= 1
+                tm.to = CGFloat(tm.currentTimeRemaining) / CGFloat(tm.isWorkTime ? tm.workTimeTotalSeconds : tm.breakTimeTotalSeconds)
+            } else if tm.started {
+                switchTimer()
             }
             
         }
         .onAppear {
-            timerModel.currentTimeRemaining = timerModel.workTimeTotalSeconds
+            if !didAppear {
+                tm.currentTimeRemaining = tm.workTimeTotalSeconds
+                didAppear = true
+            }
             
         }
         
