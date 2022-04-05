@@ -11,6 +11,7 @@ struct OptionsView: View {
     @EnvironmentObject var tM: TimerModel
     var workMinutes : Int
     var breakMinutes : Int
+    var actionVM : ActionViewModel
     
     var body: some View {
         VStack {
@@ -30,6 +31,25 @@ struct OptionsView: View {
                 
             }
             .frame(width: 200)
+            Spacer()
+            
+            Button(action: {
+                actionVM.restoreDefaultsToDisk()
+            }) {
+                HStack(spacing: 15){
+                    Image(systemName: "rectangle.portrait.and.arrow.right")
+                        .foregroundColor(.white)
+                    Text("Restore Data to default")
+                        .fontWeight(.heavy)
+                        .foregroundColor(.white)
+                }
+                .padding(.vertical)
+                .frame(width: (UIScreen.main.bounds.width - 70))
+                .background(Color.red)
+                .clipShape(Capsule())
+                .shadow(radius: 5)
+                
+            }
             Spacer()
             
         }

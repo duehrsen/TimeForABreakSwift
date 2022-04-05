@@ -132,15 +132,7 @@ struct TimerCountView: View {
                 }
                 ForEach(selectActions.selectedActions , id: \.id) {
                     item in
-                    HStack {
-                        Text(item.title)
-                            .frame(minWidth: 100, idealWidth: 120, maxWidth: 160, alignment: .leading)
-                            .font(.title2)
-                        Text("Up to " + item.duration.formatted() + " min")
-                            .frame(minWidth: 60, idealWidth: 100, maxWidth: 100, alignment: .trailing)
-                            .font(.subheadline)
-                            .padding()
-                    }
+                        ActionCompletionRowView(action: item)
                     
                 }
                 .onDelete(perform: selectActions.deleteAction)

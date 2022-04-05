@@ -28,7 +28,7 @@ struct ContentView: View {
                     Text("ACTIONS")
                 }
                 .buttonStyle(StandardButton())
-                NavigationLink(destination: OptionsView(workMinutes: tM.workTimeTotalSeconds/60, breakMinutes: tM.breakTimeTotalSeconds/60)) {
+                NavigationLink(destination: OptionsView(workMinutes: tM.workTimeTotalSeconds/60, breakMinutes: tM.breakTimeTotalSeconds/60, actionVM: allActions)) {
                     Text("OPTIONS")
                 }
                 .buttonStyle(StandardButton())

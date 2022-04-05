@@ -33,75 +33,78 @@ struct ActionListView: View {
     }
     
     var body: some View {
-        VStack {
-            
-            // Area for selected actions
-            List {
-                Section("Selected Actions") {
-                    ForEach(selectActions.selectedActions , id: \.id) { action in
-                        actionInfo(for: action)
+        NavigationView{
+            VStack {
+                
+                // Area for selected actions
+                List {
+                    Section("Selected Actions") {
+                        ForEach(selectActions.selectedActions , id: \.id) { action in
+                            actionInfo(for: action)
+                        }
+                        .onDelete(perform: selectActions.deleteAction)
+                        .onMove(perform: selectActions.move)
                     }
-                    .onDelete(perform: selectActions.deleteAction)
-                    .onMove(perform: selectActions.move)
-                }
-            }
-            
-            // Input area for new actions
-            HStack {
-                TextField("New action", text: $actionString)
-                    .frame(width: 100, height: 45, alignment: .center)
-                    .padding(.horizontal, 40)
-                    .foregroundColor(Color.black)
-                Stepper("\(durationValue) min", value: $durationValue, in: 1...10, step: 1) {_ in
-                    
                 }
                 
-                Button(action: {
-                    let actStr = actionString.trimmingCharacters(in: .whitespaces)
-                    if (actStr.count > 0)
-                    {
-                        allActionsVM.add(action: actionString, duration: durationValue > 0 ? durationValue : defaultTime)
-                        actionString = ""
-                        durationValue = defaultTime
-                    }          
+                // Input area for new actions
+                HStack {
+                    TextField("New action", text: $actionString)
+                        .frame(width: 100, height: 45, alignment: .center)
+                        .padding(.horizontal, 40)
+                        .foregroundColor(Color.black)
+                    Stepper("\(durationValue) min", value: $durationValue, in: 1...10, step: 1) {_ in
+                        
+                    }
                     
-                }) {
-                    Label("", systemImage: "plus.app.fill")
-                        .foregroundColor(.blue)
-                        .font(.largeTitle)
-                }
-            }
-            
-            
-            // List area for all actions
-            List {
-                Section("Available Actions") {
-                    ForEach(allActionsVM.actions, id: \.id) { action in
-                        HStack {
-                            Text(action.title)
-                                .font(.title2)
-                            Text(action.duration.formatted() + " min")
-                                .font(.subheadline)
-                                .frame(width: 40, alignment: .trailing)
-                                .background(Color.yellow)
+                    Button(action: {
+                        let actStr = actionString.trimmingCharacters(in: .whitespaces)
+                        if (actStr.count > 0)
+                        {
+                            allActionsVM.add(action: actionString, duration: durationValue > 0 ? durationValue : defaultTime)
+                            actionString = ""
+                            durationValue = defaultTime
                         }
                         
-                        .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
-                            Button (action: { selectActions.add(action: action)}, label: {
-                                Label("Add", systemImage: "plus")
+                    }) {
+                        Label("", systemImage: "plus.app.fill")
+                            .foregroundColor(.blue)
+                            .font(.largeTitle)
+                    }
+                }
+                
+                
+                // List area for all actions
+                List {
+                    Section("Available Actions") {
+                        ForEach(allActionsVM.actions, id: \.id) { action in
+                            NavigationLink(destination: ActionEditView(action: action)) {
+                                HStack {
+                                    Text(action.title)
+                                        .font(.title2)
+                                    Text(action.duration.formatted() + " min")
+                                        .font(.subheadline)
+                                        .frame(width: 40, alignment: .trailing)
+                                        .background(Color.yellow)
+                                }
+                                
+                            }
+                            .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
+                                Button (action: { selectActions.add(action: action)}, label: {
+                                    Label("Add", systemImage: "plus")
+                                })
+                                .tint(Color.yellow)
                             })
-                            .tint(Color.yellow)
-                            
-                        })
-                        
+                        }
                     }
-                }
-                .onAppear() {
-                    if !didLoadData
-                    {
-                        if allActionsVM.actions.count < 1 {
-                            allActionsVM.getData()
-                            didLoadData = true
+                    .onAppear() {
+                        if !didLoadData
+                        {
+                            if allActionsVM.actions.count < 1 {
+                                allActionsVM.getData()
+                                didLoadData = true
+                            }
+                            
                         }
                         
                     }
@@ -109,9 +112,8 @@ struct ActionListView: View {
                 }
                 
             }
-            
-            
         }
+        
     }
     
 }

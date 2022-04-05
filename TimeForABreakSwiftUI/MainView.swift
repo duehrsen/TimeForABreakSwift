@@ -23,7 +23,7 @@ struct MainView: View {
                 .tabItem {
                     Label("Action List", systemImage:"list.bullet.circle.fill")
                 }
-            OptionsView(workMinutes: tM.workTimeTotalSeconds/60, breakMinutes: tM.breakTimeTotalSeconds/60)
+            OptionsView(workMinutes: tM.workTimeTotalSeconds/60, breakMinutes: tM.breakTimeTotalSeconds/60, actionVM: allActions)
                 .tabItem {
                     Label("Options", systemImage: "gearshape.fill")
                 }

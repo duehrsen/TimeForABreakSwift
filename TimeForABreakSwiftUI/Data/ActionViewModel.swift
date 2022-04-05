@@ -58,13 +58,24 @@ class ActionViewModel: ObservableObject {
         
     }
     
-    fileprivate func saveToDisk() {
+    func saveToDisk() {
         ActionViewModel.save(actions: actions) { result in
             if case .failure(let error) = result {
                 fatalError(error.localizedDescription)
             }
         }
     }
+    
+    func restoreDefaultsToDisk() {
+        let defaultData = DataProvider.mockData()
+        actions = defaultData
+        ActionViewModel.save(actions: defaultData) { result in
+            if case .failure(let error) = result {
+                fatalError(error.localizedDescription)
+            }
+        }
+    }
+    
     
     func getData() {
         actions = DataProvider.mockData()
@@ -77,6 +88,23 @@ class ActionViewModel: ObservableObject {
     
     func move(index: IndexSet, dest: Int) {
         actions.move(fromOffsets: index, toOffset: dest)
+        saveToDisk()
+    }
+    
+    func update(id: UUID, newtitle: String, duration: Int) {
+        let newItem = BreakAction(id: id, title: newtitle, desc: "", duration: duration, category: "regular")
+        if let thisInd = actions.firstIndex(where: {$0.id == id} )
+        {
+            actions.replaceSubrange(thisInd...thisInd, with: repeatElement(newItem, count: 1))
+        }
+        saveToDisk()        
+    }
+    
+    func deleteById(id: UUID) {
+        if let thisInd = actions.firstIndex(where: {$0.id == id} )
+        {
+            actions.remove(at: thisInd)
+        }
         saveToDisk()
     }
     
