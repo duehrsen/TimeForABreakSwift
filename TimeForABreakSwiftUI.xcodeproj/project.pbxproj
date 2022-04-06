@@ -13,6 +13,7 @@
 		4EA7BD0B27F2B88500B9C348 /* ActionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA7BD0A27F2B88500B9C348 /* ActionListView.swift */; };
 		4EA7BD0E27F2B96A00B9C348 /* DataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA7BD0D27F2B96A00B9C348 /* DataProvider.swift */; };
 		4EA7BD1027F2B97A00B9C348 /* BreakAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA7BD0F27F2B97A00B9C348 /* BreakAction.swift */; };
+		4EBB467527FD6CD700B42E17 /* ThickDivider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EBB467427FD6CD700B42E17 /* ThickDivider.swift */; };
 		4EBD8DD227FA115900234307 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EBD8DD127FA115900234307 /* MainView.swift */; };
 		4EC68BA127F6D2BF00AFD70B /* OptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC68BA027F6D2BF00AFD70B /* OptionsView.swift */; };
 		4EC68BA527F6EA3E00AFD70B /* ActionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC68BA427F6EA3E00AFD70B /* ActionViewModel.swift */; };
@@ -31,6 +32,7 @@
 		4EA7BD0A27F2B88500B9C348 /* ActionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionListView.swift; sourceTree = "<group>"; };
 		4EA7BD0D27F2B96A00B9C348 /* DataProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataProvider.swift; sourceTree = "<group>"; };
 		4EA7BD0F27F2B97A00B9C348 /* BreakAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BreakAction.swift; sourceTree = "<group>"; };
+		4EBB467427FD6CD700B42E17 /* ThickDivider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThickDivider.swift; sourceTree = "<group>"; };
 		4EBD8DD127FA115900234307 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		4EC68BA027F6D2BF00AFD70B /* OptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsView.swift; sourceTree = "<group>"; };
 		4EC68BA427F6EA3E00AFD70B /* ActionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionViewModel.swift; sourceTree = "<group>"; };
@@ -112,6 +114,7 @@
 			isa = PBXGroup;
 			children = (
 				4EE2468E27EFE0C20099CE24 /* StandardButton.swift */,
+				4EBB467427FD6CD700B42E17 /* ThickDivider.swift */,
 			);
 			path = UIHelpers;
 			sourceTree = "<group>";
@@ -187,6 +190,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4EA7BD0E27F2B96A00B9C348 /* DataProvider.swift in Sources */,
+				4EBB467527FD6CD700B42E17 /* ThickDivider.swift in Sources */,
 				4EA7BD0B27F2B88500B9C348 /* ActionListView.swift in Sources */,
 				4EDAFE5727E9A53C00FFB703 /* ContentView.swift in Sources */,
 				4EC68BA127F6D2BF00AFD70B /* OptionsView.swift in Sources */,

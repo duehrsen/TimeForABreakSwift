@@ -27,7 +27,6 @@ struct MainView: View {
                 .tabItem {
                     Label("Options", systemImage: "gearshape.fill")
                 }
-
         }
         .onAppear {
             allActions.load { result in
@@ -52,6 +51,7 @@ struct MainView: View {
         .environmentObject(tM)
         .environmentObject(selectActions)
         .environmentObject(allActions)
+        .edgesIgnoringSafeArea(.bottom)
 
     }
 }

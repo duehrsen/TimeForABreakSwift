@@ -38,7 +38,6 @@ struct ActionListView: View {
     var body: some View {
         NavigationView{
             VStack {
-                
                 // Area for selected actions
                 List {
                     Section("Selected Actions") {
@@ -49,13 +48,19 @@ struct ActionListView: View {
                         .onMove(perform: selectActions.move)
                     }
                 }
+                .frame(maxHeight: (UIScreen.main.bounds.height / 5))
+                .listStyle(.plain)
+                
+                ThickDivider()
                 
                 // Input area for new actions
                 HStack {
+                    Spacer()
                     TextField("New action", text: $actionString)
-                        .frame(width: 100, height: 45, alignment: .center)
-                        .padding(.horizontal, 40)
+                        .frame(width: 180, height: 45, alignment: .center)
+                        .padding(.horizontal, 5)
                         .foregroundColor(Color.black)
+                        .border(Color.blue)
                     Stepper("\(durationValue) min", value: $durationValue, in: 1...10, step: 1) {_ in
                         
                     }
@@ -75,6 +80,8 @@ struct ActionListView: View {
                             .font(.largeTitle)
                     }
                 }
+                
+                ThickDivider()
                 
                 
                 // List area for all actions
@@ -113,6 +120,7 @@ struct ActionListView: View {
                     }
                     
                 }
+                .listStyle(.plain)
                 
             }
         }

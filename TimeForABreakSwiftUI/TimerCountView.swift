@@ -32,27 +32,27 @@ struct TimerCountView: View {
     
     var body: some View {
         
-        let diameter : CGFloat = 200
+        let diameter : CGFloat = 280
         //let outofSize : CGFloat = 10
-        let timerTextSize : CGFloat = 50
-        let playIconSize : CGFloat = 50
-        let lineWidth : CGFloat = 30
+        let timerTextSize : CGFloat = 60
+        let playIconSize : CGFloat = 80
+        let bglineWidth : CGFloat = 15
+        let tplineWidth : CGFloat = 8
         
-        VStack(spacing: 60) {
+        VStack(spacing: 25) {
             Spacer()
-            Text(tm.isWorkTime ? "Workin' time left" : "Chillin' Time Left")
-                .font(.largeTitle)
+            Text(tm.isWorkTime ? "Workin' time left" : "Chillin' Time Left").font(.largeTitle)
             Button {
                 tm.started.toggle()
             } label: {
                 ZStack {
                     Circle()
                         .trim(from: 0, to: 1)
-                        .stroke(Color.black.opacity(0.09),style: StrokeStyle(lineWidth: lineWidth, lineCap: .round))
-                        .frame(width: diameter, height: diameter)
+                        .stroke(Color.black.opacity(0.1),style: StrokeStyle(lineWidth: bglineWidth, lineCap: .round))
+                        .frame(minWidth: CGFloat(diameter * 0.7), idealWidth: diameter, maxWidth: diameter*1.2, minHeight: CGFloat(diameter * 0.7), idealHeight: diameter, maxHeight:diameter*1.2 )
                     Circle()
                         .trim(from: 0, to: tm.to)
-                        .stroke(Color.blue,style: StrokeStyle(lineWidth: lineWidth, lineCap: .round))
+                        .stroke(Color.blue.opacity(0.7),style: StrokeStyle(lineWidth: tplineWidth, lineCap: .butt))
                         .frame(width: diameter, height: diameter)
                         .rotationEffect(.init(degrees: -90))
                     VStack {
@@ -120,7 +120,7 @@ struct TimerCountView: View {
                 }
                 .onDelete(perform: selectActions.deleteAction)
                 .onMove(perform: selectActions.move)
-            }
+            }.listStyle(.plain)
             
             
         }
