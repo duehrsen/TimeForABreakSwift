@@ -53,7 +53,7 @@ struct TimerCountView: View {
                     Circle()
                         .trim(from: 0, to: tm.to)
                         .stroke(Color.blue.opacity(0.7),style: StrokeStyle(lineWidth: tplineWidth, lineCap: .butt))
-                        .frame(width: diameter, height: diameter)
+                        .frame(width: CGFloat(diameter * 0.8), height: CGFloat(diameter * 0.8))
                         .rotationEffect(.init(degrees: -90))
                     VStack {
                         Text("\(convertSecondsToTime(timeinSeconds:tm.currentTimeRemaining))")
