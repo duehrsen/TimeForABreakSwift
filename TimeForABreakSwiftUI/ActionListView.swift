@@ -61,6 +61,7 @@ struct ActionListView: View {
                         .padding(.horizontal, 5)
                         .foregroundColor(Color.black)
                         .border(Color.blue)
+                        .multilineTextAlignment(TextAlignment.center)
                     Stepper("\(durationValue) min", value: $durationValue, in: 1...10, step: 1) {_ in
                         
                     }
