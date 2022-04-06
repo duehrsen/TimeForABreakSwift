@@ -8,6 +8,7 @@
 import SwiftUI
 
 class ActionViewModel: ObservableObject {
+    
     @Published var actions : [BreakAction] = []
     
     private static func fileURL() throws -> URL {
@@ -91,8 +92,8 @@ class ActionViewModel: ObservableObject {
         saveToDisk()
     }
     
-    func update(id: UUID, newtitle: String, duration: Int) {
-        let newItem = BreakAction(id: id, title: newtitle, desc: "", duration: duration, category: "regular")
+    func update(id: UUID, newtitle: String, duration: Int, completed: Bool = false) {
+        let newItem = BreakAction(id: id, title: newtitle, desc: "", duration: duration, category: "regular", completed: completed)
         if let thisInd = actions.firstIndex(where: {$0.id == id} )
         {
             actions.replaceSubrange(thisInd...thisInd, with: repeatElement(newItem, count: 1))

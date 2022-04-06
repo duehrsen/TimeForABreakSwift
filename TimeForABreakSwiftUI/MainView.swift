@@ -33,7 +33,8 @@ struct MainView: View {
             ActionViewModel.load { result in
                 switch result {
                 case .failure( let error):
-                    fatalError(error.localizedDescription)
+                    print(error.localizedDescription)
+                    allActions.restoreDefaultsToDisk()
                 case .success(let loadedActions):
                     allActions.actions = loadedActions
                 }

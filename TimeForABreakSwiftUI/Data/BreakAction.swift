@@ -13,5 +13,7 @@ struct BreakAction : Codable, Identifiable {
     var desc : String
     var duration : Int
     var category : String
+    var completed : Bool = false
+    var date : Date?
     var linkurl : URL?
 }
