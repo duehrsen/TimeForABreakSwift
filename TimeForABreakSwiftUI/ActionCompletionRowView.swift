@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ActionCompletionRowView: View {
-    @EnvironmentObject private var vm : ActionViewModel
+    @EnvironmentObject private var vm : SelectedActionsViewModel
     @State private var isComplete: Bool = false
     let action: BreakAction
     
@@ -17,10 +17,10 @@ struct ActionCompletionRowView: View {
             Button {
                 self.toggleCompletion()
             } label: {
-                Image(systemName: isComplete ? "checkmark.circle.fill" : "circle")
+                Image(systemName: action.completed ? "checkmark.circle.fill" : "circle")
                     .resizable()
                     .frame(width: 20, height: 20)
-                    .foregroundColor(isComplete ? Color.green : Color.brown)
+                    .foregroundColor(action.completed ? Color.green : Color.brown)
             }
             Text(action.title)
                 .frame(minWidth: 100, idealWidth: 120, maxWidth: 160, alignment: .leading)

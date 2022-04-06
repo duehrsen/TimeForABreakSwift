@@ -39,7 +39,7 @@ struct ActionListView: View {
                 // Area for selected actions
                 List {
                     Section("Selected Actions") {
-                        ForEach(selectActions.selectedActions , id: \.id) { action in
+                        ForEach(selectActions.actions , id: \.id) { action in
                             actionInfo(for: action)
                         }
                         .onDelete(perform: selectActions.deleteAction)
@@ -90,7 +90,7 @@ struct ActionListView: View {
                                 
                             }
                             .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
-                                Button (action: { selectActions.add(action: action)}, label: {
+                                Button (action: { selectActions.add(action: action.title, duration: action.duration)}, label: {
                                     Label("Add", systemImage: "plus")
                                 })
                                 .tint(Color.yellow)

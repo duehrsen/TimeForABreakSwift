@@ -30,7 +30,7 @@ struct MainView: View {
 
         }
         .onAppear {
-            ActionViewModel.load { result in
+            allActions.load { result in
                 switch result {
                 case .failure( let error):
                     print(error.localizedDescription)
@@ -39,7 +39,15 @@ struct MainView: View {
                     allActions.actions = loadedActions
                 }
             }
-            
+            selectActions.load { result in
+                switch result {
+                case .failure( let error):
+                    print(error.localizedDescription)
+                    selectActions.emptyData()
+                case .success(let loadedActions):
+                    selectActions.actions = loadedActions
+                }
+            }            
         }
         .environmentObject(tM)
         .environmentObject(selectActions)

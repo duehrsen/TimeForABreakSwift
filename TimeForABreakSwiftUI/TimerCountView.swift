@@ -62,7 +62,6 @@ struct TimerCountView: View {
                         Label("", systemImage: tm.started ? "pause.fill" : "play.fill")
                             .foregroundColor(.blue)
                             .font(.system(size: playIconSize))
-                        //Text("out of \(convertSecondsToTime(timeinSeconds: tm.isWorkTime ? tm.workTimeTotalSeconds : tm.breakTimeTotalSeconds))").font(.system(size: outofSize))
                     }
                     
                 }
@@ -70,22 +69,6 @@ struct TimerCountView: View {
 
             
             HStack (spacing: 20) {
-//                Button(action: {
-//                    tm.started.toggle()
-//
-//                }) {
-//                    HStack(spacing: 15){
-//                        Image(systemName: tm.started ? "pause.fill" : "play.fill")
-//                            .foregroundColor(.white)
-//                        Text(tm.started ? "Pause" : "Play")
-//                            .foregroundColor(.white)
-//                    }
-//                    .padding(.vertical)
-//                    .frame(width: (UIScreen.main.bounds.width / 3) - 20)
-//                    .background(Color.blue)
-//                    .clipShape(Capsule())
-//                    .shadow(radius: 5)
-//                }
                 
                 Button(action: {
                     tm.currentTimeRemaining = tm.isWorkTime ? tm.workTimeTotalSeconds : tm.breakTimeTotalSeconds
@@ -130,7 +113,7 @@ struct TimerCountView: View {
                 Section("Your actions for today") {
                     
                 }
-                ForEach(selectActions.selectedActions , id: \.id) {
+                ForEach(selectActions.actions , id: \.id) {
                     item in
                         ActionCompletionRowView(action: item)
                     
