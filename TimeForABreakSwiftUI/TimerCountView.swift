@@ -14,6 +14,8 @@ struct TimerCountView: View {
     @State var time = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     @State var didAppear : Bool = false
     var defaultAction : BreakAction = BreakAction(title: "Get up!", desc: "Leave your chair", duration: 1, category: "relax")
+    
+    let cal = Calendar.current
 
     
     func convertSecondsToTime(timeinSeconds : Int) -> String {
@@ -113,7 +115,7 @@ struct TimerCountView: View {
                 Section("Your actions for today") {
                     
                 }
-                ForEach(selectActions.actions , id: \.id) {
+                ForEach(selectActions.actions.filter{cal.isDateInToday($0.date ?? Date(timeInterval: -36000, since: Date())) } , id: \.id) {
                     item in
                         ActionCompletionRowView(action: item)
                     
