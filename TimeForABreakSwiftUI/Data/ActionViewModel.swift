@@ -250,7 +250,7 @@ class SelectedActionsViewModel: ObservableObject {
     }
     
     func update(id: UUID, newtitle: String, duration: Int, completed: Bool = false) {
-        let newItem = BreakAction(id: id, title: newtitle, desc: "", duration: duration, category: "regular", completed: completed)
+        let newItem = BreakAction(id: id, title: newtitle, desc: "", duration: duration, category: "regular", completed: completed, date: Date())
         if let thisInd = actions.firstIndex(where: {$0.id == id} )
         {
             actions.replaceSubrange(thisInd...thisInd, with: repeatElement(newItem, count: 1))
