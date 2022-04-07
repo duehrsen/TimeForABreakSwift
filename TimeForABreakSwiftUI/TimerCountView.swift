@@ -34,12 +34,12 @@ struct TimerCountView: View {
     
     var body: some View {
         
-        let diameter : CGFloat = 280
+        let diameter : CGFloat = 300
         //let outofSize : CGFloat = 10
         let timerTextSize : CGFloat = 60
         let playIconSize : CGFloat = 80
-        let bglineWidth : CGFloat = 15
-        let tplineWidth : CGFloat = 8
+        let bglineWidth : CGFloat = 12
+        let tplineWidth : CGFloat = 4
         
         VStack(spacing: 25) {
             Spacer()
@@ -50,12 +50,12 @@ struct TimerCountView: View {
                 ZStack {
                     Circle()
                         .trim(from: 0, to: 1)
-                        .stroke(Color.black.opacity(0.1),style: StrokeStyle(lineWidth: bglineWidth, lineCap: .round))
+                        .stroke(Color.orange,style: StrokeStyle(lineWidth: bglineWidth, lineCap: .round))
                         .frame(minWidth: CGFloat(diameter * 0.7), idealWidth: diameter, maxWidth: diameter*1.2, minHeight: CGFloat(diameter * 0.7), idealHeight: diameter, maxHeight:diameter*1.2 )
                     Circle()
                         .trim(from: 0, to: tm.to)
-                        .stroke(Color.blue.opacity(0.7),style: StrokeStyle(lineWidth: tplineWidth, lineCap: .butt))
-                        .frame(width: CGFloat(diameter * 0.8), height: CGFloat(diameter * 0.8))
+                        .stroke(Color.blue.opacity(0.8),style: StrokeStyle(lineWidth: tplineWidth, lineCap: .butt))
+                        .frame(minWidth: CGFloat(diameter * 0.7), idealWidth: diameter, maxWidth: diameter*1.2, minHeight: CGFloat(diameter * 0.7), idealHeight: diameter, maxHeight:diameter*1.2 )
                         .rotationEffect(.init(degrees: -90))
                     VStack {
                         Text("\(convertSecondsToTime(timeinSeconds:tm.currentTimeRemaining))")
