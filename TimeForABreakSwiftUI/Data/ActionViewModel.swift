@@ -133,7 +133,7 @@ class ActionViewModel: ObservableObject {
             print("Random activity title: \(activityString)")
             if (activityString.count > 2)
             {
-                let newAction = BreakAction(title: activityString, desc: "", duration: 8, category: "external")
+                let newAction = BreakAction(title: activityString, desc: "", duration: 60, category: "external")
                 self.actions.insert(newAction, at: 0)
             }
         }

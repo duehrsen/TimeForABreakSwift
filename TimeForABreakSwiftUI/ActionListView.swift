@@ -28,10 +28,8 @@ struct ActionListView: View {
         HStack {
             Text(action.title)
                 .font(.title2)
-            Text(action.duration.formatted() + " min")
-                .font(.subheadline)
-                .frame(width: 40, alignment: .trailing)
-                .background(Color.yellow)
+                .badge(action.duration < 30 ? action.duration.formatted() + " min" : "a while")
+
         }
     }
     
@@ -90,20 +88,9 @@ struct ActionListView: View {
                     Section("Available Actions") {
                         ForEach(allActionsVM.actions, id: \.id) { action in
                             NavigationLink(destination: ActionEditView(action: action)) {
-                                HStack {
                                     Text(action.title)
                                         .font(.title2)
-                                    if (action.category == "external") {
-                                        Text("from the web")
-                                    } else {
-                                        Text(action.duration.formatted() + " min")
-                                            .font(.subheadline)
-                                            .frame(width: 40, alignment: .trailing)
-                                            .background(Color.yellow)
-                                    }
-                                    
-                                }
-                                
+                                        .badge(action.duration < 30 ? action.duration.formatted() + " min" : "a while")
                             }
                             .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
                                 Button (action: { selectActions.add(action: action.title, duration: action.duration)}, label: {
