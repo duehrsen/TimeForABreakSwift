@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Alamofire
 
 class ActionViewModel: ObservableObject {
     
@@ -122,6 +123,33 @@ class ActionViewModel: ObservableObject {
         saveToDisk()
     }
     
+    func addActivityFromApi() {
+        
+        var activityString : String = ""
+        
+        AF.request("https://www.boredapi.com/api/activity?participants=1&type=relaxation").responseDecodable(of: BoredResponse.self) { response in
+            guard let randomActivity = response.value else { return }
+            activityString = randomActivity.activity
+            print("Random activity title: \(activityString)")
+            if (activityString.count > 2)
+            {
+                let newAction = BreakAction(title: activityString, desc: "", duration: 8, category: "external")
+                self.actions.insert(newAction, at: 0)
+            }
+        }
+    
+    }
+       
+}
+
+struct BoredResponse: Decodable {
+    let activity : String
+    let type : String
+    let participants : Int
+    let price : Double
+    let link : String
+    let key : String
+    let accessibility : Double
 }
 
 class SelectedActionsViewModel: ObservableObject {

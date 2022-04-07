@@ -21,6 +21,7 @@ struct ActionCompletionRowView: View {
                     .resizable()
                     .frame(width: 20, height: 20)
                     .foregroundColor(action.completed ? Color.green : Color.brown)
+                    .padding(.trailing)
             }
             Text(action.title)
                 .frame(minWidth: 100, idealWidth: 120, maxWidth: 160, alignment: .leading)

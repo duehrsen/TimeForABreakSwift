@@ -93,10 +93,15 @@ struct ActionListView: View {
                                 HStack {
                                     Text(action.title)
                                         .font(.title2)
-                                    Text(action.duration.formatted() + " min")
-                                        .font(.subheadline)
-                                        .frame(width: 40, alignment: .trailing)
-                                        .background(Color.yellow)
+                                    if (action.category == "external") {
+                                        Text("from the web")
+                                    } else {
+                                        Text(action.duration.formatted() + " min")
+                                            .font(.subheadline)
+                                            .frame(width: 40, alignment: .trailing)
+                                            .background(Color.yellow)
+                                    }
+                                    
                                 }
                                 
                             }
