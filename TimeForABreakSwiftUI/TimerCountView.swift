@@ -50,11 +50,11 @@ struct TimerCountView: View {
                 ZStack {
                     Circle()
                         .trim(from: 0, to: 1)
-                        .stroke(Color.orange,style: StrokeStyle(lineWidth: bglineWidth, lineCap: .round))
+                        .stroke(Color.black.opacity(0.2),style: StrokeStyle(lineWidth: bglineWidth, lineCap: .round))
                         .frame(minWidth: CGFloat(diameter * 0.7), idealWidth: diameter, maxWidth: diameter*1.2, minHeight: CGFloat(diameter * 0.7), idealHeight: diameter, maxHeight:diameter*1.2 )
                     Circle()
                         .trim(from: 0, to: tm.to)
-                        .stroke(Color.blue.opacity(0.8),style: StrokeStyle(lineWidth: tplineWidth, lineCap: .butt))
+                        .stroke(Color(UIColor.systemBlue).opacity(0.8),style: StrokeStyle(lineWidth: tplineWidth, lineCap: .butt))
                         .frame(minWidth: CGFloat(diameter * 0.7), idealWidth: diameter, maxWidth: diameter*1.2, minHeight: CGFloat(diameter * 0.7), idealHeight: diameter, maxHeight:diameter*1.2 )
                         .rotationEffect(.init(degrees: -90))
                     VStack {

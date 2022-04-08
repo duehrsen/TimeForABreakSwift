@@ -49,16 +49,17 @@ struct ActionListView: View {
                 .frame(maxHeight: (UIScreen.main.bounds.height / 5))
                 .listStyle(.plain)
                 
-                ThickDivider()
+                //ThickDivider()
                 
                 // Input area for new actions
                 HStack {
                     Spacer()
                     TextField("New action", text: $actionString)
-                        .frame(width: 180, height: 45, alignment: .center)
+                        .frame(width: (UIScreen.main.bounds.width/3), height: 45, alignment: .center)
                         .padding(.horizontal, 5)
                         .foregroundColor(Color.black)
-                        .border(Color.blue)
+                        .background(Color.white)
+                        .border(Color.secondary)
                         .multilineTextAlignment(TextAlignment.center)
                     Stepper("\(durationValue) min", value: $durationValue, in: 1...10, step: 1) {_ in
                         
@@ -75,12 +76,13 @@ struct ActionListView: View {
                         
                     }) {
                         Label("", systemImage: "plus.app.fill")
-                            .foregroundColor(.blue)
+                            .foregroundColor(.white)
                             .font(.largeTitle)
                     }
                 }
+                .background(Color.secondary)
                 
-                ThickDivider()
+               // ThickDivider()
                 
                 
                 // List area for all actions

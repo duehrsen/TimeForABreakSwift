@@ -39,12 +39,12 @@ struct OptionsView: View {
                 HStack(spacing: 15){
                     Image(systemName: "rectangle.portrait.and.arrow.right")
                         .foregroundColor(.white)
-                    Text("Restore Data to default")
+                    Text("Restore default actions")
                         .fontWeight(.heavy)
                         .foregroundColor(.white)
                 }
                 .padding(.vertical)
-                .frame(width: (UIScreen.main.bounds.width - 70))
+                .frame(width: (UIScreen.main.bounds.width * 0.8))
                 .background(Color.red)
                 .clipShape(Capsule())
                 .shadow(radius: 5)

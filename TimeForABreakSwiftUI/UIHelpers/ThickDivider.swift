@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ThickDivider: View {
-    let color: Color = .blue
+    let color: Color = .secondary
     let width: CGFloat = 2
     var body: some View {
         Rectangle()
