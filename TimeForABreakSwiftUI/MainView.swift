@@ -12,6 +12,7 @@ struct MainView: View {
     @StateObject var tM = TimerModel()
     @StateObject var selectActions = SelectedActionsViewModel()
     @StateObject var allActions = ActionViewModel()
+    @StateObject private var notificationManager = NotificationManager()
     
     var body: some View {
         TabView{
@@ -30,6 +31,7 @@ struct MainView: View {
                 .tabViewStyle(.page)
         }
         .onAppear {
+            notificationManager.reloadAuthorizationStatus()
             allActions.load { result in
                 switch result {
                 case .failure( let error):
@@ -50,9 +52,23 @@ struct MainView: View {
             }
             allActions.addActivityFromApi()
         }
+        .onChange(of: notificationManager.authorizationStatus, perform: { authorizationStatus in
+            switch authorizationStatus {
+            case .notDetermined:
+                notificationManager.requestAuth()
+                print("request auth")
+            case .authorized:
+                notificationManager.reloadLocNotifications()
+                print("reload notif")
+                
+            default:
+                break
+            }
+        })
         .environmentObject(tM)
         .environmentObject(selectActions)
         .environmentObject(allActions)
+        .environmentObject(notificationManager)
         .edgesIgnoringSafeArea(.bottom)
 
     }

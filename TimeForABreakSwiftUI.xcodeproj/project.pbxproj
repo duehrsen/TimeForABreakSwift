@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4E0A660B27FBF67B00A8F0E6 /* ActionCompletionRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E0A660A27FBF67B00A8F0E6 /* ActionCompletionRowView.swift */; };
 		4E0A660D27FBFCBB00A8F0E6 /* ActionEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E0A660C27FBFCBB00A8F0E6 /* ActionEditView.swift */; };
+		4E1684EC27FFDE8400AF9990 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E1684EB27FFDE8400AF9990 /* NotificationManager.swift */; };
 		4E2FEF9F27F5533200A02DF2 /* TimerCountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2FEF9E27F5533200A02DF2 /* TimerCountView.swift */; };
 		4E95324227FE829A009DFBD4 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 4E95324127FE829A009DFBD4 /* Alamofire */; };
 		4EA7BD0B27F2B88500B9C348 /* ActionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA7BD0A27F2B88500B9C348 /* ActionListView.swift */; };
@@ -29,6 +30,7 @@
 /* Begin PBXFileReference section */
 		4E0A660A27FBF67B00A8F0E6 /* ActionCompletionRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionCompletionRowView.swift; sourceTree = "<group>"; };
 		4E0A660C27FBFCBB00A8F0E6 /* ActionEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionEditView.swift; sourceTree = "<group>"; };
+		4E1684EB27FFDE8400AF9990 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		4E2FEF9E27F5533200A02DF2 /* TimerCountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerCountView.swift; sourceTree = "<group>"; };
 		4EA7BD0A27F2B88500B9C348 /* ActionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionListView.swift; sourceTree = "<group>"; };
 		4EA7BD0D27F2B96A00B9C348 /* DataProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataProvider.swift; sourceTree = "<group>"; };
@@ -99,6 +101,7 @@
 				4EBD8DD127FA115900234307 /* MainView.swift */,
 				4E0A660A27FBF67B00A8F0E6 /* ActionCompletionRowView.swift */,
 				4E0A660C27FBFCBB00A8F0E6 /* ActionEditView.swift */,
+				4E1684EB27FFDE8400AF9990 /* NotificationManager.swift */,
 			);
 			path = TimeForABreakSwiftUI;
 			sourceTree = "<group>";
@@ -209,6 +212,7 @@
 				4EBD8DD227FA115900234307 /* MainView.swift in Sources */,
 				4EDAFE5527E9A53C00FFB703 /* TimeForABreakSwiftUIApp.swift in Sources */,
 				4EA7BD1027F2B97A00B9C348 /* BreakAction.swift in Sources */,
+				4E1684EC27FFDE8400AF9990 /* NotificationManager.swift in Sources */,
 				4E0A660D27FBFCBB00A8F0E6 /* ActionEditView.swift in Sources */,
 				4EE2468F27EFE0C20099CE24 /* StandardButton.swift in Sources */,
 			);

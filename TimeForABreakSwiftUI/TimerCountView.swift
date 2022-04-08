@@ -10,6 +10,7 @@ import SwiftUI
 struct TimerCountView: View {
     @EnvironmentObject var tm : TimerModel
     @EnvironmentObject var selectActions : SelectedActionsViewModel
+    @EnvironmentObject var notificationManager : NotificationManager
 
     @State var time = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     @State var didAppear : Bool = false
@@ -46,6 +47,20 @@ struct TimerCountView: View {
             Text(tm.isWorkTime ? "Workin' time left" : "Chillin' Time Left").font(.largeTitle)
             Button {
                 tm.started.toggle()
+                if tm.started
+                {
+                    print("Time remaining \(tm.currentTimeRemaining)")
+                    notificationManager.createLocalNotification(title: tm.isWorkTime ? "Take it easy" : "Break time's over, blaow! Snap back to reality", secondsUntilDone: tm.currentTimeRemaining) { error in
+                        if error == nil {
+                            DispatchQueue.main.async {
+                                print("notification triggered")
+                            }
+                        }
+                    }
+                } else {
+                    notificationManager.cancelAllNotifications()
+                    print("Canceled")
+                }
             } label: {
                 ZStack {
                     Circle()
@@ -130,6 +145,7 @@ struct TimerCountView: View {
             if tm.started && tm.currentTimeRemaining > 0 {
                 tm.currentTimeRemaining -= 1
                 tm.to = CGFloat(tm.currentTimeRemaining) / CGFloat(tm.isWorkTime ? tm.workTimeTotalSeconds : tm.breakTimeTotalSeconds)
+                notificationManager.printNotificationTimeIntervals()
             } else if tm.started {
                 switchTimer()
             }
@@ -141,6 +157,9 @@ struct TimerCountView: View {
                 didAppear = true
             }
             
+        }
+        .onDisappear {
+            notificationManager.reloadLocNotifications()
         }
         
     }
