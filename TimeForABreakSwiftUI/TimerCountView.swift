@@ -57,6 +57,7 @@ struct TimerCountView: View {
                             }
                         }
                     }
+                    notificationManager.reloadLocNotifications()
                 } else {
                     notificationManager.cancelAllNotifications()
                     print("Canceled")
@@ -159,7 +160,7 @@ struct TimerCountView: View {
             
         }
         .onDisappear {
-            notificationManager.reloadLocNotifications()
+            
         }
         
     }

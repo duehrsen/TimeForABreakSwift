@@ -38,7 +38,14 @@ struct MainView: View {
                     print(error.localizedDescription)
                     allActions.restoreDefaultsToDisk()
                 case .success(let loadedActions):
-                    allActions.actions = loadedActions
+                    if (loadedActions.count>0){
+                        allActions.actions = loadedActions
+                        print("Actions loaded from file")
+                    } else {
+                        allActions.restoreDefaultsToDisk()
+                        print("Default actions loaded")
+                    }
+                    
                 }
             }
             selectActions.load { result in

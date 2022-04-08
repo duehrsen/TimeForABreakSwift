@@ -41,7 +41,7 @@ final class NotificationManager : ObservableObject {
     
     func createLocalNotification(title: String, secondsUntilDone: Int, completion: @escaping (Error?)-> Void ) {
         
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10.0, repeats: false)
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(secondsUntilDone), repeats: false)
         
         let notificationContent = UNMutableNotificationContent()
         
