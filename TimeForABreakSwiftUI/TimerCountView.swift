@@ -47,21 +47,6 @@ struct TimerCountView: View {
             Text(tm.isWorkTime ? "Workin' time left" : "Chillin' Time Left").font(.largeTitle)
             Button {
                 tm.started.toggle()
-                if tm.started
-                {
-                    print("Time remaining \(tm.currentTimeRemaining)")
-                    notificationManager.createLocalNotification(title: tm.isWorkTime ? "Take it easy" : "Break time's over, blaow! Snap back to reality", secondsUntilDone: tm.currentTimeRemaining) { error in
-                        if error == nil {
-                            DispatchQueue.main.async {
-                                print("notification triggered")
-                            }
-                        }
-                    }
-                    notificationManager.reloadLocNotifications()
-                } else {
-                    notificationManager.cancelAllNotifications()
-                    print("Canceled")
-                }
             } label: {
                 ZStack {
                     Circle()

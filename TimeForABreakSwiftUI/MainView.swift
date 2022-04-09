@@ -9,6 +9,8 @@ import SwiftUI
 
 struct MainView: View {
     
+    @Environment(\.scenePhase) var scenePhase
+    
     @StateObject var tM = TimerModel()
     @StateObject var selectActions = SelectedActionsViewModel()
     @StateObject var allActions = ActionViewModel()
@@ -30,6 +32,36 @@ struct MainView: View {
                 }
                 .tabViewStyle(.page)
         }
+        .onChange(of: scenePhase, perform: { scene in
+            switch scene {
+                case .background:
+                print("App is in background")
+                tM.movingToBackground()
+                notificationManager.cancelAllNotifications()
+                if tM.started
+                {
+                    notificationManager.createLocalNotification(title: tM.isWorkTime ? "Take it easy" : "Break time's over, blaow! Snap back to reality", secondsUntilDone: tM.currentTimeRemaining) { error in
+                        if error == nil {
+                            DispatchQueue.main.async {
+                                print("notification triggered")
+                                notificationManager.reloadLocNotifications()
+                            }
+                        }
+                    }
+                    
+                }
+                
+                case .active:
+                    print("App is active")
+                    tM.movingToActive()
+                    notificationManager.cancelAllNotifications()
+                case .inactive:
+                    print("App is inactive")
+                @unknown default:
+                    print("App state is unclear")
+                }
+            }
+        )
         .onAppear {
             notificationManager.reloadAuthorizationStatus()
             allActions.load { result in
