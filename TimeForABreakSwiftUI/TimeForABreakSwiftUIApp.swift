@@ -13,8 +13,7 @@ struct TimeForABreakSwiftUIApp: App {
         WindowGroup {
             TabView {
                 MainView()
-            }
-            
+            }            
         }
     }
 }
