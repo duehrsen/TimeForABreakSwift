@@ -72,9 +72,7 @@ struct TimerCountView: View {
             HStack (spacing: 20) {
                 
                 Button(action: {
-                    tm.currentTimeRemaining = tm.isWorkTime ? tm.workTimeTotalSeconds : tm.breakTimeTotalSeconds
-                    tm.started = false
-                    tm.to = 0
+                    tm.resetTimer()
                 }) {
                     HStack(spacing: 15){
                         Image(systemName: "arrow.clockwise")
@@ -112,7 +110,7 @@ struct TimerCountView: View {
                 }
                 ForEach(selectActions.actions.filter{cal.isDateInToday($0.date ?? Date(timeInterval: -36000, since: Date())) } , id: \.id) {
                     item in
-                        ActionCompletionRowView(action: item)
+                    ActionCompletionRowView(action: item, editable: true)
                 }
                 .onDelete(perform: selectActions.deleteAction)
                 .onMove(perform: selectActions.move)

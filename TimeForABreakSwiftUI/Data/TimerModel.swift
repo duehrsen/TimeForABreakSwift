@@ -13,6 +13,10 @@ class TimerModel : ObservableObject {
     @Published var isWorkTime : Bool = true
     @Published var unfocusDate : Date = Date()
     
+    @Published var currentTimeRemaining : Int = 120    
+    @Published var binaryDescendingTime : Int = 0
+    @Published var started : Bool = false
+    
     var workTimeTotalSeconds : Int = 120 {
         willSet {
             currentTimeRemaining = workTimeTotalSeconds
@@ -31,11 +35,6 @@ class TimerModel : ObservableObject {
             objectWillChange.send()
         }
     }
-    
-    @Published var currentTimeRemaining : Int = 120
-    
-    @Published var binaryDescendingTime : Int = 0
-    @Published var started : Bool = false
     
     func movingToBackground(){
         if started
@@ -67,6 +66,12 @@ class TimerModel : ObservableObject {
             currentTimeRemaining = workTimeTotalSeconds
             started = false
         }
+    }
+    
+    func resetTimer() {
+        currentTimeRemaining = isWorkTime ? workTimeTotalSeconds : breakTimeTotalSeconds
+        started = false
+        to = 1
     }
                   
     

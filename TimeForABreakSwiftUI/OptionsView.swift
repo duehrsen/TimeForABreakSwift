@@ -21,14 +21,14 @@ struct OptionsView: View {
             Text("Work time")
                 .font(.title2)
             Stepper("\(workMinutes) minutes", value: $tM.workTimeTotalSeconds, in: 0...4000, step: 60) {_ in
-
+                tM.resetTimer()
             }
             .frame(width: 200)
             
             Text("Break time")
                 .font(.title2)
             Stepper("\(breakMinutes) minutes", value: $tM.breakTimeTotalSeconds, in: 0...1000, step: 60) {_ in
-                
+                tM.resetTimer()
             }
             .frame(width: 200)
             Spacer()

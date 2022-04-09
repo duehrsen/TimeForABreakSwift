@@ -248,7 +248,7 @@ class SelectedActionsViewModel: ObservableObject {
         saveToDisk()
     }
     
-    func update(id: UUID, newtitle: String, duration: Int, completed: Bool = false) {
+    func update(id: UUID, newtitle: String, duration: Int, completed: Bool = false, date: Date = Date()) {
         let newItem = BreakAction(id: id, title: newtitle, desc: "", duration: duration, category: "regular", completed: completed, date: Date())
         if let thisInd = actions.firstIndex(where: {$0.id == id} )
         {

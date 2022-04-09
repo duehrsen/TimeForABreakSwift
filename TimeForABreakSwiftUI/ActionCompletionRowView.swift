@@ -11,11 +11,14 @@ struct ActionCompletionRowView: View {
     @EnvironmentObject private var vm : SelectedActionsViewModel
     @State private var isComplete: Bool = false
     let action: BreakAction
+    let editable : Bool
     
     var body: some View {
         HStack(spacing: 6) {
             Button {
-                self.toggleCompletion()
+                if editable {
+                    self.toggleCompletion()
+                }                 
             } label: {
                 Image(systemName: action.completed ? "checkmark.circle.fill" : "circle")
                     .resizable()

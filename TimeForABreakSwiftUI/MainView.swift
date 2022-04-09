@@ -26,6 +26,10 @@ struct MainView: View {
                 .tabItem {
                     Label("Action List", systemImage:"list.bullet.circle.fill")
                 }
+            SummaryView()
+                .tabItem {
+                    Label("Summary", systemImage: "clock.badge.checkmark.fill")
+                }
             OptionsView(workMinutes: tM.workTimeTotalSeconds/60, breakMinutes: tM.breakTimeTotalSeconds/60, actionVM: allActions)
                 .tabItem {
                     Label("Options", systemImage: "gearshape.fill")
