@@ -19,7 +19,7 @@ struct SummaryView: View {
             List {
                 Section("Look at what you did yesterday") {
                 }
-                ForEach(selectActions.actions.filter{cal.isDateInToday($0.date ?? Date(timeInterval: -36000, since: Date())) && $0.completed} , id: \.id) {
+                ForEach(selectActions.actions.filter{cal.isDateInYesterday($0.date ?? Date(timeInterval: -36000, since: Date())) && $0.completed} , id: \.id) {
                     item in
                         ActionCompletionRowView(action: item, editable: false)
                 }
