@@ -117,7 +117,6 @@ class ActionViewModel: ObservableObject {
     }
     
     func add(action: String = "", duration: Int = 5) {
-        print("Adding default action with action title \(action) and duration \(duration)")
         let newAction = BreakAction(title: action, desc: action, duration: duration, category: "regular")
         actions.insert(newAction, at: 0)
         saveToDisk()
@@ -267,7 +266,6 @@ class SelectedActionsViewModel: ObservableObject {
     }
     
     func add(action: String = "", duration: Int = 5, date: Date = Date()) {
-        print("Adding default action with action title \(action) and duration \(duration)")
         let newAction = BreakAction(title: action, desc: action, duration: duration, category: "regular", date: date)
         actions.insert(newAction, at: 0)
         saveToDisk()

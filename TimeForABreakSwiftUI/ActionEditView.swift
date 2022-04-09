@@ -38,7 +38,6 @@ struct ActionEditView: View {
             HStack {
                 Button {
                     vm.update(id: action.id, newtitle: actionTitle, duration: actionDuration)
-                    print(vm.actions.filter{ $0.id == action.id }[0].title)
                 } label: {
                     HStack {
                         Text("Save")

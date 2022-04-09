@@ -51,9 +51,6 @@ class TimerModel : ObservableObject {
         {
             return
         }
-        print("unfocus date \(unfocusDate)")
-        print("current date \(Date())")
-        print("time diff \(Int(Date().timeIntervalSince(unfocusDate)))")
         let timeInterval: Int = Int(Date().timeIntervalSince(unfocusDate))
         let timeDiff : Int = currentTimeRemaining - timeInterval
         

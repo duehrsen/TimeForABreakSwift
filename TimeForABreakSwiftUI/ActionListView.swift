@@ -20,7 +20,6 @@ struct ActionListView: View {
     
     let cal = Calendar.current
     
-    
     var defaultAction : BreakAction = BreakAction(title: "Get up!", desc: "Leave your chair", duration: 1, category: "relax")
     
     @ViewBuilder
@@ -48,9 +47,7 @@ struct ActionListView: View {
                 }
                 .frame(maxHeight: (UIScreen.main.bounds.height / 5))
                 .listStyle(.plain)
-                
-                //ThickDivider()
-                
+            
                 // Input area for new actions
                 HStack {
                     Spacer()
@@ -62,7 +59,6 @@ struct ActionListView: View {
                         .border(Color.secondary)
                         .multilineTextAlignment(TextAlignment.center)
                     Stepper("\(durationValue) min", value: $durationValue, in: 1...10, step: 1) {_ in
-                        
                     }
                     
                     Button(action: {
@@ -73,7 +69,6 @@ struct ActionListView: View {
                             actionString = ""
                             durationValue = defaultTime
                         }
-                        
                     }) {
                         Label("", systemImage: "plus.app.fill")
                             .foregroundColor(.white)
@@ -81,9 +76,6 @@ struct ActionListView: View {
                     }
                 }
                 .background(Color.secondary)
-                
-               // ThickDivider()
-                
                 
                 // List area for all actions
                 List {
@@ -109,17 +101,11 @@ struct ActionListView: View {
                                 allActionsVM.getData()
                                 didLoadData = true
                             }
-                            
                         }
-                        
                     }
-                    
                 }
                 .listStyle(.plain)
-                
             }
         }
-        
     }
-    
 }

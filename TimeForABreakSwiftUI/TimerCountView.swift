@@ -17,7 +17,6 @@ struct TimerCountView: View {
     var defaultAction : BreakAction = BreakAction(title: "Get up!", desc: "Leave your chair", duration: 1, category: "relax")
     
     let cal = Calendar.current
-
     
     func convertSecondsToTime(timeinSeconds : Int) -> String {
         let minutes = timeinSeconds / 60
@@ -27,7 +26,7 @@ struct TimerCountView: View {
     }
     
     fileprivate func switchTimer() {
-        tm.started.toggle()
+        tm.started = false
         tm.isWorkTime.toggle()
         tm.currentTimeRemaining =  tm.isWorkTime ? tm.workTimeTotalSeconds : tm.breakTimeTotalSeconds
         tm.to = CGFloat(tm.currentTimeRemaining) / CGFloat(tm.isWorkTime ? tm.workTimeTotalSeconds : tm.breakTimeTotalSeconds)
@@ -65,8 +64,7 @@ struct TimerCountView: View {
                         Label("", systemImage: tm.started ? "pause.fill" : "play.fill")
                             .foregroundColor(.blue)
                             .font(.system(size: playIconSize))
-                    }
-                    
+                    }                    
                 }
             }
 
@@ -77,7 +75,6 @@ struct TimerCountView: View {
                     tm.currentTimeRemaining = tm.isWorkTime ? tm.workTimeTotalSeconds : tm.breakTimeTotalSeconds
                     tm.started = true
                     tm.to = 0
-                    
                 }) {
                     HStack(spacing: 15){
                         Image(systemName: "arrow.clockwise")
@@ -107,35 +104,25 @@ struct TimerCountView: View {
                     .background(Color.green)
                     .clipShape(Capsule())
                     .shadow(radius: 5)
-                    
                 }
-                
             }
             
             List {
                 Section("Your actions for today") {
-                    
                 }
                 ForEach(selectActions.actions.filter{cal.isDateInToday($0.date ?? Date(timeInterval: -36000, since: Date())) } , id: \.id) {
                     item in
                         ActionCompletionRowView(action: item)
-                    
                 }
                 .onDelete(perform: selectActions.deleteAction)
                 .onMove(perform: selectActions.move)
             }.listStyle(.plain)
-            
-            
         }
         .onReceive(self.time) { (_) in
             if tm.started && tm.currentTimeRemaining > 0 {
                 tm.currentTimeRemaining -= 1
                 tm.to = CGFloat(tm.currentTimeRemaining) / CGFloat(tm.isWorkTime ? tm.workTimeTotalSeconds : tm.breakTimeTotalSeconds)
-                notificationManager.printNotificationTimeIntervals()
-            } else if tm.started {
-                switchTimer()
             }
-            
         }
         .onAppear {
             if !didAppear {
@@ -143,11 +130,7 @@ struct TimerCountView: View {
                 didAppear = true
             }
             
-        }
-        .onDisappear {
-            
-        }
-        
+        }        
     }
 }
 

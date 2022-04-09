@@ -33,7 +33,6 @@ struct ActionCompletionRowView: View {
     private func toggleCompletion() {
         isComplete.toggle()
         vm.update(id: action.id, newtitle: action.title, duration: action.duration, completed: isComplete)
-        print("Current state of \(action.title) is \(isComplete ? "" : "not") completed")
     }
 }
 
