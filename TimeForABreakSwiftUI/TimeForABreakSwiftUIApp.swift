@@ -11,9 +11,7 @@ import SwiftUI
 struct TimeForABreakSwiftUIApp: App {
     var body: some Scene {
         WindowGroup {
-            TabView {
                 MainView()
-            }            
         }
     }
 }

@@ -39,13 +39,14 @@ final class NotificationManager : ObservableObject {
         }
     }
     
-    func createLocalNotification(title: String, secondsUntilDone: Int, completion: @escaping (Error?)-> Void ) {
+    func createLocalNotification(title: String, body: String, secondsUntilDone: Int, completion: @escaping (Error?)-> Void ) {
         
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(secondsUntilDone), repeats: false)
         
         let notificationContent = UNMutableNotificationContent()
         
         notificationContent.title = title
+        notificationContent.body = body
         notificationContent.sound = UNNotificationSound.default
         
         let request = UNNotificationRequest(identifier: "timeIntervalLapsed", content: notificationContent, trigger: trigger)

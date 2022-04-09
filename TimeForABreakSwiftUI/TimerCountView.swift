@@ -73,7 +73,7 @@ struct TimerCountView: View {
                 
                 Button(action: {
                     tm.currentTimeRemaining = tm.isWorkTime ? tm.workTimeTotalSeconds : tm.breakTimeTotalSeconds
-                    tm.started = true
+                    tm.started = false
                     tm.to = 0
                 }) {
                     HStack(spacing: 15){

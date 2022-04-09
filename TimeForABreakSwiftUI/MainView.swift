@@ -40,7 +40,10 @@ struct MainView: View {
                 notificationManager.cancelAllNotifications()
                 if tM.started
                 {
-                    notificationManager.createLocalNotification(title: tM.isWorkTime ? "Take it easy" : "Break time's over, blaow! Snap back to reality", secondsUntilDone: tM.currentTimeRemaining) { error in
+                    notificationManager.createLocalNotification(
+                        title: tM.isWorkTime ? "Work time's up!" : "Break time's over, blaow",
+                        body: tM.isWorkTime ? "You deserve a break, doncha?" : "Snap back to reality",
+                        secondsUntilDone: tM.currentTimeRemaining) { error in
                         if error == nil {
                             DispatchQueue.main.async {
                                 print("notification triggered")
