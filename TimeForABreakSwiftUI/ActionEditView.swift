@@ -29,7 +29,7 @@ struct ActionEditView: View {
                 Text("Action duration")
                     .foregroundColor(.gray)
                 
-                Stepper("\(actionDuration) min", value: $actionDuration, in: 1...10, step: 1) {_ in
+                Stepper("\(actionDuration) min", value: $actionDuration, in: 1...60, step: 1) {_ in
                 }
                 
                 Divider()
