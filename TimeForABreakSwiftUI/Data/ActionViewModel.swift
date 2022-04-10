@@ -220,8 +220,14 @@ class SelectedActionsViewModel: ObservableObject {
     }
     
     func restoreDefaultsToDisk() {
+        actions = []
         let defaultData = DataProvider.mockData()
         actions = defaultData
+        self.save(actions: []) { result in
+            if case .failure(let error) = result {
+                fatalError(error.localizedDescription)
+            }
+        }
         self.save(actions: defaultData) { result in
             if case .failure(let error) = result {
                 fatalError(error.localizedDescription)
