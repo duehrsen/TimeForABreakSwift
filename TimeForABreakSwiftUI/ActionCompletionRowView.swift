@@ -27,7 +27,6 @@ struct ActionCompletionRowView: View {
                     .padding(.trailing)
             }
             Text(action.title)
-                .frame(minWidth: 100, idealWidth: 120, maxWidth: 160, alignment: .leading)
                 .font(.title2)
                 .badge(action.duration < 30 ? action.duration.formatted() + " min" : "a while")
         }

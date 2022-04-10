@@ -27,6 +27,7 @@
 		4EE2468F27EFE0C20099CE24 /* StandardButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE2468E27EFE0C20099CE24 /* StandardButton.swift */; };
 		4EE2469627F0454C0099CE24 /* TimerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE2469527F0454C0099CE24 /* TimerModel.swift */; };
 		4EE9FB7D2802876B00D0F02D /* NewDayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE9FB7C2802876B00D0F02D /* NewDayView.swift */; };
+		4EE9FB7F2802A3C500D0F02D /* SimpleActionRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE9FB7E2802A3C500D0F02D /* SimpleActionRowView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +51,7 @@
 		4EE2468E27EFE0C20099CE24 /* StandardButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardButton.swift; sourceTree = "<group>"; };
 		4EE2469527F0454C0099CE24 /* TimerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerModel.swift; sourceTree = "<group>"; };
 		4EE9FB7C2802876B00D0F02D /* NewDayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewDayView.swift; sourceTree = "<group>"; };
+		4EE9FB7E2802A3C500D0F02D /* SimpleActionRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleActionRowView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +106,7 @@
 				4EC68BA027F6D2BF00AFD70B /* OptionsView.swift */,
 				4EDAFE5A27E9A53D00FFB703 /* Preview Content */,
 				4E0A660A27FBF67B00A8F0E6 /* ActionCompletionRowView.swift */,
+				4EE9FB7E2802A3C500D0F02D /* SimpleActionRowView.swift */,
 				4E0A660C27FBFCBB00A8F0E6 /* ActionEditView.swift */,
 				4E1684EB27FFDE8400AF9990 /* NotificationManager.swift */,
 				4E74E0722801514B0094CE5D /* SummaryView.swift */,
@@ -223,6 +226,7 @@
 				4E1684EC27FFDE8400AF9990 /* NotificationManager.swift in Sources */,
 				4E0A660D27FBFCBB00A8F0E6 /* ActionEditView.swift in Sources */,
 				4EE2468F27EFE0C20099CE24 /* StandardButton.swift in Sources */,
+				4EE9FB7F2802A3C500D0F02D /* SimpleActionRowView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

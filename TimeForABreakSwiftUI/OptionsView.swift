@@ -16,7 +16,6 @@ struct OptionsView: View {
     var body: some View {
         VStack {
             Text("App Options")
-                .font(.largeTitle)
             Spacer()
             Text("Work time")
                 .font(.title2)

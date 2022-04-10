@@ -15,16 +15,21 @@ struct SummaryView: View {
     
     var body: some View {
         VStack{
-            Text("Action Summary")
+            Text("What you've been up to lately")
             List {
-                Section("Look at what you did yesterday") {
+                Section("Today") {
                 }
-                ForEach(selectActions.actions.filter{cal.isDateInYesterday($0.date ?? Date(timeInterval: -36000, since: Date())) && $0.completed} , id: \.id) {
+                ForEach(selectActions.actions.filter{cal.isDateInToday($0.date ?? Date(timeInterval: -36000, since: Date()))} , id: \.id) {
                     item in
-                        ActionCompletionRowView(action: item, editable: false)
+                        SimpleActionRowView(action: item)
                 }
-            }.listStyle(.plain)
-            
+                Section("Yesterday") {
+                }
+                ForEach(selectActions.actions.filter{cal.isDateInYesterday($0.date ?? Date(timeInterval: -36000, since: Date()))} , id: \.id) {
+                    item in
+                        SimpleActionRowView(action: item)
+                }
+            }.listStyle(.insetGrouped)
         }
        
     }
