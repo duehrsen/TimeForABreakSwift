@@ -95,9 +95,16 @@ struct ActionListView: View {
                             }
                             .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
                                 Button (action: { selectActions.add(action: action.title, duration: action.duration)}, label: {
-                                    Label("Add", systemImage: "plus")
+                                    Text("Add to Selected Actions")
+                                    //Label("Add to Selected Actions", systemImage: "plus.square.fill")
                                 })
-                                .tint(Color.yellow)
+                                .tint(Color.green)
+                            })
+                            .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
+                                Button (role: .destructive, action: { selectActions.add(action: action.title, duration: action.duration)}, label: {
+                                    Text("Remove from Available Actions")
+                                    //Label("Remove from Available Actions", systemImage: "trash.fill")
+                                })
                             })
                         }
                     }
