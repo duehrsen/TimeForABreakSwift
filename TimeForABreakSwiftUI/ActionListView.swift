@@ -24,12 +24,20 @@ struct ActionListView: View {
     
     @ViewBuilder
     func actionInfo(for action: BreakAction) -> some View {
-        HStack {
-            Text(action.title)
-                .font(.title2)
-                .badge(action.duration < 30 ? action.duration.formatted() + " min" : "a while")
-
+        Button {
+            togglePinned(action: action)
+        } label: {
+            HStack {
+                Text(action.title)
+                    .font(.title2)
+                Spacer()
+                Label("", systemImage: action.pinned ? "pin.fill" : "pin.slash")
+            }
         }
+    }
+    
+    func togglePinned(action: BreakAction) {
+        selectActions.pinToggle(action: action)
     }
     
     var body: some View {
@@ -38,16 +46,15 @@ struct ActionListView: View {
                 // Area for selected actions
                 List {
                     Section("Selected Actions") {
-                        ForEach(selectActions.actions.filter{cal.isDateInToday($0.date ?? Date(timeInterval: -36000, since: Date())) }, id: \.id) { action in
+                        ForEach(selectActions.actions.filter{cal.isDateInToday($0.date ?? Date(timeInterval: -36000, since: Date())) || $0.pinned }, id: \.id) { action in
                             actionInfo(for: action)
                         }
                         .onDelete(perform: selectActions.deleteAction)
-                        .onMove(perform: selectActions.move)
                     }
                 }
                 .frame(maxHeight: (UIScreen.main.bounds.height / 5))
                 .listStyle(.plain)
-            
+                
                 // Input area for new actions
                 HStack {
                     Spacer()
@@ -82,9 +89,9 @@ struct ActionListView: View {
                     Section("Available Actions") {
                         ForEach(allActionsVM.actions, id: \.id) { action in
                             NavigationLink(destination: ActionEditView(action: action)) {
-                                    Text(action.title)
-                                        .font(.title2)
-                                        .badge(action.duration < 30 ? action.duration.formatted() + " min" : "a while")
+                                Text(action.title)
+                                    .font(.title2)
+                                    .badge(action.duration < 30 ? action.duration.formatted() + " min" : "a while")
                             }
                             .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
                                 Button (action: { selectActions.add(action: action.title, duration: action.duration)}, label: {

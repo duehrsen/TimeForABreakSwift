@@ -16,4 +16,5 @@ struct BreakAction : Codable, Identifiable {
     var completed : Bool = false
     var date : Date?
     var linkurl : URL?
+    var pinned: Bool = false
 }

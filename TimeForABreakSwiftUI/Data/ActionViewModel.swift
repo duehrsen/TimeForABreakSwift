@@ -263,6 +263,16 @@ class SelectedActionsViewModel: ObservableObject {
         saveToDisk()
     }
     
+    func pinToggle(action: BreakAction) {
+        var updateAction = action
+        updateAction.pinned = !action.pinned
+        if let thisInd = actions.firstIndex(where: {$0.id == updateAction.id} )
+        {
+            actions.replaceSubrange(thisInd...thisInd, with: repeatElement(updateAction, count: 1))
+        }
+        saveToDisk()
+    }
+    
     func deleteById(id: UUID) {
         if let thisInd = actions.firstIndex(where: {$0.id == id} )
         {

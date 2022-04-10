@@ -26,6 +26,7 @@
 		4EDAFE5C27E9A53D00FFB703 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4EDAFE5B27E9A53D00FFB703 /* Preview Assets.xcassets */; };
 		4EE2468F27EFE0C20099CE24 /* StandardButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE2468E27EFE0C20099CE24 /* StandardButton.swift */; };
 		4EE2469627F0454C0099CE24 /* TimerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE2469527F0454C0099CE24 /* TimerModel.swift */; };
+		4EE9FB7D2802876B00D0F02D /* NewDayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE9FB7C2802876B00D0F02D /* NewDayView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +49,7 @@
 		4EDAFE5B27E9A53D00FFB703 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		4EE2468E27EFE0C20099CE24 /* StandardButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StandardButton.swift; sourceTree = "<group>"; };
 		4EE2469527F0454C0099CE24 /* TimerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerModel.swift; sourceTree = "<group>"; };
+		4EE9FB7C2802876B00D0F02D /* NewDayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewDayView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +107,7 @@
 				4E0A660C27FBFCBB00A8F0E6 /* ActionEditView.swift */,
 				4E1684EB27FFDE8400AF9990 /* NotificationManager.swift */,
 				4E74E0722801514B0094CE5D /* SummaryView.swift */,
+				4EE9FB7C2802876B00D0F02D /* NewDayView.swift */,
 			);
 			path = TimeForABreakSwiftUI;
 			sourceTree = "<group>";
@@ -209,6 +212,7 @@
 				4EDAFE5727E9A53C00FFB703 /* ContentView.swift in Sources */,
 				4EC68BA127F6D2BF00AFD70B /* OptionsView.swift in Sources */,
 				4E74E0732801514B0094CE5D /* SummaryView.swift in Sources */,
+				4EE9FB7D2802876B00D0F02D /* NewDayView.swift in Sources */,
 				4EC68BA527F6EA3E00AFD70B /* ActionViewModel.swift in Sources */,
 				4E0A660B27FBF67B00A8F0E6 /* ActionCompletionRowView.swift in Sources */,
 				4EE2469627F0454C0099CE24 /* TimerModel.swift in Sources */,

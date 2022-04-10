@@ -18,7 +18,7 @@ struct ActionCompletionRowView: View {
             Button {
                 if editable {
                     self.toggleCompletion()
-                }                 
+                }
             } label: {
                 Image(systemName: action.completed ? "checkmark.circle.fill" : "circle")
                     .resizable()
@@ -38,9 +38,3 @@ struct ActionCompletionRowView: View {
         vm.update(id: action.id, newtitle: action.title, duration: action.duration, completed: isComplete)
     }
 }
-
-//struct ActionCompletionRowView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ActionCompletionRowView(action: BreakAction)
-//    }
-//}
