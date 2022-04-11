@@ -11,9 +11,12 @@ struct TimerCountView: View {
     @EnvironmentObject var tm : TimerModel
     @EnvironmentObject var selectActions : SelectedActionsViewModel
     @EnvironmentObject var notificationManager : NotificationManager
+    @Environment(\.colorScheme) var colorScheme
 
-    @State var time = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-    @State var didAppear : Bool = false
+    @State private var time = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    @State private var didAppear : Bool = false
+    @State private var showingSheet : Bool = false
+    
     var defaultAction : BreakAction = BreakAction(title: "Get up!", desc: "Leave your chair", duration: 1, category: "relax")
     
     let cal = Calendar.current
@@ -34,16 +37,15 @@ struct TimerCountView: View {
     
     var body: some View {
         
-        let diameter : CGFloat = 300
+        let diameter : CGFloat = 225
         //let outofSize : CGFloat = 10
         let timerTextSize : CGFloat = 60
-        let playIconSize : CGFloat = 80
+        let playIconSize : CGFloat = 40
         let bglineWidth : CGFloat = 12
         let tplineWidth : CGFloat = 4
         
         VStack(spacing: 25) {
-            Spacer()
-            Text(tm.isWorkTime ? "Workin' time left" : "Chillin' Time Left").font(.largeTitle)
+            //Text(tm.isWorkTime ? "Work time left" : "Break Time Left").font(.title)
             Button {
                 tm.started.toggle()
             } label: {
@@ -52,12 +54,17 @@ struct TimerCountView: View {
                         .trim(from: 0, to: 1)
                         .stroke(Color.black.opacity(0.2),style: StrokeStyle(lineWidth: bglineWidth, lineCap: .round))
                         .frame(minWidth: CGFloat(diameter * 0.7), idealWidth: diameter, maxWidth: diameter*1.2, minHeight: CGFloat(diameter * 0.7), idealHeight: diameter, maxHeight:diameter*1.2 )
+                    
                     Circle()
                         .trim(from: 0, to: tm.to)
                         .stroke(Color(UIColor.systemBlue).opacity(0.8),style: StrokeStyle(lineWidth: tplineWidth, lineCap: .butt))
                         .frame(minWidth: CGFloat(diameter * 0.7), idealWidth: diameter, maxWidth: diameter*1.2, minHeight: CGFloat(diameter * 0.7), idealHeight: diameter, maxHeight:diameter*1.2 )
                         .rotationEffect(.init(degrees: -90))
                     VStack {
+                        Label("", systemImage: tm.isWorkTime ? "brain" : "cup.and.saucer.fill")
+                            .font(.system(size: diameter/3))
+                            .opacity(0.8)
+                            .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
                         Text("\(convertSecondsToTime(timeinSeconds:tm.currentTimeRemaining))")
                             .font(.system(size: timerTextSize))
                             .fontWeight(.bold)
@@ -69,8 +76,8 @@ struct TimerCountView: View {
             }
 
             
-            HStack (spacing: 20) {
-                
+            VStack() {
+                HStack(spacing: 10) {
                 Button(action: {
                     tm.resetTimer()
                 }) {
@@ -79,9 +86,10 @@ struct TimerCountView: View {
                             .foregroundColor(.white)
                         Text("Restart")
                             .foregroundColor(.white)
+                            .font(.caption)
                     }
-                    .padding(.vertical)
-                    .frame(width: (UIScreen.main.bounds.width / 2) - 55)
+                    .padding()
+                    //.frame(width: UIScreen.main.bounds.width - 40)
                     .background(Color.blue)
                     .clipShape(Capsule())
                     .shadow(radius: 5)
@@ -89,33 +97,56 @@ struct TimerCountView: View {
                 }
                 
                 Button(action: {
-                    switchTimer()                    
+                    switchTimer()
                 }) {
                     HStack(spacing: 15){
-                        Image(systemName: "rectangle.portrait.and.arrow.right")
+                        Image(systemName: tm.isWorkTime ? "cup.and.saucer.fill": "brain")
                             .foregroundColor(.white)
-                        Text("To " + (tm.isWorkTime ? "Break" : "Work"))
+                        Text("Switch")
                             .foregroundColor(.white)
+                            .font(.caption)
                     }
-                    .padding(.vertical)
-                    .frame(width: (UIScreen.main.bounds.width / 2) - 55)
-                    .background(Color.green)
+                    .padding()
+                    //.frame(width: UIScreen.main.bounds.width - 40)
+                    .background(Color.orange)
                     .clipShape(Capsule())
                     .shadow(radius: 5)
                 }
             }
-            
-            List {
-                Section("Your actions for today") {
-                }
-                ForEach(selectActions.actions.filter{cal.isDateInToday($0.date ?? Date(timeInterval: -36000, since: Date())) } , id: \.id) {
-                    item in
-                    ActionCompletionRowView(action: item, editable: true)
-                }
-                .onDelete(perform: selectActions.deleteAction)
-                .onMove(perform: selectActions.move)
-            }.listStyle(.plain)
         }
+            
+            Button(action: {
+                showingSheet.toggle()
+            }) {
+                HStack(spacing: 15){
+                    Image(systemName: "eyes.inverse")
+                        .foregroundColor(.white)
+                    Text("Show Actions")
+                        .foregroundColor(.white)
+                        .font(.caption)
+                }
+                .padding()
+                //.frame(width: UIScreen.main.bounds.width - 40)
+                .background(Color.green)
+                .clipShape(Capsule())
+                .shadow(radius: 5)
+            }
+        }
+            
+//            List {
+//                Section("Your actions for today") {
+//                }
+//                ForEach(selectActions.actions.filter{cal.isDateInToday($0.date ?? Date(timeInterval: -36000, since: Date())) } , id: \.id) {
+//                    item in
+//                    ActionCompletionRowView(action: item, editable: true)
+//                }
+//                .onDelete(perform: selectActions.deleteAction)
+//                .onMove(perform: selectActions.move)
+//            }.listStyle(.plain)
+//        }
+        .sheet(isPresented: $showingSheet, content: {
+            SelectedActionsSheetView()
+        })
         .onReceive(self.time) { (_) in
             if tm.started && tm.currentTimeRemaining > 0 {
                 tm.currentTimeRemaining -= 1
@@ -129,11 +160,5 @@ struct TimerCountView: View {
             }
             
         }        
-    }
-}
-
-struct TimerCountView_Previews: PreviewProvider {
-    static var previews: some View {
-        TimerCountView()
     }
 }

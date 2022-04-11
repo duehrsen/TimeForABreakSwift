@@ -12,11 +12,15 @@
 		4E1684EC27FFDE8400AF9990 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E1684EB27FFDE8400AF9990 /* NotificationManager.swift */; };
 		4E2FEF9F27F5533200A02DF2 /* TimerCountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2FEF9E27F5533200A02DF2 /* TimerCountView.swift */; };
 		4E74E0732801514B0094CE5D /* SummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E74E0722801514B0094CE5D /* SummaryView.swift */; };
+		4E8A32902803C3CA0078AAF0 /* SelectedActionsSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8A328F2803C3CA0078AAF0 /* SelectedActionsSheetView.swift */; };
+		4E8A32922803E7180078AAF0 /* AvailableActionsSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8A32912803E7180078AAF0 /* AvailableActionsSheetView.swift */; };
+		4E8A32962804096F0078AAF0 /* ActionCreateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8A32952804096F0078AAF0 /* ActionCreateView.swift */; };
+		4E8A32A8280423600078AAF0 /* FlatWideButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8A32A4280423600078AAF0 /* FlatWideButtonStyle.swift */; };
+		4E8A32AD280423820078AAF0 /* ThickDivider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8A32AC280423820078AAF0 /* ThickDivider.swift */; };
 		4E95324227FE829A009DFBD4 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 4E95324127FE829A009DFBD4 /* Alamofire */; };
 		4EA7BD0B27F2B88500B9C348 /* ActionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA7BD0A27F2B88500B9C348 /* ActionListView.swift */; };
 		4EA7BD0E27F2B96A00B9C348 /* DataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA7BD0D27F2B96A00B9C348 /* DataProvider.swift */; };
 		4EA7BD1027F2B97A00B9C348 /* BreakAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA7BD0F27F2B97A00B9C348 /* BreakAction.swift */; };
-		4EBB467527FD6CD700B42E17 /* ThickDivider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EBB467427FD6CD700B42E17 /* ThickDivider.swift */; };
 		4EBD8DD227FA115900234307 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EBD8DD127FA115900234307 /* MainView.swift */; };
 		4EC68BA127F6D2BF00AFD70B /* OptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC68BA027F6D2BF00AFD70B /* OptionsView.swift */; };
 		4EC68BA527F6EA3E00AFD70B /* ActionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC68BA427F6EA3E00AFD70B /* ActionViewModel.swift */; };
@@ -35,10 +39,14 @@
 		4E1684EB27FFDE8400AF9990 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		4E2FEF9E27F5533200A02DF2 /* TimerCountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerCountView.swift; sourceTree = "<group>"; };
 		4E74E0722801514B0094CE5D /* SummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryView.swift; sourceTree = "<group>"; };
+		4E8A328F2803C3CA0078AAF0 /* SelectedActionsSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedActionsSheetView.swift; sourceTree = "<group>"; };
+		4E8A32912803E7180078AAF0 /* AvailableActionsSheetView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AvailableActionsSheetView.swift; sourceTree = "<group>"; };
+		4E8A32952804096F0078AAF0 /* ActionCreateView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionCreateView.swift; sourceTree = "<group>"; };
+		4E8A32A4280423600078AAF0 /* FlatWideButtonStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlatWideButtonStyle.swift; sourceTree = "<group>"; };
+		4E8A32AC280423820078AAF0 /* ThickDivider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThickDivider.swift; sourceTree = "<group>"; };
 		4EA7BD0A27F2B88500B9C348 /* ActionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionListView.swift; sourceTree = "<group>"; };
 		4EA7BD0D27F2B96A00B9C348 /* DataProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataProvider.swift; sourceTree = "<group>"; };
 		4EA7BD0F27F2B97A00B9C348 /* BreakAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BreakAction.swift; sourceTree = "<group>"; };
-		4EBB467427FD6CD700B42E17 /* ThickDivider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThickDivider.swift; sourceTree = "<group>"; };
 		4EBD8DD127FA115900234307 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		4EC68BA027F6D2BF00AFD70B /* OptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsView.swift; sourceTree = "<group>"; };
 		4EC68BA427F6EA3E00AFD70B /* ActionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionViewModel.swift; sourceTree = "<group>"; };
@@ -64,6 +72,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4E8A329928041E260078AAF0 /* Subviews */ = {
+			isa = PBXGroup;
+			children = (
+				4E8A32912803E7180078AAF0 /* AvailableActionsSheetView.swift */,
+				4E8A328F2803C3CA0078AAF0 /* SelectedActionsSheetView.swift */,
+				4EE9FB7E2802A3C500D0F02D /* SimpleActionRowView.swift */,
+				4E0A660C27FBFCBB00A8F0E6 /* ActionEditView.swift */,
+				4E0A660A27FBF67B00A8F0E6 /* ActionCompletionRowView.swift */,
+				4E8A32952804096F0078AAF0 /* ActionCreateView.swift */,
+			);
+			path = Subviews;
+			sourceTree = "<group>";
+		};
+		4E8A329A28041E620078AAF0 /* Old */ = {
+			isa = PBXGroup;
+			children = (
+				4EDAFE5627E9A53C00FFB703 /* ContentView.swift */,
+			);
+			path = Old;
+			sourceTree = "<group>";
+		};
 		4EA7BD0C27F2B93A00B9C348 /* Data */ = {
 			isa = PBXGroup;
 			children = (
@@ -98,16 +127,14 @@
 				4EE2468D27EFE0970099CE24 /* UIHelpers */,
 				4EDAFE5427E9A53C00FFB703 /* TimeForABreakSwiftUIApp.swift */,
 				4EBD8DD127FA115900234307 /* MainView.swift */,
-				4EDAFE5627E9A53C00FFB703 /* ContentView.swift */,
-				4EA7BD0A27F2B88500B9C348 /* ActionListView.swift */,
 				4E2FEF9E27F5533200A02DF2 /* TimerCountView.swift */,
+				4EA7BD0A27F2B88500B9C348 /* ActionListView.swift */,
 				4EC68BA027F6D2BF00AFD70B /* OptionsView.swift */,
-				4EDAFE5A27E9A53D00FFB703 /* Preview Content */,
-				4E0A660A27FBF67B00A8F0E6 /* ActionCompletionRowView.swift */,
-				4EE9FB7E2802A3C500D0F02D /* SimpleActionRowView.swift */,
-				4E0A660C27FBFCBB00A8F0E6 /* ActionEditView.swift */,
-				4E1684EB27FFDE8400AF9990 /* NotificationManager.swift */,
 				4E74E0722801514B0094CE5D /* SummaryView.swift */,
+				4E1684EB27FFDE8400AF9990 /* NotificationManager.swift */,
+				4EDAFE5A27E9A53D00FFB703 /* Preview Content */,
+				4E8A329928041E260078AAF0 /* Subviews */,
+				4E8A329A28041E620078AAF0 /* Old */,
 			);
 			path = TimeForABreakSwiftUI;
 			sourceTree = "<group>";
@@ -125,7 +152,8 @@
 			isa = PBXGroup;
 			children = (
 				4EE2468E27EFE0C20099CE24 /* StandardButton.swift */,
-				4EBB467427FD6CD700B42E17 /* ThickDivider.swift */,
+				4E8A32A4280423600078AAF0 /* FlatWideButtonStyle.swift */,
+				4E8A32AC280423820078AAF0 /* ThickDivider.swift */,
 			);
 			path = UIHelpers;
 			sourceTree = "<group>";
@@ -207,9 +235,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				4EA7BD0E27F2B96A00B9C348 /* DataProvider.swift in Sources */,
-				4EBB467527FD6CD700B42E17 /* ThickDivider.swift in Sources */,
+				4E8A32902803C3CA0078AAF0 /* SelectedActionsSheetView.swift in Sources */,
+				4E8A32A8280423600078AAF0 /* FlatWideButtonStyle.swift in Sources */,
 				4EA7BD0B27F2B88500B9C348 /* ActionListView.swift in Sources */,
 				4EDAFE5727E9A53C00FFB703 /* ContentView.swift in Sources */,
+				4E8A32962804096F0078AAF0 /* ActionCreateView.swift in Sources */,
 				4EC68BA127F6D2BF00AFD70B /* OptionsView.swift in Sources */,
 				4E74E0732801514B0094CE5D /* SummaryView.swift in Sources */,
 				4EC68BA527F6EA3E00AFD70B /* ActionViewModel.swift in Sources */,
@@ -221,6 +251,8 @@
 				4EA7BD1027F2B97A00B9C348 /* BreakAction.swift in Sources */,
 				4E1684EC27FFDE8400AF9990 /* NotificationManager.swift in Sources */,
 				4E0A660D27FBFCBB00A8F0E6 /* ActionEditView.swift in Sources */,
+				4E8A32922803E7180078AAF0 /* AvailableActionsSheetView.swift in Sources */,
+				4E8A32AD280423820078AAF0 /* ThickDivider.swift in Sources */,
 				4EE2468F27EFE0C20099CE24 /* StandardButton.swift in Sources */,
 				4EE9FB7F2802A3C500D0F02D /* SimpleActionRowView.swift in Sources */,
 			);
@@ -360,6 +392,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -390,6 +423,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

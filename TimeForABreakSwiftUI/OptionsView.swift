@@ -14,43 +14,39 @@ struct OptionsView: View {
     var actionVM : ActionViewModel
     
     var body: some View {
-        VStack {
-            Text("App Options")
-            Spacer()
-            Text("Work time")
-                .font(.title2)
-            Stepper("\(workMinutes) minutes", value: $tM.workTimeTotalSeconds, in: 0...4000, step: 60) {_ in
-                tM.resetTimer()
-            }
-            .frame(width: 200)
-            
-            Text("Break time")
-                .font(.title2)
-            Stepper("\(breakMinutes) minutes", value: $tM.breakTimeTotalSeconds, in: 0...1000, step: 60) {_ in
-                tM.resetTimer()
-            }
-            .frame(width: 200)
-            Spacer()
-            
-            Button(action: {
-                actionVM.restoreDefaultsToDisk()
-            }) {
-                HStack(spacing: 15){
-                    Image(systemName: "rectangle.portrait.and.arrow.right")
-                        .foregroundColor(.white)
-                    Text("Restore default actions")
-                        .fontWeight(.heavy)
-                        .foregroundColor(.white)
+        NavigationView {
+            VStack {
+                Spacer()
+                Text("Work time")
+                    .font(.title2)
+                Stepper("\(workMinutes) minutes", value: $tM.workTimeTotalSeconds, in: 0...4000, step: 60) {_ in
+                    tM.resetTimer()
                 }
-                .padding(.vertical)
-                .frame(width: (UIScreen.main.bounds.width * 0.8))
-                .background(Color.red)
-                .clipShape(Capsule())
-                .shadow(radius: 5)
+                //.frame(width: 200)
                 
-            }
-            Spacer()
-            
+                Text("Break time")
+                    .font(.title2)
+                Stepper("\(breakMinutes) minutes", value: $tM.breakTimeTotalSeconds, in: 0...1000, step: 60) {_ in
+                    tM.resetTimer()
+                }
+                //.frame(width: 200)
+                Spacer()
+                
+                Button(action: {
+                    actionVM.restoreDefaultsToDisk()
+                }) {
+                    HStack(spacing: 15){
+                        Image(systemName: "rectangle.portrait.and.arrow.right")
+                            .foregroundColor(.white)
+                        Text("Restore defaults")
+                            .font(.body)
+                            .foregroundColor(.white)
+                    }
+                    
+                } .buttonStyle(FlatWideButtonStyle(bgColor: .red))
+                Spacer()
+                
+            }.navigationBarTitle("App Options")
         }
     }
 }

@@ -27,7 +27,7 @@ struct ActionCompletionRowView: View {
                     .padding(.trailing)
             }
             Text(action.title)
-                .font(.title2)
+                .font(.body)
                 .badge(action.duration < 30 ? action.duration.formatted() + " min" : "a while")
         }
     }

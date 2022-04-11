@@ -29,9 +29,10 @@ struct ActionListView: View {
         } label: {
             HStack {
                 Text(action.title)
-                    .font(.title2)
+                    .font(.caption)
                 Spacer()
                 Label("", systemImage: action.pinned ? "pin.fill" : "pin.slash")
+                    .font(.caption)
             }
         }
     }
@@ -43,54 +44,26 @@ struct ActionListView: View {
     var body: some View {
         NavigationView{
             VStack {
+                Text("Select your actions for today")
                 // Area for selected actions
                 List {
-                    Section("Selected Actions") {
+                    Section("Selected") {
                         ForEach(selectActions.actions.filter{cal.isDateInToday($0.date ?? Date(timeInterval: -36000, since: Date())) || $0.pinned }, id: \.id) { action in
                             actionInfo(for: action)
                         }
                         .onDelete(perform: selectActions.deleteAction)
                     }
                 }
-                .frame(maxHeight: (UIScreen.main.bounds.height / 5))
-                .listStyle(.plain)
-                
-                // Input area for new actions
-                HStack {
-                    Spacer()
-                    TextField("New action", text: $actionString)
-                        .frame(width: (UIScreen.main.bounds.width/3), height: 45, alignment: .center)
-                        .padding(.horizontal, 5)
-                        .foregroundColor(Color.black)
-                        .background(Color.white)
-                        .border(Color.secondary)
-                        .multilineTextAlignment(TextAlignment.center)
-                    Stepper("\(durationValue) min", value: $durationValue, in: 1...60, step: 1) {_ in
-                    }
-                    
-                    Button(action: {
-                        let actStr = actionString.trimmingCharacters(in: .whitespaces)
-                        if (actStr.count > 0)
-                        {
-                            allActionsVM.add(action: actionString, duration: durationValue > 0 ? durationValue : defaultTime)
-                            actionString = ""
-                            durationValue = defaultTime
-                        }
-                    }) {
-                        Label("", systemImage: "plus.app.fill")
-                            .foregroundColor(.white)
-                            .font(.largeTitle)
-                    }
-                }
-                .background(Color.secondary)
-                
+               // .frame(maxHeight: (UIScreen.main.bounds.height / 5))
+                .listStyle(SidebarListStyle())
+                                
                 // List area for all actions
                 List {
-                    Section("Available Actions") {
+                    Section("Available") {
                         ForEach(allActionsVM.actions, id: \.id) { action in
                             NavigationLink(destination: ActionEditView(action: action)) {
                                 Text(action.title)
-                                    .font(.title2)
+                                    .font(.caption)
                                     .badge(action.duration < 30 ? action.duration.formatted() + " min" : "a while")
                             }
                             .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
@@ -101,7 +74,8 @@ struct ActionListView: View {
                                 .tint(Color.green)
                             })
                             .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
-                                Button (role: .destructive, action: { selectActions.add(action: action.title, duration: action.duration)}, label: {
+                                Button (role: .destructive, action: {
+                                    allActionsVM.deleteById(id: action.id)}, label: {
                                     Text("Remove from Available Actions")
                                     //Label("Remove from Available Actions", systemImage: "trash.fill")
                                 })
@@ -118,8 +92,21 @@ struct ActionListView: View {
                         }
                     }
                 }
-                .listStyle(.plain)
-            }
+                .listStyle(SidebarListStyle())
+                Spacer()
+                NavigationLink(destination: ActionCreateView()) {
+                    HStack(spacing: 15){
+                        Image(systemName: "plus.app.fill")
+                            .foregroundColor(.white)
+                        Text("Create New Action")
+                            .foregroundColor(.white)
+                            .font(.caption)
+                    }
+                }.buttonStyle(FlatWideButtonStyle(bgColor: .green))
+                Spacer()
+                               
+            }.navigationBarTitle("Break Actions") // end of vstack
         }
+        
     }
 }

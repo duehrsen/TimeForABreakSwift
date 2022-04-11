@@ -20,21 +20,21 @@ struct MainView: View {
         TabView{
             TimerCountView()
                 .tabItem {
-                    Label("Timer", systemImage: "clock.circle.fill")
+                    Label("Timer", systemImage: "hourglass.circle")
                 }
             ActionListView()
                 .tabItem {
                     Label("Action List", systemImage:"list.bullet.circle.fill")
                 }
-            SummaryView()
-                .tabItem {
-                    Label("Summary", systemImage: "clock.badge.checkmark.fill")
-                }
+            
             OptionsView(workMinutes: tM.workTimeTotalSeconds/60, breakMinutes: tM.breakTimeTotalSeconds/60, actionVM: allActions)
                 .tabItem {
                     Label("Options", systemImage: "gearshape.fill")
                 }
-                .tabViewStyle(.page)
+            SummaryView()
+                .tabItem {
+                    Label("Summary", systemImage: "clock.badge.checkmark.fill")
+                }
         }
         .onChange(of: scenePhase, perform: { scene in
             switch scene {
@@ -117,11 +117,5 @@ struct MainView: View {
         .environmentObject(notificationManager)
         .edgesIgnoringSafeArea(.bottom)
 
-    }
-}
-
-struct MainView_Previews: PreviewProvider {
-    static var previews: some View {
-        MainView()
     }
 }
