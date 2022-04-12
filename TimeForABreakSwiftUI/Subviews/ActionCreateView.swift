@@ -33,19 +33,26 @@ struct ActionCreateView: View {
                 Divider()
             }
             
-            HStack {
-                Button {
-                    vm.add(action: actionTitle, duration: actionDuration)
-                    presentationMode.wrappedValue.dismiss()
-                } label: {
-                    HStack {
-                        Text("Save")
-                    }
-                    .foregroundColor(.green)
-                }          
-            
-
-            
+            HStack(alignment: .center, spacing: 10) {
+            Button(action: {
+                vm.add(action: actionTitle, duration: actionDuration)
+                presentationMode.wrappedValue.dismiss()
+            }) {
+                HStack(spacing: 15){
+                    Spacer()
+                    //Image(systemName: "checkmark.circle.fill")        .foregroundColor(.white)
+                    Text("Save")
+                        .foregroundColor(.white)
+                        //.font(.caption)
+                    Spacer()
+                }
+                .padding()
+                .background(Color.green)
+                .clipShape(Capsule())
+                .shadow(radius: 5)
+                
+            }
+                
         }
         .navigationBarTitle("Create New Action")
         .navigationBarTitleDisplayMode(.inline)

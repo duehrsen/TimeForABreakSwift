@@ -16,25 +16,38 @@ struct MainView: View {
     @StateObject var allActions = ActionViewModel()
     @StateObject private var notificationManager = NotificationManager()
     
+    @State private var selectedTab = 0
+    @State private var minDragForSwipe : CGFloat = 60
+    
+    let numTabs = 4
+    
+    private func handleSwipe(translation : CGFloat) {
+        print("Swipey swiping, how much? \(translation) swipey!")
+    }
+    
     var body: some View {
-        TabView{
+        TabView(selection: $selectedTab ) {
             TimerCountView()
                 .tabItem {
                     Label("Timer", systemImage: "hourglass.circle")
                 }
+                .tag(0)
             ActionListView()
                 .tabItem {
                     Label("Action List", systemImage:"list.bullet.circle.fill")
                 }
-            
+                .tag(1)
             OptionsView(workMinutes: tM.workTimeTotalSeconds/60, breakMinutes: tM.breakTimeTotalSeconds/60, actionVM: allActions)
                 .tabItem {
                     Label("Options", systemImage: "gearshape.fill")
                 }
+                .tag(2)
             SummaryView()
                 .tabItem {
                     Label("Summary", systemImage: "clock.badge.checkmark.fill")
                 }
+                .tag(3)
+                .highPriorityGesture(DragGesture().onEnded({ self.handleSwipe(translation: $0.translation.width) }))
         }
         .onChange(of: scenePhase, perform: { scene in
             switch scene {

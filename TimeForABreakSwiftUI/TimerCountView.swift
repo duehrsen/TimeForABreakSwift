@@ -64,7 +64,8 @@ struct TimerCountView: View {
                         Label("", systemImage: tm.isWorkTime ? "brain" : "cup.and.saucer.fill")
                             .font(.system(size: diameter/3))
                             .opacity(0.8)
-                            .foregroundColor(colorScheme == .dark ? Color.white : Color.black)
+                            .foregroundColor(tm.isWorkTime ? Color.pink : Color.blue)
+                            //foregroundColor(colorScheme == .dark ? Color.white : Color.black)
                         Text("\(convertSecondsToTime(timeinSeconds:tm.currentTimeRemaining))")
                             .font(.system(size: timerTextSize))
                             .fontWeight(.bold)
@@ -74,7 +75,6 @@ struct TimerCountView: View {
                     }                    
                 }
             }
-
             
             VStack() {
                 HStack(spacing: 10) {

@@ -35,29 +35,43 @@ struct ActionEditView: View {
                 Divider()
             }
             
-            HStack {
-                Button {
+            VStack() {
+                HStack(alignment: .center, spacing: 10) {
+                Button(action: {
                     vm.update(id: action.id, newtitle: actionTitle, duration: actionDuration)
-                } label: {
-                    HStack {
+                }) {
+                    HStack(spacing: 15){
+                        //Image(systemName: "checkmark.circle.fill")        .foregroundColor(.white)
                         Text("Save")
+                            .foregroundColor(.white)
+                            //.font(.caption)
                     }
-                    .foregroundColor(.green)
+                    .padding()
+                    .frame(width: UIScreen.main.bounds.width/2 - 20)
+                    .background(Color.green)
+                    .clipShape(Capsule())
+                    .shadow(radius: 5)
+                    
                 }
-                Spacer()
                 
-                
-                Button {
+                Button(action: {
                     vm.deleteById(id: action.id)
                     presentationMode.wrappedValue.dismiss()
-                } label: {
-                    HStack {
+                }) {
+                    HStack(spacing: 15){
+                        //Image(systemName: "trash.fill")    .foregroundColor(.white)
                         Text("Delete")
+                            .foregroundColor(.white)
+                            //.font(.caption)
                     }
-                    .foregroundColor(.red)
+                    .padding()
+                    .frame(width: UIScreen.main.bounds.width/2 - 20)
+                    .background(Color.red)
+                    .clipShape(Capsule())
+                    .shadow(radius: 5)
                 }
-                
             }
+        }
             
             Spacer()
             
