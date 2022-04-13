@@ -19,8 +19,9 @@ struct TimerCompletionView: View {
         VStack(spacing: 60) {
             Spacer()
             Text(isFinishedWork ? "Awesome work! \nTime for a break, eh?" : "Break time's up! \nHope you are refreshed and recharged")
-                .font(.largeTitle)
-                .fontWeight(.heavy)
+                .font(.title)
+                .lineLimit(4)
+                .minimumScaleFactor(0.5)
                 .foregroundColor(Color.blue)
                 .frame(width: UIScreen.main.bounds.width - 20, alignment: .center)
             Image(systemName: isFinishedWork ? "hands.sparkles.fill" : "bolt.fill")
