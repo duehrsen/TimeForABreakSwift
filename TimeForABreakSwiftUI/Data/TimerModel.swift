@@ -17,7 +17,7 @@ class TimerModel : ObservableObject {
     @Published var binaryDescendingTime : Int = 0
     @Published var started : Bool = false
     
-    var workTimeTotalSeconds : Int = 60*20 {
+    var workTimeTotalSeconds : Int = 10 {
         willSet {
             currentTimeRemaining = workTimeTotalSeconds
             started = false
@@ -26,7 +26,7 @@ class TimerModel : ObservableObject {
             objectWillChange.send()
         }
     }
-    var breakTimeTotalSeconds : Int = 60*5 {
+    var breakTimeTotalSeconds : Int = 10 {
         willSet {
             currentTimeRemaining = breakTimeTotalSeconds
             started = false

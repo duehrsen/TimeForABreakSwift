@@ -58,8 +58,8 @@ struct MainView: View {
                 if tM.started
                 {
                     notificationManager.createLocalNotification(
-                        title: tM.isWorkTime ? "Time for a break!" : "Break time's over, blaow",
-                        body: tM.isWorkTime ? "You worked for \(tM.workTimeTotalSeconds/60) min" : "\(tM.breakTimeTotalSeconds/60) min break over. Time to get sh!t done",
+                        title: tM.isWorkTime ? "Time for a break!" : "Break time's over",
+                        body: tM.isWorkTime ? "You worked for \(tM.workTimeTotalSeconds/60) min" : "\(tM.breakTimeTotalSeconds/60) min break over.",
                         secondsUntilDone: tM.currentTimeRemaining) { error in
                         if error == nil {
                             DispatchQueue.main.async {

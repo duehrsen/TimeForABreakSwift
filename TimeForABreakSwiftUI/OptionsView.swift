@@ -16,7 +16,11 @@ struct OptionsView: View {
     var body: some View {
         NavigationView {
             VStack {
-                Text("Adjust your time intervals")
+                HStack {
+                    Text("Adjust your time intervals")
+                        .padding()
+                    Spacer()
+                }
                 Spacer()
                 Text("Work time")
                     .font(.title2)

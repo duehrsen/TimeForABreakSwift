@@ -11,11 +11,13 @@ struct TimerCountView: View {
     @EnvironmentObject var tm : TimerModel
     @EnvironmentObject var selectActions : SelectedActionsViewModel
     @EnvironmentObject var notificationManager : NotificationManager
+    @Environment(\.scenePhase) var scenePhase
     @Environment(\.colorScheme) var colorScheme
 
     @State private var time = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     @State private var didAppear : Bool = false
     @State private var showingSheet : Bool = false
+    @State private var showingCompleteSheet : Bool = false
     
     var defaultAction : BreakAction = BreakAction(title: "Get up!", desc: "Leave your chair", duration: 1, category: "relax")
     
@@ -45,7 +47,6 @@ struct TimerCountView: View {
         let tplineWidth : CGFloat = 4
         
         VStack(spacing: 25) {
-            //Text(tm.isWorkTime ? "Work time left" : "Break Time Left").font(.title)
             Button {
                 tm.started.toggle()
             } label: {
@@ -65,7 +66,6 @@ struct TimerCountView: View {
                             .font(.system(size: diameter/3))
                             .opacity(0.8)
                             .foregroundColor(tm.isWorkTime ? Color.pink : Color.blue)
-                            //foregroundColor(colorScheme == .dark ? Color.white : Color.black)
                         Text("\(convertSecondsToTime(timeinSeconds:tm.currentTimeRemaining))")
                             .font(.system(size: timerTextSize))
                             .fontWeight(.bold)
@@ -132,25 +132,21 @@ struct TimerCountView: View {
                 .shadow(radius: 5)
             }
         }
-            
-//            List {
-//                Section("Your actions for today") {
-//                }
-//                ForEach(selectActions.actions.filter{cal.isDateInToday($0.date ?? Date(timeInterval: -36000, since: Date())) } , id: \.id) {
-//                    item in
-//                    ActionCompletionRowView(action: item, editable: true)
-//                }
-//                .onDelete(perform: selectActions.deleteAction)
-//                .onMove(perform: selectActions.move)
-//            }.listStyle(.plain)
-//        }
         .sheet(isPresented: $showingSheet, content: {
             SelectedActionsSheetView()
+        })
+        .sheet(isPresented: $showingCompleteSheet, content: {
+            TimerCompletionView(isFinishedWork: !tm.isWorkTime )
         })
         .onReceive(self.time) { (_) in
             if tm.started && tm.currentTimeRemaining > 0 {
                 tm.currentTimeRemaining -= 1
                 tm.to = CGFloat(tm.currentTimeRemaining) / CGFloat(tm.isWorkTime ? tm.workTimeTotalSeconds : tm.breakTimeTotalSeconds)
+            }
+            
+            else if tm.started && (scenePhase == .active) {
+                tm.started = false
+                showingCompleteSheet.toggle()
             }
         }
         .onAppear {

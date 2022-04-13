@@ -11,15 +11,16 @@ struct SelectedActionsSheetView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var selectActions : SelectedActionsViewModel
     
+    var isFromCompletedSheet : Bool = false
+    
     let cal = Calendar.current
     
     var body: some View {
         VStack {
-            //Button("X") { dismiss()}.frame(alignment: .trailing)
             List {
-                Section("Your actions for today") {
+                Section(isFromCompletedSheet ? "Check off any you've done!" : "Your actions for today") {
                 }
-                ForEach(selectActions.actions.filter{cal.isDateInToday($0.date ?? Date(timeInterval: -36000, since: Date())) } , id: \.id) {
+                ForEach(selectActions.actions.filter{cal.isDateInToday($0.date ?? Date(timeInterval: -36000, since: Date())) || $0.pinned} , id: \.id) {
                     item in
                     ActionCompletionRowView(action: item, editable: true)
                 }

@@ -16,7 +16,6 @@ struct SimpleActionRowView: View {
         HStack(spacing: 6) {
             Text(action.title)
                 .font(.caption)
-                .badge(action.duration < 30 ? action.duration.formatted() + " min" : "a while")
         }
     }
 }

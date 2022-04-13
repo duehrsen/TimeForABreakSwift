@@ -16,7 +16,11 @@ struct SummaryView: View {
     var body: some View {
         NavigationView {
             VStack{
-                Text("What you've been up to lately")
+                HStack {
+                    Text("What you've been up to lately")
+                        .padding()
+                    Spacer()
+                }
                 List {
                     Section("Today") {
                     }

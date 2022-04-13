@@ -44,7 +44,11 @@ struct ActionListView: View {
     var body: some View {
         NavigationView{
             VStack {
-                Text("Select your actions for today")
+                HStack {
+                    Text("Select your actions for today")
+                        .padding()
+                    Spacer()
+                }
                 // Area for selected actions
                 List {
                     Section("Selected") {
