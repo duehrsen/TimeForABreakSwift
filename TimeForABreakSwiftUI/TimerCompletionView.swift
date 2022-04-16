@@ -6,10 +6,13 @@
 //
 
 import SwiftUI
+import AVFoundation
 
 struct TimerCompletionView: View {
     
     @EnvironmentObject var selectActions : SelectedActionsViewModel
+    
+    @State var player : AVAudioPlayer?
     
     var isFinishedWork : Bool
     let cal = Calendar.current
@@ -51,7 +54,21 @@ struct TimerCompletionView: View {
                 SelectedActionsSheetView(isFromCompletedSheet: true)
                     .frame(width: UIScreen.main.bounds.width - 20, alignment: .center)
             }
-        }.edgesIgnoringSafeArea(.all)
+        }
+        .onAppear(){
+            let path = Bundle.main.path(forResource: "hornorganmusichockey.m4a", ofType: nil)!
+            let url = URL(fileURLWithPath: path)
+
+            do {
+                player = try AVAudioPlayer(contentsOf: url)
+
+                player?.play()
+
+            } catch let error {
+                print(error.localizedDescription)
+            }
+        }
+        .edgesIgnoringSafeArea(.all)
     }
 }
 

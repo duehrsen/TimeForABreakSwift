@@ -25,6 +25,7 @@
 		4EA7BD0E27F2B96A00B9C348 /* DataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA7BD0D27F2B96A00B9C348 /* DataProvider.swift */; };
 		4EA7BD1027F2B97A00B9C348 /* BreakAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA7BD0F27F2B97A00B9C348 /* BreakAction.swift */; };
 		4EB2213628069665004BD397 /* TimerCompletionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB2213528069665004BD397 /* TimerCompletionView.swift */; };
+		4EB3AB09280A42BB008FF804 /* hornorganmusichockey.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 4EB3AB08280A42BB008FF804 /* hornorganmusichockey.m4a */; };
 		4EBD8DD227FA115900234307 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EBD8DD127FA115900234307 /* MainView.swift */; };
 		4EC68BA127F6D2BF00AFD70B /* OptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC68BA027F6D2BF00AFD70B /* OptionsView.swift */; };
 		4EC68BA527F6EA3E00AFD70B /* ActionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC68BA427F6EA3E00AFD70B /* ActionViewModel.swift */; };
@@ -55,6 +56,7 @@
 		4EA7BD0D27F2B96A00B9C348 /* DataProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataProvider.swift; sourceTree = "<group>"; };
 		4EA7BD0F27F2B97A00B9C348 /* BreakAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BreakAction.swift; sourceTree = "<group>"; };
 		4EB2213528069665004BD397 /* TimerCompletionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerCompletionView.swift; sourceTree = "<group>"; };
+		4EB3AB08280A42BB008FF804 /* hornorganmusichockey.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = hornorganmusichockey.m4a; sourceTree = "<group>"; };
 		4EBD8DD127FA115900234307 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		4EC68BA027F6D2BF00AFD70B /* OptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsView.swift; sourceTree = "<group>"; };
 		4EC68BA427F6EA3E00AFD70B /* ActionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionViewModel.swift; sourceTree = "<group>"; };
@@ -114,6 +116,14 @@
 			path = Data;
 			sourceTree = "<group>";
 		};
+		4EB3AB0A280A42FB008FF804 /* Media */ = {
+			isa = PBXGroup;
+			children = (
+				4EB3AB08280A42BB008FF804 /* hornorganmusichockey.m4a */,
+			);
+			path = Media;
+			sourceTree = "<group>";
+		};
 		4EDAFE4827E9A53C00FFB703 = {
 			isa = PBXGroup;
 			children = (
@@ -134,6 +144,7 @@
 		4EDAFE5327E9A53C00FFB703 /* TimeForABreakSwiftUI */ = {
 			isa = PBXGroup;
 			children = (
+				4EB3AB0A280A42FB008FF804 /* Media */,
 				4EA7BD0C27F2B93A00B9C348 /* Data */,
 				4EE2468D27EFE0970099CE24 /* UIHelpers */,
 				4EDAFE5427E9A53C00FFB703 /* TimeForABreakSwiftUIApp.swift */,
@@ -235,6 +246,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4E2D19B428053A3A00459DDB /* Launch Screen.storyboard in Resources */,
+				4EB3AB09280A42BB008FF804 /* hornorganmusichockey.m4a in Resources */,
 				4EDAFE5C27E9A53D00FFB703 /* Preview Assets.xcassets in Resources */,
 				4EE9FB832802C28800D0F02D /* Assets.xcassets in Resources */,
 			);
