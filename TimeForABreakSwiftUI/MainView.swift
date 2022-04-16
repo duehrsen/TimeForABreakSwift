@@ -15,6 +15,7 @@ struct MainView: View {
     @StateObject var selectActions = SelectedActionsViewModel()
     @StateObject var allActions = ActionViewModel()
     @StateObject private var notificationManager = NotificationManager()
+    @StateObject var optionsModel = OptionsModel()
     
     @State private var selectedTab = 0
     @State private var minDragForSwipe : CGFloat = 60
@@ -37,7 +38,7 @@ struct MainView: View {
                     Label("Action List", systemImage:"list.bullet.circle.fill")
                 }
                 .tag(1)
-            OptionsView(workMinutes: tM.workTimeTotalSeconds/60, breakMinutes: tM.breakTimeTotalSeconds/60, actionVM: allActions)
+            OptionsView()
                 .tabItem {
                     Label("Options", systemImage: "gearshape.fill")
                 }
@@ -60,7 +61,8 @@ struct MainView: View {
                     notificationManager.createLocalNotification(
                         title: tM.isWorkTime ? "Time for a break!" : "Break time's over",
                         body: tM.isWorkTime ? "You worked for \(tM.workTimeTotalSeconds/60) min" : "\(tM.breakTimeTotalSeconds/60) min break over.",
-                        secondsUntilDone: tM.currentTimeRemaining) { error in
+                        secondsUntilDone: tM.currentTimeRemaining,
+                        doesPlaySounds: optionsModel.options.doesPlaySounds) { error in
                         if error == nil {
                             DispatchQueue.main.async {
                                 print("notification triggered")
@@ -110,6 +112,18 @@ struct MainView: View {
                 }
             }
             allActions.addActivityFromApi()
+            optionsModel.load { result in
+                switch result {
+                case .failure( let error):
+                    print(error.localizedDescription)
+                    optionsModel.setDefault()
+                    print("set default options")
+                case .success(let loadedOptions):
+                    print("saved options loaded")
+                    print("breakmin \(loadedOptions.breaktimeMin)")
+                    optionsModel.updateOptionsModel(breakMin: loadedOptions.breaktimeMin, workMin: loadedOptions.worktimeMin, doesPlaySounds: loadedOptions.doesPlaySounds)
+                }
+            }
         }
         .onChange(of: notificationManager.authorizationStatus, perform: { authorizationStatus in
             switch authorizationStatus {
@@ -124,6 +138,7 @@ struct MainView: View {
                 break
             }
         })
+        .environmentObject(optionsModel)
         .environmentObject(tM)
         .environmentObject(selectActions)
         .environmentObject(allActions)

@@ -11,6 +11,7 @@ import AVFoundation
 struct TimerCompletionView: View {
     
     @EnvironmentObject var selectActions : SelectedActionsViewModel
+    @EnvironmentObject var os : OptionsModel
     
     @State var player : AVAudioPlayer?
     
@@ -18,6 +19,21 @@ struct TimerCompletionView: View {
     let cal = Calendar.current
     
     @EnvironmentObject var tm : TimerModel
+    
+    fileprivate func playSuccessSound() {
+        let path = Bundle.main.path(forResource: "hornorganmusichockey.m4a", ofType: nil)!
+        let url = URL(fileURLWithPath: path)
+        
+        do {
+            player = try AVAudioPlayer(contentsOf: url)
+            
+            player?.play()
+            
+        } catch let error {
+            print(error.localizedDescription)
+        }
+    }
+    
     var body: some View {
         VStack(spacing: 60) {
             Spacer()
@@ -56,16 +72,8 @@ struct TimerCompletionView: View {
             }
         }
         .onAppear(){
-            let path = Bundle.main.path(forResource: "hornorganmusichockey.m4a", ofType: nil)!
-            let url = URL(fileURLWithPath: path)
-
-            do {
-                player = try AVAudioPlayer(contentsOf: url)
-
-                player?.play()
-
-            } catch let error {
-                print(error.localizedDescription)
+            if os.options.doesPlaySounds {
+                playSuccessSound()
             }
         }
         .edgesIgnoringSafeArea(.all)

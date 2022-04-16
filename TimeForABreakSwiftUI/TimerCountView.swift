@@ -10,7 +10,6 @@ import SwiftUI
 struct TimerCountView: View {
     @EnvironmentObject var tm : TimerModel
     @EnvironmentObject var selectActions : SelectedActionsViewModel
-    @EnvironmentObject var notificationManager : NotificationManager
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.colorScheme) var colorScheme
 

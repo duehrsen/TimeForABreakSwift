@@ -36,6 +36,12 @@ class TimerModel : ObservableObject {
         }
     }
     
+    func updateFromOptions(optionSet: OptionSet) {
+        workTimeTotalSeconds = optionSet.worktimeMin * 60
+        breakTimeTotalSeconds = optionSet.breaktimeMin * 60
+        resetTimer()
+    }
+    
     func movingToBackground(){
         if started
         {

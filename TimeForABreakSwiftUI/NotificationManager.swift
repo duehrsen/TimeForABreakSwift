@@ -7,8 +7,10 @@
 
 import Foundation
 import UserNotifications
+import SwiftUI
 
 final class NotificationManager : ObservableObject {
+    @EnvironmentObject var os : OptionsModel
     @Published private(set) var notifications : [UNNotificationRequest] = []
     @Published private(set) var authorizationStatus :  UNAuthorizationStatus?
     
@@ -39,7 +41,7 @@ final class NotificationManager : ObservableObject {
         }
     }
     
-    func createLocalNotification(title: String, body: String, secondsUntilDone: Int, completion: @escaping (Error?)-> Void ) {
+    func createLocalNotification(title: String, body: String, secondsUntilDone: Int, doesPlaySounds: Bool = false, completion: @escaping (Error?)-> Void ) {
         
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(secondsUntilDone), repeats: false)
         
@@ -47,7 +49,9 @@ final class NotificationManager : ObservableObject {
         
         notificationContent.title = title
         notificationContent.body = body
-        notificationContent.sound = UNNotificationSound.default
+        if doesPlaySounds {
+            notificationContent.sound = UNNotificationSound.default
+        }
         
         let request = UNNotificationRequest(identifier: "timeIntervalLapsed", content: notificationContent, trigger: trigger)
         

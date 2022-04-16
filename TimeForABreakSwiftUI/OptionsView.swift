@@ -9,49 +9,70 @@ import SwiftUI
 
 struct OptionsView: View {
     @EnvironmentObject var tM: TimerModel
-    var workMinutes : Int
-    var breakMinutes : Int
-    var actionVM : ActionViewModel
+    @EnvironmentObject var os : OptionsModel
+    @State private var playSounds : Bool = false
+    @State private var workMin : Int = 60
+    @State private var breakMin: Int = 5
+    private var actionVM : ActionViewModel = ActionViewModel()
     
     var body: some View {
         NavigationView {
-            VStack {
+            VStack {                
                 HStack {
                     Text("Adjust your time intervals")
                         .padding()
                     Spacer()
                 }
                 Spacer()
-                Text("Work time")
-                    .font(.title2)
-                Stepper("\(workMinutes) min", value: $tM.workTimeTotalSeconds, in: 0...4000, step: 60) {_ in
-                    tM.resetTimer()
-                }
-                .frame(width: 250)
-                
-                Text("Break time")
-                    .font(.title2)
-                Stepper("\(breakMinutes) min", value: $tM.breakTimeTotalSeconds, in: 0...1000, step: 60) {_ in
-                    tM.resetTimer()
-                }
-                .frame(width: 250)
+                OptionsInputSubView()
                 Spacer()
                 
-                Button(action: {
-                    actionVM.restoreDefaultsToDisk()
-                }) {
-                    HStack(spacing: 15){
-                        Image(systemName: "rectangle.portrait.and.arrow.right")
-                            .foregroundColor(.white)
-                        Text("Restore default actions")
-                            .font(.body)
-                            .foregroundColor(.white)
+                HStack(alignment: .center, spacing: 10) {
+                    Button(action: {
+                        if os.options.worktimeMin > 0 && os.options.breaktimeMin > 0 {
+                            let newOptions = OptionSet(breaktimeMin: os.options.breaktimeMin, worktimeMin: os.options.worktimeMin, doesPlaySounds: os.options.doesPlaySounds)
+                            print("gonna save")
+                            os.save(options: newOptions) { result in
+                                if case .failure(let error) = result {
+                                    fatalError(error.localizedDescription)
+                                }
+                            }
+                            tM.updateFromOptions(optionSet: newOptions)
+                        }
+                    }) {
+                        HStack(spacing: 15){
+                            Text("Save")
+                                .foregroundColor(.white)
+                        }
+                        .padding()
+                        .frame(width: UIScreen.main.bounds.width/2 - 20)
+                        .background(Color.green)
+                        .clipShape(Capsule())
+                        .shadow(radius: 5)
+                        
                     }
                     
-                } .buttonStyle(FlatWideButtonStyle(bgColor: .red))
+                    Button(action: {
+                        actionVM.restoreDefaultsToDisk()
+                        os.setDefault()
+                    }) {
+                        HStack(spacing: 15){
+                            //Image(systemName: "rectangle.portrait.and.arrow.right")                              .foregroundColor(.white)
+                            Text("Restore all")
+                                .font(.body)
+                                .foregroundColor(.white)
+                        }
+                        .padding()
+                        .frame(width: UIScreen.main.bounds.width/2 - 20)
+                        .background(Color.red)
+                        .clipShape(Capsule())
+                        .shadow(radius: 5)
+                    }
+                    
+                }.navigationBarTitle("App Options")
                 Spacer()
                 
-            }.navigationBarTitle("App Options")
+            }
         }
     }
 }
