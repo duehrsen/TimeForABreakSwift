@@ -38,14 +38,15 @@ struct MainView: View {
                     Label("Action List", systemImage:"list.bullet.circle.fill")
                 }
                 .tag(1)
-            OptionsView()
-                .tabItem {
-                    Label("Options", systemImage: "gearshape.fill")
-                }
-                .tag(2)
             SummaryView()
                 .tabItem {
                     Label("Summary", systemImage: "clock.badge.checkmark.fill")
+                }
+                .tag(2)
+            
+            OptionsView()
+                .tabItem {
+                    Label("Options", systemImage: "gearshape.fill")
                 }
                 .tag(3)
                 .highPriorityGesture(DragGesture().onEnded({ self.handleSwipe(translation: $0.translation.width) }))
@@ -122,6 +123,7 @@ struct MainView: View {
                     print("saved options loaded")
                     print("breakmin \(loadedOptions.breaktimeMin)")
                     optionsModel.updateOptionsModel(breakMin: loadedOptions.breaktimeMin, workMin: loadedOptions.worktimeMin, doesPlaySounds: loadedOptions.doesPlaySounds)
+                    tM.updateFromOptions(optionSet: loadedOptions)
                 }
             }
         }

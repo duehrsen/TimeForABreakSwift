@@ -16,28 +16,33 @@ struct SummaryView: View {
     var body: some View {
         NavigationView {
             VStack{
-                HStack {
-                    Text("What you've been up to lately")
-                        .padding()
-                    Spacer()
-                }
+//                HStack {
+//                    Text("What you've been up to lately")
+//                        .padding()
+//                    Spacer()
+//                }
                 List {
                     Section("Today") {
                     }
                     ForEach(selectActions.actions.filter{cal.isDateInToday($0.date ?? Date(timeInterval: -36000, since: Date()))} , id: \.id) {
                         item in
-                            SimpleActionRowView(action: item)
+                        SimpleActionRowView(action: item)
                     }
                     Section("Yesterday") {
                     }
                     ForEach(selectActions.actions.filter{cal.isDateInYesterday($0.date ?? Date(timeInterval: -36000, since: Date()))} , id: \.id) {
                         item in
-                            SimpleActionRowView(action: item)
+                        SimpleActionRowView(action: item)
                     }
                 }.listStyle(.insetGrouped)
-            }.navigationTitle("Summary")
+            }
+            //.navigationTitle("Summary")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+               toolbars(title: "Summary")
+            }
         }
-       
-    }
         
+    }
+    
 }

@@ -28,6 +28,8 @@
 		4EB3AB09280A42BB008FF804 /* hornorganmusichockey.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 4EB3AB08280A42BB008FF804 /* hornorganmusichockey.m4a */; };
 		4EB3AB0C280A866A008FF804 /* OptionsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB3AB0B280A866A008FF804 /* OptionsModel.swift */; };
 		4EB3AB0E280AA6A5008FF804 /* OptionsInputSubView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB3AB0D280AA6A5008FF804 /* OptionsInputSubView.swift */; };
+		4EB3AB10280AB894008FF804 /* TimeRemainingSubView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB3AB0F280AB894008FF804 /* TimeRemainingSubView.swift */; };
+		4EB3AB14280ACC2C008FF804 /* ToolbarElements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB3AB13280ACC2C008FF804 /* ToolbarElements.swift */; };
 		4EBD8DD227FA115900234307 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EBD8DD127FA115900234307 /* MainView.swift */; };
 		4EC68BA127F6D2BF00AFD70B /* OptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC68BA027F6D2BF00AFD70B /* OptionsView.swift */; };
 		4EC68BA527F6EA3E00AFD70B /* ActionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC68BA427F6EA3E00AFD70B /* ActionViewModel.swift */; };
@@ -60,6 +62,8 @@
 		4EB3AB08280A42BB008FF804 /* hornorganmusichockey.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = hornorganmusichockey.m4a; sourceTree = "<group>"; };
 		4EB3AB0B280A866A008FF804 /* OptionsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsModel.swift; sourceTree = "<group>"; };
 		4EB3AB0D280AA6A5008FF804 /* OptionsInputSubView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsInputSubView.swift; sourceTree = "<group>"; };
+		4EB3AB0F280AB894008FF804 /* TimeRemainingSubView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeRemainingSubView.swift; sourceTree = "<group>"; };
+		4EB3AB13280ACC2C008FF804 /* ToolbarElements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarElements.swift; sourceTree = "<group>"; };
 		4EBD8DD127FA115900234307 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		4EC68BA027F6D2BF00AFD70B /* OptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsView.swift; sourceTree = "<group>"; };
 		4EC68BA427F6EA3E00AFD70B /* ActionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionViewModel.swift; sourceTree = "<group>"; };
@@ -94,6 +98,8 @@
 				4E0A660A27FBF67B00A8F0E6 /* ActionCompletionRowView.swift */,
 				4E8A32952804096F0078AAF0 /* ActionCreateView.swift */,
 				4EB3AB0D280AA6A5008FF804 /* OptionsInputSubView.swift */,
+				4EB3AB0F280AB894008FF804 /* TimeRemainingSubView.swift */,
+				4EB3AB13280ACC2C008FF804 /* ToolbarElements.swift */,
 			);
 			path = Subviews;
 			sourceTree = "<group>";
@@ -281,10 +287,12 @@
 				4EDAFE5527E9A53C00FFB703 /* TimeForABreakSwiftUIApp.swift in Sources */,
 				4EA7BD1027F2B97A00B9C348 /* BreakAction.swift in Sources */,
 				4E1684EC27FFDE8400AF9990 /* NotificationManager.swift in Sources */,
+				4EB3AB14280ACC2C008FF804 /* ToolbarElements.swift in Sources */,
 				4EB2213628069665004BD397 /* TimerCompletionView.swift in Sources */,
 				4E0A660D27FBFCBB00A8F0E6 /* ActionEditView.swift in Sources */,
 				4E8A32922803E7180078AAF0 /* AvailableActionsSheetView.swift in Sources */,
 				4E8A32AD280423820078AAF0 /* ThickDivider.swift in Sources */,
+				4EB3AB10280AB894008FF804 /* TimeRemainingSubView.swift in Sources */,
 				4EE2468F27EFE0C20099CE24 /* StandardButton.swift in Sources */,
 				4EE9FB7F2802A3C500D0F02D /* SimpleActionRowView.swift in Sources */,
 			);

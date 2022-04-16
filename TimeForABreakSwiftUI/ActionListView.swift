@@ -10,6 +10,15 @@ import Foundation
 
 struct ActionListView: View {
     
+    let attributes = [
+        NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24),
+        NSAttributedString.Key.foregroundColor: UIColor.systemBlue
+    ]
+    
+    init() {
+        UINavigationBar.appearance().titleTextAttributes = attributes
+    }
+    
     let defaultTime : Int = 3
     
     @EnvironmentObject var allActionsVM : ActionViewModel
@@ -44,11 +53,11 @@ struct ActionListView: View {
     var body: some View {
         NavigationView{
             VStack {
-                HStack {
-                    Text("Select your actions for today")
-                        .padding()
-                    Spacer()
-                }
+//                HStack {
+//                    Text("Select your actions for today")
+//                        .padding()
+//                    Spacer()
+//                }
                 // Area for selected actions
                 List {
                     Section("Selected") {
@@ -58,9 +67,9 @@ struct ActionListView: View {
                         .onDelete(perform: selectActions.deleteAction)
                     }
                 }
-               // .frame(maxHeight: (UIScreen.main.bounds.height / 5))
+                // .frame(maxHeight: (UIScreen.main.bounds.height / 5))
                 .listStyle(SidebarListStyle())
-                                
+                
                 // List area for all actions
                 List {
                     Section("Available") {
@@ -80,9 +89,9 @@ struct ActionListView: View {
                             .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
                                 Button (role: .destructive, action: {
                                     allActionsVM.deleteById(id: action.id)}, label: {
-                                    Text("Remove from Available Actions")
-                                    //Label("Remove from Available Actions", systemImage: "trash.fill")
-                                })
+                                        Text("Remove from Available Actions")
+                                        //Label("Remove from Available Actions", systemImage: "trash.fill")
+                                    })
                             })
                         }
                     }
@@ -108,8 +117,12 @@ struct ActionListView: View {
                     }
                 }.buttonStyle(FlatWideButtonStyle(bgColor: .green))
                 Spacer()
-                               
-            }.navigationBarTitle("Break Actions") // end of vstack
+                
+            }
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                toolbars(title: "Actions")                
+            }
         }
         
     }

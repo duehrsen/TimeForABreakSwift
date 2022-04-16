@@ -52,7 +52,7 @@ struct TimerCountView: View {
                 ZStack {
                     Circle()
                         .trim(from: 0, to: 1)
-                        .stroke(Color.black.opacity(0.2),style: StrokeStyle(lineWidth: bglineWidth, lineCap: .round))
+                        .stroke(Color.orange.opacity(0.3),style: StrokeStyle(lineWidth: bglineWidth, lineCap: .round))
                         .frame(minWidth: CGFloat(diameter * 0.7), idealWidth: diameter, maxWidth: diameter*1.2, minHeight: CGFloat(diameter * 0.7), idealHeight: diameter, maxHeight:diameter*1.2 )
                     
                     Circle()
@@ -106,7 +106,6 @@ struct TimerCountView: View {
                             .font(.caption)
                     }
                     .padding()
-                    //.frame(width: UIScreen.main.bounds.width - 40)
                     .background(Color.orange)
                     .clipShape(Capsule())
                     .shadow(radius: 5)

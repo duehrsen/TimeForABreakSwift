@@ -18,11 +18,11 @@ struct OptionsView: View {
     var body: some View {
         NavigationView {
             VStack {                
-                HStack {
-                    Text("Adjust your time intervals")
-                        .padding()
-                    Spacer()
-                }
+//                HStack {
+//                    Text("Adjust your time intervals")
+//                        .padding()
+//                    Spacer()
+//                }
                 Spacer()
                 OptionsInputSubView()
                 Spacer()
@@ -69,7 +69,15 @@ struct OptionsView: View {
                         .shadow(radius: 5)
                     }
                     
-                }.navigationBarTitle("App Options")
+                }
+                //.navigationBarTitle("App Options")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    toolbars(title: "Options")
+
+                }
+        
+
                 Spacer()
                 
             }
