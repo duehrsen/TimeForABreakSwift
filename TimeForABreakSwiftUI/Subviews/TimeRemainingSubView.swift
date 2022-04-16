@@ -19,13 +19,11 @@ struct TimeRemainingSubView: View {
     
     var body: some View {
         ZStack {
-            //Capsule(style: .circular) .foregroundColor(Color.blue)
             HStack {
                 Image(systemName: tM.isWorkTime ? "brain" : "cup.and.saucer.fill")
                     .foregroundColor(tM.isWorkTime ? Color.pink : Color.blue)
                 Text(convertSecondsToTime(timeinSeconds: tM.currentTimeRemaining))
-                    .foregroundColor(Color.black)
-                .font(.system(size: 24))
+                    .font(.system(size: 24))
             }
         }
     }
