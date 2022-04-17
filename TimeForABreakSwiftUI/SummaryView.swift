@@ -24,13 +24,13 @@ struct SummaryView: View {
                 List {
                     Section("Today") {
                     }
-                    ForEach(selectActions.actions.filter{cal.isDateInToday($0.date ?? Date(timeInterval: -36000, since: Date()))} , id: \.id) {
+                    ForEach(selectActions.actions.filter{cal.isDateInToday($0.date ?? Date(timeInterval: -36000, since: Date())) && $0.completed} , id: \.id) {
                         item in
                         SimpleActionRowView(action: item)
                     }
                     Section("Yesterday") {
                     }
-                    ForEach(selectActions.actions.filter{cal.isDateInYesterday($0.date ?? Date(timeInterval: -36000, since: Date()))} , id: \.id) {
+                    ForEach(selectActions.actions.filter{cal.isDateInYesterday($0.date ?? Date(timeInterval: -36000, since: Date())) && $0.completed} , id: \.id) {
                         item in
                         SimpleActionRowView(action: item)
                     }
