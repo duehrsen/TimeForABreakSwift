@@ -93,6 +93,7 @@
 		4E8A329928041E260078AAF0 /* Subviews */ = {
 			isa = PBXGroup;
 			children = (
+				4EB2213528069665004BD397 /* TimerCompletionView.swift */,
 				4E8A32912803E7180078AAF0 /* AvailableActionsSheetView.swift */,
 				4E8A328F2803C3CA0078AAF0 /* SelectedActionsSheetView.swift */,
 				4EE9FB7E2802A3C500D0F02D /* SimpleActionRowView.swift */,
@@ -168,7 +169,6 @@
 				4EDAFE5A27E9A53D00FFB703 /* Preview Content */,
 				4E8A329928041E260078AAF0 /* Subviews */,
 				4E8A329A28041E620078AAF0 /* Old */,
-				4EB2213528069665004BD397 /* TimerCompletionView.swift */,
 			);
 			path = TimeForABreakSwiftUI;
 			sourceTree = "<group>";

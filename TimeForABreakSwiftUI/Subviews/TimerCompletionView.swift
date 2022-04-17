@@ -35,10 +35,10 @@ struct TimerCompletionView: View {
     }
     
     var body: some View {
-        VStack(spacing: 60) {
+        VStack(spacing: 30) {
             Spacer()
-            Text(isFinishedWork ? "Awesome work! \nTime for a break, eh?" : "Break time's up! \nHope you are refreshed and recharged")
-                .font(.title)
+            Text(isFinishedWork ? "Time for a break!" : "Hope you are recharged!")
+                .font(.title2)
                 .lineLimit(4)
                 .minimumScaleFactor(0.5)
                 .foregroundColor(Color.blue)
