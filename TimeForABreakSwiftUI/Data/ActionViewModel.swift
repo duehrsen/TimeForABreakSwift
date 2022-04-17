@@ -121,14 +121,19 @@ class ActionViewModel: ObservableObject {
         saveToDisk()        
     }
     
-    func pinToggle(action: BreakAction) {
+    func pinToggle(action: BreakAction, toggleOn: Bool) -> Bool {
         var updateAction = action
-        updateAction.pinned = !action.pinned
+        if (updateAction.pinned == toggleOn) {
+            print("Item doesn't need to be pin toggled")
+            return false
+        }
+        updateAction.pinned = toggleOn
         if let thisInd = actions.firstIndex(where: {$0.id == updateAction.id} )
         {
             actions.replaceSubrange(thisInd...thisInd, with: repeatElement(updateAction, count: 1))
         }
         saveToDisk()
+        return true
     }
     
     func deleteById(id: UUID) {

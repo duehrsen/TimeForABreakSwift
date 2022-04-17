@@ -11,7 +11,7 @@ struct ActionEditView: View {
     @EnvironmentObject private var vm : ActionViewModel
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @State private var actionTitle: String = ""
-    @State private var actionDuration = 3
+    @State private var actionDuration = 5
     
     let action: BreakAction
        
@@ -20,18 +20,20 @@ struct ActionEditView: View {
         VStack(alignment: .leading, spacing: 24) {
             
             VStack(alignment: .leading, spacing: 4) {
-                Text("Action")
-                    .foregroundColor(.gray)
-                
-                TextField("Enter title..", text: $actionTitle)
-                    .font(.largeTitle)
-                
-                Text("Action duration")
+                Text("Duration")
                     .foregroundColor(.gray)
                 
                 Stepper("\(actionDuration) min", value: $actionDuration, in: 1...60, step: 1) {_ in
                 }
                 
+                Divider()
+                
+                Text("Action")                    .foregroundColor(.gray)
+                
+                TextEditor(text: $actionTitle)
+                    .padding(.horizontal)
+                    .navigationTitle("Action")
+                    .frame(height: 100)
                 Divider()
             }
             

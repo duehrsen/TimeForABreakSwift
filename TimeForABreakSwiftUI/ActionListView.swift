@@ -89,17 +89,20 @@ struct ActionListView: View {
                                     selectActions.add(action: action.title, duration: action.duration)
                                     showAddToast = true
                                 }, label: {
-                                    Text("Add to Selected Actions")
-                                    //Label("Add to Selected Actions", systemImage: "plus.square.fill")
+                                    //Text("Add to Selected Actions")
+                                    Label("Add to Selected Actions", systemImage: "plus.square.fill")
                                 })
-                                .tint(Color.green)
+                                .tint(Color.blue)
                             })
                             .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
-                                Button (action: { allActionsVM.pinToggle(action: action)
-                                    showPinToast = true
+                                Button (action: {
+                                    
+                                    if allActionsVM.pinToggle(action: action, toggleOn: true) {               showPinToast = true
+                                    }
+                                    
                                 }, label: {
-                                    Text("Pin to top of list")
-                                    //Label("Add to Selected Actions", systemImage: "plus.square.fill")
+                                    //Text("Pin to top of list")
+                                    Label("Pin to top of list", systemImage: "pin.fill")
                                 })
                                 .tint(Color.yellow)
                             })
@@ -108,16 +111,17 @@ struct ActionListView: View {
                                     allActionsVM.deleteById(id: action.id)
                                     showDelToast = true
                                 }, label: {
-                                        Text("Remove from Available Actions")
-                                        //Label("Remove from Available Actions", systemImage: "trash.fill")
+                                        //Text("Remove from Available Actions")
+                                        Label("Remove from Available Actions", systemImage: "trash.fill")
                                     })
                             })
-                            .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
-                                Button (action: { allActionsVM.pinToggle(action: action)
-                                    showUnpinToast = true
+                            .swipeActions(edge: .trailing, allowsFullSwipe: false, content: {
+                                Button (action: {
+                                    if allActionsVM.pinToggle(action: action, toggleOn: false) {               showUnpinToast = true
+                                }
                                 }, label: {
-                                    Text("Unpin from top of list")
-                                    //Label("Add to Selected Actions", systemImage: "plus.square.fill")
+                                    //Text("Unpin from top of list")
+                                    Label("Unpin from top of list", systemImage: "pin.slash")
                                 })
                                 .tint(Color.yellow)
                             })
@@ -135,13 +139,12 @@ struct ActionListView: View {
                 }
                 .listStyle(.plain)
                 Spacer()
-                NavigationLink(destination: ActionCreateView()) {
+                NavigationLink(destination: ActionNewView()) {
                     HStack(spacing: 15){
-                        Image(systemName: "plus.app.fill")
-                            .foregroundColor(.white)
+                        //Image(systemName: "plus.app.fill").foregroundColor(.white)
                         Text("Create New Action")
                             .foregroundColor(.white)
-                            .font(.caption)
+                            //.font(.caption)
                     }
                 }.buttonStyle(FlatWideButtonStyle(bgColor: .green))
                 Spacer()
