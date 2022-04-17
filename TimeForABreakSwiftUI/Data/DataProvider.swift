@@ -47,10 +47,6 @@ class DataProvider {
         BreakAction(title: "Exercise: Do a few pushups", desc: "Laying on your belly with your hands on the ground by your shoulders, push up with your arms until extended. Do a set that tires you", duration: 4, category: "exercise"))
         data.append(BreakAction(title: "Exercise: Back Bridges", desc: "Lie on your back with your knees bent. Tighten your abdominal muscles. Raise your hips off the floor until your hips are aligned with your knees and shoulders. Hold for three deep breaths. Return to the starting position and repeat.", duration: 4, category: "exercise", linkurl: URL(string: "https://www.mayoclinic.org/healthy-lifestyle/labor-and-delivery/multimedia/bridge-exercise/img-20006409")))
         
-        data.map { breakAction in
-            print( breakAction.title)
-        }
-        
         return data
     }
     

@@ -12,7 +12,20 @@ class ActionViewModel: ObservableObject {
     
     private var fileBase : String = "breakActions"
     
-    @Published var actions : [BreakAction] = []
+    var actions : [BreakAction] = [] {
+        didSet {
+            actions.sort { (lhs, rhs) -> Bool in
+                if lhs.pinned && !rhs.pinned {
+                    return true
+                }
+//                else if lhs.title < rhs.title {
+//                    return true
+//                }
+                return false
+            }
+            objectWillChange.send()
+        }
+    }
     
     private func fileURL() throws -> URL {
         
@@ -106,6 +119,16 @@ class ActionViewModel: ObservableObject {
             actions.replaceSubrange(thisInd...thisInd, with: repeatElement(newItem, count: 1))
         }
         saveToDisk()        
+    }
+    
+    func pinToggle(action: BreakAction) {
+        var updateAction = action
+        updateAction.pinned = !action.pinned
+        if let thisInd = actions.firstIndex(where: {$0.id == updateAction.id} )
+        {
+            actions.replaceSubrange(thisInd...thisInd, with: repeatElement(updateAction, count: 1))
+        }
+        saveToDisk()
     }
     
     func deleteById(id: UUID) {

@@ -27,6 +27,13 @@ struct ActionListView: View {
     @State private var durationValue = 3
     @State private var didLoadData = false
     
+    // Toast vars
+    @State private var showAddToast = false
+    @State private var showDelToast = false
+    @State private var showPinToast = false
+    @State private var showUnpinToast = false
+    
+    
     let cal = Calendar.current
     
     var defaultAction : BreakAction = BreakAction(title: "Get up!", desc: "Leave your chair", duration: 1, category: "relax")
@@ -40,7 +47,7 @@ struct ActionListView: View {
                 Text(action.title)
                     .font(.caption)
                 Spacer()
-                Label("", systemImage: action.pinned ? "pin.fill" : "pin.slash")
+                Label("", systemImage: action.pinned ? "pin.fill" : "")
                     .font(.caption)
             }
         }
@@ -59,39 +66,60 @@ struct ActionListView: View {
 //                    Spacer()
 //                }
                 // Area for selected actions
-                List {
-                    Section("Selected") {
-                        ForEach(selectActions.actions.filter{cal.isDateInToday($0.date ?? Date(timeInterval: -36000, since: Date())) || $0.pinned }, id: \.id) { action in
-                            actionInfo(for: action)
-                        }
-                        .onDelete(perform: selectActions.deleteAction)
-                    }
-                }
-                // .frame(maxHeight: (UIScreen.main.bounds.height / 5))
-                .listStyle(SidebarListStyle())
+//                List {
+//                    Section("Selected") {
+//                        ForEach(selectActions.actions.filter{cal.isDateInToday($0.date ?? Date(timeInterval: -36000, since: Date())) || $0.pinned }, id: \.id) { action in
+//                            actionInfo(for: action)
+//                        }
+//                        .onDelete(perform: selectActions.deleteAction)
+//                    }
+//                }
+//                // .frame(maxHeight: (UIScreen.main.bounds.height / 5))
+//                .listStyle(SidebarListStyle())
                 
                 // List area for all actions
                 List {
                     Section("Available") {
                         ForEach(allActionsVM.actions, id: \.id) { action in
                             NavigationLink(destination: ActionEditView(action: action)) {
-                                Text(action.title)
-                                    .font(.caption)
-                                    .badge(action.duration < 30 ? action.duration.formatted() + " min" : "a while")
+                                actionInfo(for: action)
                             }
                             .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
-                                Button (action: { selectActions.add(action: action.title, duration: action.duration)}, label: {
+                                Button (action: {
+                                    selectActions.add(action: action.title, duration: action.duration)
+                                    showAddToast = true
+                                }, label: {
                                     Text("Add to Selected Actions")
                                     //Label("Add to Selected Actions", systemImage: "plus.square.fill")
                                 })
                                 .tint(Color.green)
                             })
+                            .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
+                                Button (action: { allActionsVM.pinToggle(action: action)
+                                    showPinToast = true
+                                }, label: {
+                                    Text("Pin to top of list")
+                                    //Label("Add to Selected Actions", systemImage: "plus.square.fill")
+                                })
+                                .tint(Color.yellow)
+                            })
                             .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
                                 Button (role: .destructive, action: {
-                                    allActionsVM.deleteById(id: action.id)}, label: {
+                                    allActionsVM.deleteById(id: action.id)
+                                    showDelToast = true
+                                }, label: {
                                         Text("Remove from Available Actions")
                                         //Label("Remove from Available Actions", systemImage: "trash.fill")
                                     })
+                            })
+                            .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
+                                Button (action: { allActionsVM.pinToggle(action: action)
+                                    showUnpinToast = true
+                                }, label: {
+                                    Text("Unpin from top of list")
+                                    //Label("Add to Selected Actions", systemImage: "plus.square.fill")
+                                })
+                                .tint(Color.yellow)
                             })
                         }
                     }
@@ -105,7 +133,7 @@ struct ActionListView: View {
                         }
                     }
                 }
-                .listStyle(SidebarListStyle())
+                .listStyle(.plain)
                 Spacer()
                 NavigationLink(destination: ActionCreateView()) {
                     HStack(spacing: 15){
@@ -123,6 +151,27 @@ struct ActionListView: View {
             .toolbar {
                 toolbars(title: "Actions")                
             }
+            .toast(message: "Added to today's list",
+                   isShowing: $showAddToast,
+                   config: .init(backgroundColor: .blue.opacity(0.8),
+                                sysImg: "plus.circle.fill")
+            )
+            .toast(message: "Removed action",
+                   isShowing: $showDelToast,
+                   config: .init(backgroundColor: .red.opacity(0.8),
+                                 sysImg: "trash.fill")
+            )
+            .toast(message: "Pinned action to top",
+                   isShowing: $showPinToast,
+                   config: .init(backgroundColor: .yellow.opacity(0.8),
+                                 sysImg: "pin.fill")
+            )
+            .toast(message: "Unpinned action",
+                   isShowing: $showUnpinToast,
+                   config: .init(backgroundColor: .yellow.opacity(0.8),
+                                 sysImg: "pin.slash")
+            )
+            
         }
         
     }
