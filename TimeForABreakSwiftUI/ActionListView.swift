@@ -47,8 +47,14 @@ struct ActionListView: View {
                 Text(action.title)
                     .font(.caption)
                 Spacer()
-                Label("", systemImage: action.pinned ? "pin.fill" : "")
-                    .font(.caption)
+                if action.pinned {
+                    Label("", systemImage: "pin.fill")
+                                        .font(.caption)
+                } else if action.category == "external" {
+                    Label("", systemImage: "network")
+                                        .font(.caption)
+                }
+                
             }
         }
     }
@@ -151,12 +157,12 @@ struct ActionListView: View {
             )
             .toast(message: "Pinned action to top",
                    isShowing: $showPinToast,
-                   config: .init(backgroundColor: .yellow.opacity(0.8),
+                   config: .init(backgroundColor: .yellow.opacity(0.9),
                                  sysImg: "pin.fill")
             )
             .toast(message: "Unpinned action",
                    isShowing: $showUnpinToast,
-                   config: .init(backgroundColor: .yellow.opacity(0.8),
+                   config: .init(backgroundColor: .yellow.opacity(0.9),
                                  sysImg: "pin.slash")
             )
             
