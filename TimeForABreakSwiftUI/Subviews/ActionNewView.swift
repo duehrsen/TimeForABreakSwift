@@ -35,8 +35,8 @@ struct ActionNewView: View {
                 Divider()
             }
             
-            VStack() {
-                HStack(alignment: .center, spacing: 10) {
+            HStack {
+                Spacer()
                     Button(action: {
                         vm.add(action: actionTitle, duration: actionDuration)
                         presentationMode.wrappedValue.dismiss()
@@ -48,13 +48,14 @@ struct ActionNewView: View {
                             //.font(.caption)
                         }
                         .padding()
-                        .frame(width: UIScreen.main.bounds.width/2)
+                        .frame(width: UIScreen.main.bounds.width/2, alignment: .center)
                         .background(Color.green)
                         .clipShape(Capsule())
                         .shadow(radius: 5)
                         
                     }
-                }
+                Spacer()
+                
             }
             
             Spacer()

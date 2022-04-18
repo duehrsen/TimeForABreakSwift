@@ -119,7 +119,7 @@ struct TimerCountView: View {
                 HStack(spacing: 15){
                     Image(systemName: "eyes.inverse")
                         .foregroundColor(.white)
-                    Text("Show Actions")
+                    Text("Show Today's Actions")
                         .foregroundColor(.white)
                         .font(.caption)
                 }

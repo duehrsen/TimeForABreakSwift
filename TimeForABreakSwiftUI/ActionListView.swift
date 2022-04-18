@@ -57,29 +57,14 @@ struct ActionListView: View {
         selectActions.pinToggle(action: action)
     }
     
+    private func onMove(source: IndexSet, destination: Int) {
+        allActionsVM.actions.move(fromOffsets: source, toOffset: destination)
+    }
+    
     var body: some View {
         NavigationView{
             VStack {
-//                HStack {
-//                    Text("Select your actions for today")
-//                        .padding()
-//                    Spacer()
-//                }
-                // Area for selected actions
-//                List {
-//                    Section("Selected") {
-//                        ForEach(selectActions.actions.filter{cal.isDateInToday($0.date ?? Date(timeInterval: -36000, since: Date())) || $0.pinned }, id: \.id) { action in
-//                            actionInfo(for: action)
-//                        }
-//                        .onDelete(perform: selectActions.deleteAction)
-//                    }
-//                }
-//                // .frame(maxHeight: (UIScreen.main.bounds.height / 5))
-//                .listStyle(SidebarListStyle())
-                
-                // List area for all actions
                 List {
-                    Section("Available") {
                         ForEach(allActionsVM.actions, id: \.id) { action in
                             NavigationLink(destination: ActionEditView(action: action)) {
                                 actionInfo(for: action)
@@ -89,44 +74,43 @@ struct ActionListView: View {
                                     selectActions.add(action: action.title, duration: action.duration)
                                     showAddToast = true
                                 }, label: {
-                                    //Text("Add to Selected Actions")
                                     Label("Add to Selected Actions", systemImage: "plus.square.fill")
                                 })
                                 .tint(Color.blue)
                             })
                             .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
-                                Button (action: {
-                                    
-                                    if allActionsVM.pinToggle(action: action, toggleOn: true) {               showPinToast = true
-                                    }
-                                    
-                                }, label: {
-                                    //Text("Pin to top of list")
-                                    Label("Pin to top of list", systemImage: "pin.fill")
-                                })
-                                .tint(Color.yellow)
+                                if !action.pinned{
+                                    Button (action: {
+                                        if allActionsVM.pinToggle(action: action, toggleOn: true) {               showPinToast = true
+                                        }
+                                    }, label: {
+                                        Label("Pin to top of list", systemImage: "pin.fill")
+                                    })
+                                    .tint(Color.yellow)
+                                }
                             })
                             .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
                                 Button (role: .destructive, action: {
                                     allActionsVM.deleteById(id: action.id)
                                     showDelToast = true
                                 }, label: {
-                                        //Text("Remove from Available Actions")
                                         Label("Remove from Available Actions", systemImage: "trash.fill")
                                     })
                             })
                             .swipeActions(edge: .trailing, allowsFullSwipe: false, content: {
-                                Button (action: {
-                                    if allActionsVM.pinToggle(action: action, toggleOn: false) {               showUnpinToast = true
+                                if action.pinned {
+                                    Button (action: {
+                                        if allActionsVM.pinToggle(action: action, toggleOn: false) {               showUnpinToast = true
+                                    }
+                                    }, label: {
+                                        Label("Unpin from top of list", systemImage: "pin.slash")
+                                    })
+                                    .tint(Color.yellow)
                                 }
-                                }, label: {
-                                    //Text("Unpin from top of list")
-                                    Label("Unpin from top of list", systemImage: "pin.slash")
-                                })
-                                .tint(Color.yellow)
+
                             })
                         }
-                    }
+                        .onMove(perform: onMove)
                     .onAppear() {
                         if !didLoadData
                         {
@@ -137,11 +121,11 @@ struct ActionListView: View {
                         }
                     }
                 }
+                //.environment(\.editMode, .constant(.active))
                 .listStyle(.plain)
                 Spacer()
                 NavigationLink(destination: ActionNewView()) {
                     HStack(spacing: 15){
-                        //Image(systemName: "plus.app.fill").foregroundColor(.white)
                         Text("Create New Action")
                             .foregroundColor(.white)
                             //.font(.caption)
@@ -151,8 +135,9 @@ struct ActionListView: View {
                 
             }
             .navigationBarTitleDisplayMode(.inline)
+            .navigationBarItems(trailing: EditButton())
             .toolbar {
-                toolbars(title: "Actions")                
+                toolbars(title: "Actions")
             }
             .toast(message: "Added to today's list",
                    isShowing: $showAddToast,
