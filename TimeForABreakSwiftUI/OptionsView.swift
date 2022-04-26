@@ -52,22 +52,22 @@ struct OptionsView: View {
                         
                     }
                     
-                    Button(action: {
-                        actionVM.restoreDefaultsToDisk()
-                        os.setDefault()
-                    }) {
-                        HStack(spacing: 15){
-                            //Image(systemName: "rectangle.portrait.and.arrow.right")                              .foregroundColor(.white)
-                            Text("Restore all")
-                                .font(.body)
-                                .foregroundColor(.white)
-                        }
-                        .padding()
-                        .frame(width: UIScreen.main.bounds.width/2 - 20)
-                        .background(Color.red)
-                        .clipShape(Capsule())
-                        .shadow(radius: 5)
-                    }
+//                    Button(action: {
+//                        actionVM.restoreDefaultsToDisk()
+//                        os.setDefault()
+//                    }) {
+//                        HStack(spacing: 15){
+//                            //Image(systemName: "rectangle.portrait.and.arrow.right")                              .foregroundColor(.white)
+//                            Text("Restore all")
+//                                .font(.body)
+//                                .foregroundColor(.white)
+//                        }
+//                        .padding()
+//                        .frame(width: UIScreen.main.bounds.width/2 - 20)
+//                        .background(Color.red)
+//                        .clipShape(Capsule())
+//                        .shadow(radius: 5)
+//                    }
                     
                 }
                 //.navigationBarTitle("App Options")

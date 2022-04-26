@@ -127,6 +127,16 @@ struct MainView: View {
                 }
             }
         }
+        // Fetch pinned actions daily
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification), perform: { _ in
+            allActions.actions.forEach { a in
+                if (a.pinned) {
+                    let newAction = BreakAction(title: a.title, desc: a.desc, duration: a.duration, category: a.category, completed: false, date: Date.now, linkurl: a.linkurl, pinned: true, frequency: a.frequency)
+                    selectActions.actions.insert(newAction, at: 0)
+                }
+                                
+            }
+        })
         .onChange(of: notificationManager.authorizationStatus, perform: { authorizationStatus in
             switch authorizationStatus {
             case .notDetermined:
