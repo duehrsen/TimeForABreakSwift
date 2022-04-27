@@ -22,15 +22,20 @@ struct SummaryView: View {
 //                    Spacer()
 //                }
                 List {
-                    Section("Today") {
+                    Section("Completed Today") {
                     }
-                    ForEach(selectActions.actions.filter{cal.isDateInToday($0.date ?? Date(timeInterval: -36000, since: Date())) && $0.completed} , id: \.id) {
-                        item in
-                        SimpleActionRowView(action: item)
+                    ForEach(selectActions.countedHistoryActions(actions: selectActions.actions
+                        .filter{cal.isDateInToday($0.date ?? Date(timeInterval: -36000, since: Date())) && $0.completed}), id: \.id) {
+                        action in
+                        HStack(spacing: 6) {
+                            Text(action.title)
+                                .font(.caption)
+                                .badge("\(action.frequency)x")
+                        }
                     }
-                    Section("Yesterday") {
+                    Section("Completed Yesterday") {
                     }
-                    ForEach(selectActions.actions.filter{cal.isDateInYesterday($0.date ?? Date(timeInterval: -36000, since: Date())) && $0.completed} , id: \.id) {
+                    ForEach(selectActions.countedHistoryActions(actions: selectActions.actions.filter{cal.isDateInYesterday($0.date ?? Date(timeInterval: -36000, since: Date())) && $0.completed}), id: \.id) {
                         item in
                         SimpleActionRowView(action: item)
                     }

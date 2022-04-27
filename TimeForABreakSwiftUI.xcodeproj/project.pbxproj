@@ -14,6 +14,7 @@
 		4E2D19B228052EDE00459DDB /* SelectedActionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2D19B128052EDE00459DDB /* SelectedActionsViewModel.swift */; };
 		4E2D19B428053A3A00459DDB /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4E2D19B328053A3A00459DDB /* Launch Screen.storyboard */; };
 		4E2FEF9F27F5533200A02DF2 /* TimerCountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2FEF9E27F5533200A02DF2 /* TimerCountView.swift */; };
+		4E4440BA281919A000065E44 /* FrequencyActionRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E4440B9281919A000065E44 /* FrequencyActionRowView.swift */; };
 		4E58B485280BDEE40025D27F /* ToastViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E58B484280BDEE40025D27F /* ToastViewModifier.swift */; };
 		4E58B487280C076C0025D27F /* ActionNewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E58B486280C076C0025D27F /* ActionNewView.swift */; };
 		4E74E0732801514B0094CE5D /* SummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E74E0722801514B0094CE5D /* SummaryView.swift */; };
@@ -51,6 +52,7 @@
 		4E2D19B128052EDE00459DDB /* SelectedActionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedActionsViewModel.swift; sourceTree = "<group>"; };
 		4E2D19B328053A3A00459DDB /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		4E2FEF9E27F5533200A02DF2 /* TimerCountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerCountView.swift; sourceTree = "<group>"; };
+		4E4440B9281919A000065E44 /* FrequencyActionRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FrequencyActionRowView.swift; sourceTree = "<group>"; };
 		4E58B484280BDEE40025D27F /* ToastViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastViewModifier.swift; sourceTree = "<group>"; };
 		4E58B486280C076C0025D27F /* ActionNewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionNewView.swift; sourceTree = "<group>"; };
 		4E74E0722801514B0094CE5D /* SummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryView.swift; sourceTree = "<group>"; };
@@ -99,6 +101,7 @@
 				4E8A32912803E7180078AAF0 /* AvailableActionsSheetView.swift */,
 				4E8A328F2803C3CA0078AAF0 /* SelectedActionsSheetView.swift */,
 				4EE9FB7E2802A3C500D0F02D /* SimpleActionRowView.swift */,
+				4E4440B9281919A000065E44 /* FrequencyActionRowView.swift */,
 				4E0A660C27FBFCBB00A8F0E6 /* ActionEditView.swift */,
 				4E58B486280C076C0025D27F /* ActionNewView.swift */,
 				4E0A660A27FBF67B00A8F0E6 /* ActionCompletionRowView.swift */,
@@ -284,6 +287,7 @@
 				4E8A32962804096F0078AAF0 /* ActionCreateView.swift in Sources */,
 				4EC68BA127F6D2BF00AFD70B /* OptionsView.swift in Sources */,
 				4E74E0732801514B0094CE5D /* SummaryView.swift in Sources */,
+				4E4440BA281919A000065E44 /* FrequencyActionRowView.swift in Sources */,
 				4EC68BA527F6EA3E00AFD70B /* ActionViewModel.swift in Sources */,
 				4E58B487280C076C0025D27F /* ActionNewView.swift in Sources */,
 				4E0A660B27FBF67B00A8F0E6 /* ActionCompletionRowView.swift in Sources */,
