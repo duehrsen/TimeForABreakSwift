@@ -17,6 +17,7 @@ struct MainView: View {
     @StateObject private var notificationManager = NotificationManager()
     @StateObject var optionsModel = OptionsModel()
     
+    @State private var switchedToBackground : Bool = false
     @State private var selectedTab = 0
     @State private var minDragForSwipe : CGFloat = 60
     
@@ -53,33 +54,36 @@ struct MainView: View {
         }
         .onChange(of: scenePhase, perform: { scene in
             switch scene {
-                case .background:
-                print("App is in background")
-                tM.movingToBackground()
-                notificationManager.cancelAllNotifications()
-                if tM.started
-                {
-                    notificationManager.createLocalNotification(
-                        title: tM.isWorkTime ? "Time for a break!" : "Break time's over",
-                        body: tM.isWorkTime ? "You worked for \(tM.workTimeTotalSeconds/60) min" : "\(tM.breakTimeTotalSeconds/60) min break over.",
-                        secondsUntilDone: tM.currentTimeRemaining,
-                        doesPlaySounds: optionsModel.options.doesPlaySounds) { error in
-                        if error == nil {
-                            DispatchQueue.main.async {
-                                print("notification triggered")
-                                notificationManager.reloadLocNotifications()
+                case .background, .inactive:
+                if !switchedToBackground {
+                    switchedToBackground = true
+                    tM.movingToBackground()
+                    notificationManager.cancelAllNotifications()
+                    if tM.started
+                    {
+                        notificationManager.createLocalNotification(
+                            title: tM.isWorkTime ? "Time for a break!" : "Break time's over",
+                            body: tM.isWorkTime ? "You worked for \(tM.workTimeTotalSeconds/60) min" : "\(tM.breakTimeTotalSeconds/60) min break over.",
+                            secondsUntilDone: tM.currentTimeRemaining,
+                            doesPlaySounds: optionsModel.options.doesPlaySounds) { error in
+                            if error == nil {
+                                DispatchQueue.main.async {
+                                    print("notification triggered")
+                                    notificationManager.reloadLocNotifications()
+                                }
                             }
                         }
+                        
                     }
-                    
                 }
+
+
                 
                 case .active:
                     print("App is active")
+                    switchedToBackground = false
                     tM.movingToActive()
                     notificationManager.cancelAllNotifications()
-                case .inactive:
-                    print("App is inactive")
                 @unknown default:
                     print("App state is unclear")
                 }
