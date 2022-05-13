@@ -134,7 +134,14 @@ struct MainView: View {
         // Fetch pinned actions daily
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification), perform: { _ in
             allActions.actions.forEach { a in
-                if (a.pinned) {
+                let isContained = selectActions.actions.contains { element in
+                    if (element.title == a.title) {
+                        return true
+                    }
+                    return false
+                }
+                
+                if (a.pinned && !isContained) {
                     let newAction = BreakAction(title: a.title, desc: a.desc, duration: a.duration, category: a.category, completed: false, date: Date.now, linkurl: a.linkurl, pinned: true, frequency: a.frequency)
                     selectActions.actions.insert(newAction, at: 0)
                 }
