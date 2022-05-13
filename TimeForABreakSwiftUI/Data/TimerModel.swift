@@ -54,7 +54,6 @@ class TimerModel : ObservableObject {
     {
         if (!started)
         {
-            currentTimeRemaining = isWorkTime ? workTimeTotalSeconds : breakTimeTotalSeconds
             return
         }
         let timeInterval: Int = Int(Date().timeIntervalSince(unfocusDate))
@@ -64,6 +63,7 @@ class TimerModel : ObservableObject {
         case Int.min...0:
             isWorkTime.toggle()
             currentTimeRemaining = isWorkTime ? workTimeTotalSeconds : breakTimeTotalSeconds
+            resetTimer()
             started = false
         case 1...currentTimeRemaining:
             currentTimeRemaining = timeDiff
