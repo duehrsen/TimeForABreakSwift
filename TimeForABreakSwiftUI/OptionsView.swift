@@ -34,7 +34,7 @@ struct OptionsView: View {
                             print("gonna save")
                             os.save(options: newOptions) { result in
                                 if case .failure(let error) = result {
-                                    fatalError(error.localizedDescription)
+                                    print("[OptionsView] Failed to save options: \(error.localizedDescription)")
                                 }
                             }
                             tM.updateFromOptions(optionSet: newOptions)

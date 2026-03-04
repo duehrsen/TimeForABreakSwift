@@ -66,7 +66,7 @@ class PersistenceManager<T: Codable> {
     func saveToDisk(data: T) {
         save(data: data) { result in
             if case .failure(let error) = result {
-                fatalError(error.localizedDescription)
+                print("[PersistenceManager] Failed to save \(self.fileName): \(error.localizedDescription)")
             }
         }
     }

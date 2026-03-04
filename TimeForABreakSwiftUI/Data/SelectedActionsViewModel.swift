@@ -74,12 +74,12 @@ class SelectedActionsViewModel: ObservableObject {
         actions = defaultData
         persistence.save(data: []) { result in
             if case .failure(let error) = result {
-                fatalError(error.localizedDescription)
+                print("[SelectedActionsViewModel] Failed to clear data: \(error.localizedDescription)")
             }
         }
         persistence.save(data: defaultData) { result in
             if case .failure(let error) = result {
-                fatalError(error.localizedDescription)
+                print("[SelectedActionsViewModel] Failed to save defaults: \(error.localizedDescription)")
             }
         }
     }
