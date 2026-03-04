@@ -10,6 +10,7 @@
 		4E0A660B27FBF67B00A8F0E6 /* ActionCompletionRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E0A660A27FBF67B00A8F0E6 /* ActionCompletionRowView.swift */; };
 		4E0A660D27FBFCBB00A8F0E6 /* ActionEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E0A660C27FBFCBB00A8F0E6 /* ActionEditView.swift */; };
 		4E0FE79B2F56C51D007A1092 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4E0FE79A2F56C51D007A1092 /* Assets.xcassets */; };
+		4E14B7882F5802BE005E7A0F /* PersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E14B7872F5802BE005E7A0F /* PersistenceManager.swift */; };
 		4E1684EC27FFDE8400AF9990 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E1684EB27FFDE8400AF9990 /* NotificationManager.swift */; };
 		4E2D19B028052E7400459DDB /* BoredResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2D19AF28052E7400459DDB /* BoredResponse.swift */; };
 		4E2D19B228052EDE00459DDB /* SelectedActionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E2D19B128052EDE00459DDB /* SelectedActionsViewModel.swift */; };
@@ -60,6 +61,7 @@
 		4E0FE79A2F56C51D007A1092 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4E0FE79D2F56C8B3007A1092 /* TimerModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerModelTests.swift; sourceTree = "<group>"; };
 		4E0FE7A22F56C909007A1092 /* TimeForABreakSwiftUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TimeForABreakSwiftUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4E14B7872F5802BE005E7A0F /* PersistenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceManager.swift; sourceTree = "<group>"; };
 		4E1684EB27FFDE8400AF9990 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		4E2D19AF28052E7400459DDB /* BoredResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoredResponse.swift; sourceTree = "<group>"; };
 		4E2D19B128052EDE00459DDB /* SelectedActionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedActionsViewModel.swift; sourceTree = "<group>"; };
@@ -161,6 +163,7 @@
 				4E2D19AF28052E7400459DDB /* BoredResponse.swift */,
 				4E2D19B128052EDE00459DDB /* SelectedActionsViewModel.swift */,
 				4EB3AB0B280A866A008FF804 /* OptionsModel.swift */,
+				4E14B7872F5802BE005E7A0F /* PersistenceManager.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -365,6 +368,7 @@
 				4E74E0732801514B0094CE5D /* SummaryView.swift in Sources */,
 				4E4440BA281919A000065E44 /* FrequencyActionRowView.swift in Sources */,
 				4EC68BA527F6EA3E00AFD70B /* ActionViewModel.swift in Sources */,
+				4E14B7882F5802BE005E7A0F /* PersistenceManager.swift in Sources */,
 				4E58B487280C076C0025D27F /* ActionNewView.swift in Sources */,
 				4E0A660B27FBF67B00A8F0E6 /* ActionCompletionRowView.swift in Sources */,
 				4EE2469627F0454C0099CE24 /* TimerModel.swift in Sources */,

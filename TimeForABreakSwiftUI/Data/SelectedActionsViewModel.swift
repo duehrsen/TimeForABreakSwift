@@ -10,29 +10,19 @@ import SwiftUI
 import Alamofire
 
 class SelectedActionsViewModel: ObservableObject {
-    
-    @Published var selectedActions : [BreakAction] = []
-    
+
+    private let persistence = PersistenceManager<[BreakAction]>(fileName: "selectedActions", defaultValue: [])
+
+    @Published var selectedActions: [BreakAction] = []
+
     init() {
         selectedActions = [BreakAction(title: "Get up", desc: "", duration: 3, category: "regular")]
     }
-    
-    private var fileBase : String = "selectedActions"
-    
+
     let cal = Calendar.current
-    
-    @Published var actions : [BreakAction] = []
-    
-    private func fileURL() throws -> URL {
-        
-        try FileManager.default.url(for: .documentDirectory,
-                                    in: .userDomainMask,
-                                    appropriateFor: nil,
-                                    create: false)
-        .appendingPathComponent("\(fileBase).data")
-        
-    }
-    
+
+    @Published var actions: [BreakAction] = []
+
     func getTodaysActions() -> [BreakAction] {
         return selectedActions.filter{cal.isDateInToday($0.date ?? Date(timeInterval: -36000, since: Date())) && $0.completed}
     }
@@ -67,61 +57,27 @@ class SelectedActionsViewModel: ObservableObject {
     }
     
     func save(actions: [BreakAction], completion: @escaping (Result<Int, Error>) -> Void) {
-        DispatchQueue.global(qos: .background).async {
-            do {
-                let data = try JSONEncoder().encode(actions)
-                let outfile = try self.fileURL()
-                try data.write(to: outfile)
-            } catch {
-                DispatchQueue.main.async {
-                    completion(.failure(error))
-                }
-            }
-        }
+        persistence.save(data: actions, completion: completion)
     }
-    
-    func load(completion: @escaping (Result<[BreakAction], Error>)->Void) {
-        DispatchQueue.global(qos: .background).async {
-            do {
-                let fileUrl = try self.fileURL()
-                guard let file = try? FileHandle(forReadingFrom: fileUrl) else {
-                    DispatchQueue.main.async {
-                        completion(.success([]))
-                    }
-                    return
-                }
-                let aryActionBreaks = try JSONDecoder().decode([BreakAction].self, from: file.availableData)
-                DispatchQueue.main.async {
-                    completion(.success(aryActionBreaks))
-                }
-            } catch {
-                DispatchQueue.main.async {
-                    completion(.failure(error))
-                }
-            }
-            
-        }
-        
+
+    func load(completion: @escaping (Result<[BreakAction], Error>) -> Void) {
+        persistence.load(completion: completion)
     }
-    
+
     func saveToDisk() {
-        self.save(actions: actions) { result in
-            if case .failure(let error) = result {
-                fatalError(error.localizedDescription)
-            }
-        }
+        persistence.saveToDisk(data: actions)
     }
-    
+
     func restoreDefaultsToDisk() {
         actions = []
         let defaultData = DataProvider.mockData()
         actions = defaultData
-        self.save(actions: []) { result in
+        persistence.save(data: []) { result in
             if case .failure(let error) = result {
                 fatalError(error.localizedDescription)
             }
         }
-        self.save(actions: defaultData) { result in
+        persistence.save(data: defaultData) { result in
             if case .failure(let error) = result {
                 fatalError(error.localizedDescription)
             }

@@ -10,88 +10,37 @@ import SwiftUI
 import Alamofire
 
 class ActionViewModel: ObservableObject {
-    
-    private var fileBase : String = "breakActions"
-    
-    var actions : [BreakAction] = [] {
+
+    private let persistence = PersistenceManager<[BreakAction]>(fileName: "breakActions", defaultValue: [])
+
+    var actions: [BreakAction] = [] {
         didSet {
             actions.sort { (lhs, rhs) -> Bool in
                 if lhs.pinned && !rhs.pinned {
                     return true
                 }
-//                else if lhs.title < rhs.title {
-//                    return true
-//                }
                 return false
             }
             objectWillChange.send()
         }
     }
-    
-    private func fileURL() throws -> URL {
-        
-        try FileManager.default.url(for: .documentDirectory,
-                                    in: .userDomainMask,
-                                    appropriateFor: nil,
-                                    create: false)
-        .appendingPathComponent("\(fileBase).data")
-        
-    }
-    
+
     func save(actions: [BreakAction], completion: @escaping (Result<Int, Error>) -> Void) {
-        DispatchQueue.global(qos: .background).async {
-            do {
-                let data = try JSONEncoder().encode(actions)
-                let outfile = try self.fileURL()
-                try data.write(to: outfile)
-            } catch {
-                DispatchQueue.main.async {
-                    completion(.failure(error))
-                }
-            }
-        }
+        persistence.save(data: actions, completion: completion)
     }
-    
-    func load(completion: @escaping (Result<[BreakAction], Error>)->Void) {
-        DispatchQueue.global(qos: .background).async {
-            do {
-                let fileUrl = try self.fileURL()
-                guard let file = try? FileHandle(forReadingFrom: fileUrl) else {
-                    DispatchQueue.main.async {
-                        completion(.success([]))
-                    }
-                    return
-                }
-                let aryActionBreaks = try JSONDecoder().decode([BreakAction].self, from: file.availableData)
-                DispatchQueue.main.async {
-                    completion(.success(aryActionBreaks))
-                }
-            } catch {
-                DispatchQueue.main.async {
-                    completion(.failure(error))
-                }
-            }
-            
-        }
-        
+
+    func load(completion: @escaping (Result<[BreakAction], Error>) -> Void) {
+        persistence.load(completion: completion)
     }
-    
+
     func saveToDisk() {
-        self.save(actions: actions) { result in
-            if case .failure(let error) = result {
-                fatalError(error.localizedDescription)
-            }
-        }
+        persistence.saveToDisk(data: actions)
     }
-    
+
     func restoreDefaultsToDisk() {
         let defaultData = DataProvider.mockData()
         actions = defaultData
-        self.save(actions: defaultData) { result in
-            if case .failure(let error) = result {
-                fatalError(error.localizedDescription)
-            }
-        }
+        persistence.saveToDisk(data: defaultData)
     }
     
     
