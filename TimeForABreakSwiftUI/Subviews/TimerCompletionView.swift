@@ -48,8 +48,7 @@ struct TimerCompletionView: View {
                 .foregroundColor(Color.yellow)
                 .frame(width: UIScreen.main.bounds.width - 20, alignment: .center)
                 .onAppear(perform: {
-                    tm.isWorkTime.toggle()
-                    tm.resetTimer()
+                    tm.switchMode()
                 })
             if isFinishedWork {
                 List {
