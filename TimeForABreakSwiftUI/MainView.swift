@@ -52,8 +52,8 @@ struct MainView: View {
                 .tag(3)
                 .highPriorityGesture(DragGesture().onEnded({ self.handleSwipe(translation: $0.translation.width) }))
         }
-        .onChange(of: scenePhase, perform: { scene in
-            switch scene {
+        .onChange(of: scenePhase) { newPhase in
+            switch newPhase {
                 case .background, .inactive:
                 if !switchedToBackground {
                     switchedToBackground = true
@@ -87,8 +87,7 @@ struct MainView: View {
                 @unknown default:
                     print("App state is unclear")
                 }
-            }
-        )
+        }
         .onAppear {
             notificationManager.reloadAuthorizationStatus()
             allActions.load { result in
@@ -148,8 +147,8 @@ struct MainView: View {
                                 
             }
         })
-        .onChange(of: notificationManager.authorizationStatus, perform: { authorizationStatus in
-            switch authorizationStatus {
+        .onChange(of: notificationManager.authorizationStatus) { newStatus in
+            switch newStatus {
             case .notDetermined:
                 notificationManager.requestAuth()
                 print("request auth")
@@ -160,7 +159,7 @@ struct MainView: View {
             default:
                 break
             }
-        })
+        }
         .environmentObject(optionsModel)
         .environmentObject(tM)
         .environmentObject(selectActions)

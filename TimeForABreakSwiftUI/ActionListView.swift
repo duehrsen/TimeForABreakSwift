@@ -141,8 +141,10 @@ struct ActionListView: View {
                 
             }
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(trailing: EditButton())
             .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    EditButton()
+                }
                 toolbars(title: "Actions")
             }
             .toast(message: "Added to today's list",

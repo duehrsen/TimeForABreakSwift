@@ -35,40 +35,43 @@ struct TimerCompletionView: View {
     }
     
     var body: some View {
-        VStack(spacing: 30) {
-            Spacer()
-            Text(isFinishedWork ? "Time for a break!" : "Hope you are recharged!")
-                .font(.title2)
-                .lineLimit(4)
-                .minimumScaleFactor(0.5)
-                .foregroundColor(Color.blue)
-                .frame(width: UIScreen.main.bounds.width - 20, alignment: .center)
-            Image(systemName: isFinishedWork ? "hands.sparkles.fill" : "bolt.fill")
-                .font(.system(size: 80))
-                .foregroundColor(Color.yellow)
-                .frame(width: UIScreen.main.bounds.width - 20, alignment: .center)
-                .onAppear(perform: {
-                    tm.switchMode()
-                })
-            if isFinishedWork {
-                List {
-                    Section("Some actions left to do" ) {
-                    }
-                    ForEach(
-                        selectActions.actions.filter{
-                            
-                            ( cal.isDateInToday($0.date ?? Date(timeInterval: -36000, since: Date())) || $0.pinned) && $0.completed == false
-                            
-                        } , id: \.id) {
-                            item in
-                            SimpleActionRowView(action: item)
+        GeometryReader { geometry in
+            VStack(spacing: 30) {
+                Spacer()
+                Text(isFinishedWork ? "Time for a break!" : "Hope you are recharged!")
+                    .font(.title2)
+                    .lineLimit(4)
+                    .minimumScaleFactor(0.5)
+                    .foregroundColor(Color.blue)
+                    .frame(width: geometry.size.width - 20, alignment: .center)
+                Image(systemName: isFinishedWork ? "hands.sparkles.fill" : "bolt.fill")
+                    .font(.system(size: 80))
+                    .foregroundColor(Color.yellow)
+                    .frame(width: geometry.size.width - 20, alignment: .center)
+                    .onAppear(perform: {
+                        tm.switchMode()
+                    })
+                if isFinishedWork {
+                    List {
+                        Section("Some actions left to do" ) {
                         }
-                }.listStyle(.plain)
-                    .frame(width: UIScreen.main.bounds.width - 20, alignment: .center)
-            } else {
-                SelectedActionsSheetView(isFromCompletedSheet: true)
-                    .frame(width: UIScreen.main.bounds.width - 20, alignment: .center)
+                        ForEach(
+                            selectActions.actions.filter{
+                                
+                                ( cal.isDateInToday($0.date ?? Date(timeInterval: -36000, since: Date())) || $0.pinned) && $0.completed == false
+                                
+                            } , id: \.id) {
+                                item in
+                                SimpleActionRowView(action: item)
+                            }
+                    }.listStyle(.plain)
+                        .frame(width: geometry.size.width - 20, alignment: .center)
+                } else {
+                    SelectedActionsSheetView(isFromCompletedSheet: true)
+                        .frame(width: geometry.size.width - 20, alignment: .center)
+                }
             }
+            .frame(maxWidth: .infinity)
         }
         .onAppear(){
             if os.options.doesPlaySounds {

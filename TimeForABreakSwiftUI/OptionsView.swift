@@ -17,6 +17,7 @@ struct OptionsView: View {
     
     var body: some View {
         NavigationView {
+            GeometryReader { geometry in
             VStack {                
 //                HStack {
 //                    Text("Adjust your time intervals")
@@ -45,7 +46,7 @@ struct OptionsView: View {
                                 .foregroundColor(.white)
                         }
                         .padding()
-                        .frame(width: UIScreen.main.bounds.width/2 - 20)
+                        .frame(width: geometry.size.width / 2 - 20)
                         .background(Color.green)
                         .clipShape(Capsule())
                         .shadow(radius: 5)
@@ -80,6 +81,7 @@ struct OptionsView: View {
 
                 Spacer()
                 
+            }
             }
         }
     }
