@@ -68,7 +68,7 @@ struct ActionListView: View {
     }
     
     var body: some View {
-        NavigationView{
+        NavigationStack {
             VStack {
                 List {
                         ForEach(allActionsVM.actions, id: \.id) { action in

@@ -14,7 +14,7 @@ struct SummaryView: View {
     let cal = Calendar.current
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack{
 //                HStack {
 //                    Text("What you've been up to lately")

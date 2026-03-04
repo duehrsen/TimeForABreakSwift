@@ -13,10 +13,9 @@ struct OptionsView: View {
     @State private var playSounds : Bool = false
     @State private var workMin : Int = 60
     @State private var breakMin: Int = 5
-    private var actionVM : ActionViewModel = ActionViewModel()
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             GeometryReader { geometry in
             VStack {                
 //                HStack {

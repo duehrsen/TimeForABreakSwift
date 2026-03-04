@@ -13,23 +13,9 @@ class SelectedActionsViewModel: ObservableObject {
 
     private let persistence = PersistenceManager<[BreakAction]>(fileName: "selectedActions", defaultValue: [])
 
-    @Published var selectedActions: [BreakAction] = []
-
-    init() {
-        selectedActions = [BreakAction(title: "Get up", desc: "", duration: 3, category: "regular")]
-    }
-
     let cal = Calendar.current
 
     @Published var actions: [BreakAction] = []
-
-    func getTodaysActions() -> [BreakAction] {
-        return selectedActions.filter{cal.isDateInToday($0.date ?? Date(timeInterval: -36000, since: Date())) && $0.completed}
-    }
-    
-    func getYestActions() -> [BreakAction] {
-        return selectedActions.filter{cal.isDateInYesterday($0.date ?? Date(timeInterval: -36000, since: Date())) && $0.completed}
-    }
     
     func countedHistoryActions(actions: [BreakAction]) -> [BreakAction]
     {
