@@ -22,10 +22,8 @@ struct OptionsView: View {
                     Button(action: {
                         if optionsModel.options.worktimeMin > 0 && optionsModel.options.breaktimeMin > 0 {
                             let newOptions = OptionSet(breaktimeMin: optionsModel.options.breaktimeMin, worktimeMin: optionsModel.options.worktimeMin, doesPlaySounds: optionsModel.options.doesPlaySounds)
-                            optionsModel.save(options: newOptions) { result in
-                                if case .failure(let error) = result {
-                                    print("[OptionsView] Failed to save options: \(error.localizedDescription)")
-                                }
+                            Task {
+                                try? await optionsModel.save(options: newOptions)
                             }
                             timerModel.updateFromOptions(optionSet: newOptions)
                         }

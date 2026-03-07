@@ -25,12 +25,12 @@ class ActionViewModel: ObservableObject {
         }
     }
 
-    func save(actions: [BreakAction], completion: @escaping (Result<Int, Error>) -> Void) {
-        persistence.save(data: actions, completion: completion)
+    func save(actions: [BreakAction]) async throws {
+        try await persistence.save(data: actions)
     }
 
-    func load(completion: @escaping (Result<[BreakAction], Error>) -> Void) {
-        persistence.load(completion: completion)
+    func load() async throws -> [BreakAction] {
+        try await persistence.load()
     }
 
     func saveToDisk() {

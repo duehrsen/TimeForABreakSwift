@@ -42,12 +42,12 @@ class SelectedActionsViewModel: ObservableObject {
         return countedActions
     }
     
-    func save(actions: [BreakAction], completion: @escaping (Result<Int, Error>) -> Void) {
-        persistence.save(data: actions, completion: completion)
+    func save(actions: [BreakAction]) async throws {
+        try await persistence.save(data: actions)
     }
 
-    func load(completion: @escaping (Result<[BreakAction], Error>) -> Void) {
-        persistence.load(completion: completion)
+    func load() async throws -> [BreakAction] {
+        try await persistence.load()
     }
 
     func saveToDisk() {
@@ -58,16 +58,7 @@ class SelectedActionsViewModel: ObservableObject {
         actions = []
         let defaultData = DataProvider.mockData()
         actions = defaultData
-        persistence.save(data: []) { result in
-            if case .failure(let error) = result {
-                print("[SelectedActionsViewModel] Failed to clear data: \(error.localizedDescription)")
-            }
-        }
-        persistence.save(data: defaultData) { result in
-            if case .failure(let error) = result {
-                print("[SelectedActionsViewModel] Failed to save defaults: \(error.localizedDescription)")
-            }
-        }
+        persistence.saveToDisk(data: defaultData)
     }
     
     

@@ -85,38 +85,31 @@ struct MainView: View {
                     break
                 }
         }
-        .onAppear {
+        .task {
             notificationManager.reloadAuthorizationStatus()
-            allActions.load { result in
-                switch result {
-                case .failure:
+            do {
+                let loadedActions = try await allActions.load()
+                if loadedActions.count > 0 {
+                    allActions.actions = loadedActions
+                } else {
                     allActions.restoreDefaultsToDisk()
-                case .success(let loadedActions):
-                    if loadedActions.count > 0 {
-                        allActions.actions = loadedActions
-                    } else {
-                        allActions.restoreDefaultsToDisk()
-                    }
-                    
                 }
+            } catch {
+                allActions.restoreDefaultsToDisk()
             }
-            selectActions.load { result in
-                switch result {
-                case .failure:
-                    selectActions.emptyData()
-                case .success(let loadedActions):
-                    selectActions.actions = loadedActions
-                }
+            do {
+                let loadedActions = try await selectActions.load()
+                selectActions.actions = loadedActions
+            } catch {
+                selectActions.emptyData()
             }
             allActions.addActivityFromApi()
-            optionsModel.load { result in
-                switch result {
-                case .failure:
-                    optionsModel.setDefault()
-                case .success(let loadedOptions):
-                    optionsModel.updateOptionsModel(breakMin: loadedOptions.breaktimeMin, workMin: loadedOptions.worktimeMin, doesPlaySounds: loadedOptions.doesPlaySounds)
-                    timerModel.updateFromOptions(optionSet: loadedOptions)
-                }
+            do {
+                let loadedOptions = try await optionsModel.load()
+                optionsModel.updateOptionsModel(breakMin: loadedOptions.breaktimeMin, workMin: loadedOptions.worktimeMin, doesPlaySounds: loadedOptions.doesPlaySounds)
+                timerModel.updateFromOptions(optionSet: loadedOptions)
+            } catch {
+                optionsModel.setDefault()
             }
         }
         // Fetch pinned actions daily

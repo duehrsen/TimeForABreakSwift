@@ -33,12 +33,12 @@ class OptionsModel: ObservableObject {
         options.doesPlaySounds = doesPlaySounds
     }
 
-    func save(options: OptionSet, completion: @escaping (Result<Int, Error>) -> Void) {
-        persistence.save(data: options, completion: completion)
+    func save(options: OptionSet) async throws {
+        try await persistence.save(data: options)
     }
 
-    func load(completion: @escaping (Result<OptionSet, Error>) -> Void) {
-        persistence.load(completion: completion)
+    func load() async throws -> OptionSet {
+        try await persistence.load()
     }
 
     func saveToDisk() {
