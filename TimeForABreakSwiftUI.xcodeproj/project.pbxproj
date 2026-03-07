@@ -23,6 +23,7 @@
 		4E4048782F5CA9CD00F47C6C /* SpeechService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E4048772F5CA9CD00F47C6C /* SpeechService.swift */; };
 		4E40487A2F5CD92900F47C6C /* PhraseMatching.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E4048792F5CD92900F47C6C /* PhraseMatching.swift */; };
 		4E40487E2F5CD9BD00F47C6C /* VoiceRecognitionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E40487D2F5CD9BD00F47C6C /* VoiceRecognitionService.swift */; };
+		4E4048802F5CDA1A00F47C6C /* VoiceInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E40487F2F5CDA1A00F47C6C /* VoiceInputView.swift */; };
 		4E4440BA281919A000065E44 /* FrequencyActionRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E4440B9281919A000065E44 /* FrequencyActionRowView.swift */; };
 		4E58B485280BDEE40025D27F /* ToastViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E58B484280BDEE40025D27F /* ToastViewModifier.swift */; };
 		4E58B487280C076C0025D27F /* ActionNewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E58B486280C076C0025D27F /* ActionNewView.swift */; };
@@ -81,6 +82,7 @@
 		4E4048772F5CA9CD00F47C6C /* SpeechService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechService.swift; sourceTree = "<group>"; };
 		4E4048792F5CD92900F47C6C /* PhraseMatching.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhraseMatching.swift; sourceTree = "<group>"; };
 		4E40487D2F5CD9BD00F47C6C /* VoiceRecognitionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceRecognitionService.swift; sourceTree = "<group>"; };
+		4E40487F2F5CDA1A00F47C6C /* VoiceInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceInputView.swift; sourceTree = "<group>"; };
 		4E4440B9281919A000065E44 /* FrequencyActionRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FrequencyActionRowView.swift; sourceTree = "<group>"; };
 		4E58B484280BDEE40025D27F /* ToastViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastViewModifier.swift; sourceTree = "<group>"; };
 		4E58B486280C076C0025D27F /* ActionNewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionNewView.swift; sourceTree = "<group>"; };
@@ -155,6 +157,7 @@
 				4EB3AB0D280AA6A5008FF804 /* OptionsInputSubView.swift */,
 				4EB3AB0F280AB894008FF804 /* TimeRemainingSubView.swift */,
 				4EB3AB13280ACC2C008FF804 /* ToolbarElements.swift */,
+				4E40487F2F5CDA1A00F47C6C /* VoiceInputView.swift */,
 			);
 			path = Subviews;
 			sourceTree = "<group>";
@@ -377,6 +380,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4E4048802F5CDA1A00F47C6C /* VoiceInputView.swift in Sources */,
 				4EB3AB0C280A866A008FF804 /* OptionsModel.swift in Sources */,
 				4E2D19B228052EDE00459DDB /* SelectedActionsViewModel.swift in Sources */,
 				4E4048702F5C0A2D00F47C6C /* ActionCompletion.swift in Sources */,
