@@ -22,6 +22,7 @@
 		4E4048742F5C9EEA00F47C6C /* DataMigration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E4048732F5C9EEA00F47C6C /* DataMigration.swift */; };
 		4E4048782F5CA9CD00F47C6C /* SpeechService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E4048772F5CA9CD00F47C6C /* SpeechService.swift */; };
 		4E40487A2F5CD92900F47C6C /* PhraseMatching.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E4048792F5CD92900F47C6C /* PhraseMatching.swift */; };
+		4E40487E2F5CD9BD00F47C6C /* VoiceRecognitionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E40487D2F5CD9BD00F47C6C /* VoiceRecognitionService.swift */; };
 		4E4440BA281919A000065E44 /* FrequencyActionRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E4440B9281919A000065E44 /* FrequencyActionRowView.swift */; };
 		4E58B485280BDEE40025D27F /* ToastViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E58B484280BDEE40025D27F /* ToastViewModifier.swift */; };
 		4E58B487280C076C0025D27F /* ActionNewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E58B486280C076C0025D27F /* ActionNewView.swift */; };
@@ -79,6 +80,7 @@
 		4E4048732F5C9EEA00F47C6C /* DataMigration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataMigration.swift; sourceTree = "<group>"; };
 		4E4048772F5CA9CD00F47C6C /* SpeechService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechService.swift; sourceTree = "<group>"; };
 		4E4048792F5CD92900F47C6C /* PhraseMatching.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhraseMatching.swift; sourceTree = "<group>"; };
+		4E40487D2F5CD9BD00F47C6C /* VoiceRecognitionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceRecognitionService.swift; sourceTree = "<group>"; };
 		4E4440B9281919A000065E44 /* FrequencyActionRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FrequencyActionRowView.swift; sourceTree = "<group>"; };
 		4E58B484280BDEE40025D27F /* ToastViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastViewModifier.swift; sourceTree = "<group>"; };
 		4E58B486280C076C0025D27F /* ActionNewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionNewView.swift; sourceTree = "<group>"; };
@@ -182,6 +184,7 @@
 				4E4048732F5C9EEA00F47C6C /* DataMigration.swift */,
 				4E4048772F5CA9CD00F47C6C /* SpeechService.swift */,
 				4E4048792F5CD92900F47C6C /* PhraseMatching.swift */,
+				4E40487D2F5CD9BD00F47C6C /* VoiceRecognitionService.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -410,6 +413,7 @@
 				4EB3AB10280AB894008FF804 /* TimeRemainingSubView.swift in Sources */,
 				4EE2468F27EFE0C20099CE24 /* StandardButton.swift in Sources */,
 				4EE9FB7F2802A3C500D0F02D /* SimpleActionRowView.swift in Sources */,
+				4E40487E2F5CD9BD00F47C6C /* VoiceRecognitionService.swift in Sources */,
 				4E40487A2F5CD92900F47C6C /* PhraseMatching.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
