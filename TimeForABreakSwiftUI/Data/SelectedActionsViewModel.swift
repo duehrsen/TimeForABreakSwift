@@ -25,7 +25,7 @@ class SelectedActionsViewModel: ObservableObject {
         actions.forEach { action in
             
             if alreadyCountedTitles.contains(action.title) {
-                print("Duplicate \(action.title)")
+                // Skip duplicates
             } else {
                 let matchingTitles = actions.filter { action.title == $0.title }
                 if matchingTitles.count > 1 {

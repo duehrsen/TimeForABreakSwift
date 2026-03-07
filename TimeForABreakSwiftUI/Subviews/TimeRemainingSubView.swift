@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct TimeRemainingSubView: View {
-    @EnvironmentObject var tM : TimerModel
+    @EnvironmentObject var timerModel : TimerModel
     
     var body: some View {
         ZStack {
             HStack {
-                Image(systemName: tM.isWorkTime ? "brain" : "cup.and.saucer.fill")
-                    .foregroundColor(tM.isWorkTime ? Color.pink : Color.blue)
-                Text(tM.formattedTime)
+                Image(systemName: timerModel.isWorkTime ? "brain" : "cup.and.saucer.fill")
+                    .foregroundColor(timerModel.isWorkTime ? Color.pink : Color.blue)
+                Text(timerModel.formattedTime)
                     .font(.system(size: 24))
             }
         }

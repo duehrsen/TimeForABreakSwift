@@ -43,10 +43,8 @@ struct ActionEditView: View {
                     vm.update(id: action.id, newtitle: actionTitle, duration: actionDuration)
                 }) {
                     HStack(spacing: 15){
-                        //Image(systemName: "checkmark.circle.fill")        .foregroundColor(.white)
                         Text("Save")
                             .foregroundColor(.white)
-                            //.font(.caption)
                     }
                     .padding()
                     .frame(width: UIScreen.main.bounds.width/2 - 20)
@@ -61,10 +59,8 @@ struct ActionEditView: View {
                     presentationMode.wrappedValue.dismiss()
                 }) {
                     HStack(spacing: 15){
-                        //Image(systemName: "trash.fill")    .foregroundColor(.white)
                         Text("Delete")
                             .foregroundColor(.white)
-                            //.font(.caption)
                     }
                     .padding()
                     .frame(width: UIScreen.main.bounds.width/2 - 20)

@@ -74,7 +74,6 @@ class ActionViewModel: ObservableObject {
     func pinToggle(action: BreakAction, toggleOn: Bool) -> Bool {
         var updateAction = action
         if (updateAction.pinned == toggleOn) {
-            print("Item doesn't need to be pin toggled")
             return false
         }
         updateAction.pinned = toggleOn
@@ -107,7 +106,6 @@ class ActionViewModel: ObservableObject {
         AF.request("https://www.boredapi.com/api/activity?participants=1&type=relaxation").responseDecodable(of: BoredResponse.self) { response in
             guard let randomActivity = response.value else { return }
             activityString = randomActivity.activity
-            print("Random activity title: \(activityString)")
             if (activityString.count > 2)
             {
                 let newAction = BreakAction(title: activityString, desc: "", duration: 60, category: "external")

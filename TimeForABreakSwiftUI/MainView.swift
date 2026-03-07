@@ -11,7 +11,7 @@ struct MainView: View {
     
     @Environment(\.scenePhase) var scenePhase
     
-    @StateObject var tM = TimerModel()
+    @StateObject var timerModel = TimerModel()
     @StateObject var selectActions = SelectedActionsViewModel()
     @StateObject var allActions = ActionViewModel()
     @StateObject private var notificationManager = NotificationManager()
@@ -24,7 +24,6 @@ struct MainView: View {
     let numTabs = 4
     
     private func handleSwipe(translation : CGFloat) {
-        print("Swipey swiping, how much? \(translation) swipey!")
     }
     
     var body: some View {
@@ -57,18 +56,17 @@ struct MainView: View {
                 case .background, .inactive:
                 if !switchedToBackground {
                     switchedToBackground = true
-                    tM.movingToBackground()
+                    timerModel.movingToBackground()
                     notificationManager.cancelAllNotifications()
-                    if tM.started
+                    if timerModel.started
                     {
                         notificationManager.createLocalNotification(
-                            title: tM.isWorkTime ? "Time for a break!" : "Break time's over",
-                            body: tM.isWorkTime ? "You worked for \(tM.workTimeTotalSeconds/60) min" : "\(tM.breakTimeTotalSeconds/60) min break over.",
-                            secondsUntilDone: tM.currentTimeRemaining,
+                            title: timerModel.isWorkTime ? "Time for a break!" : "Break time's over",
+                            body: timerModel.isWorkTime ? "You worked for \(timerModel.workTimeTotalSeconds/60) min" : "\(timerModel.breakTimeTotalSeconds/60) min break over.",
+                            secondsUntilDone: timerModel.currentTimeRemaining,
                             doesPlaySounds: optionsModel.options.doesPlaySounds) { error in
                             if error == nil {
                                 DispatchQueue.main.async {
-                                    print("notification triggered")
                                     notificationManager.reloadLocNotifications()
                                 }
                             }
@@ -80,36 +78,31 @@ struct MainView: View {
 
                 
                 case .active:
-                    print("App is active")
                     switchedToBackground = false
-                    tM.movingToActive()
+                    timerModel.movingToActive()
                     notificationManager.cancelAllNotifications()
                 @unknown default:
-                    print("App state is unclear")
+                    break
                 }
         }
         .onAppear {
             notificationManager.reloadAuthorizationStatus()
             allActions.load { result in
                 switch result {
-                case .failure( let error):
-                    print(error.localizedDescription)
+                case .failure:
                     allActions.restoreDefaultsToDisk()
                 case .success(let loadedActions):
-                    if (loadedActions.count>0){
+                    if loadedActions.count > 0 {
                         allActions.actions = loadedActions
-                        print("Actions loaded from file")
                     } else {
                         allActions.restoreDefaultsToDisk()
-                        print("Default actions loaded")
                     }
                     
                 }
             }
             selectActions.load { result in
                 switch result {
-                case .failure( let error):
-                    print(error.localizedDescription)
+                case .failure:
                     selectActions.emptyData()
                 case .success(let loadedActions):
                     selectActions.actions = loadedActions
@@ -118,15 +111,11 @@ struct MainView: View {
             allActions.addActivityFromApi()
             optionsModel.load { result in
                 switch result {
-                case .failure( let error):
-                    print(error.localizedDescription)
+                case .failure:
                     optionsModel.setDefault()
-                    print("set default options")
                 case .success(let loadedOptions):
-                    print("saved options loaded")
-                    print("breakmin \(loadedOptions.breaktimeMin)")
                     optionsModel.updateOptionsModel(breakMin: loadedOptions.breaktimeMin, workMin: loadedOptions.worktimeMin, doesPlaySounds: loadedOptions.doesPlaySounds)
-                    tM.updateFromOptions(optionSet: loadedOptions)
+                    timerModel.updateFromOptions(optionSet: loadedOptions)
                 }
             }
         }
@@ -151,17 +140,15 @@ struct MainView: View {
             switch newStatus {
             case .notDetermined:
                 notificationManager.requestAuth()
-                print("request auth")
             case .authorized:
                 notificationManager.reloadLocNotifications()
-                print("reload notif")
                 
             default:
                 break
             }
         }
         .environmentObject(optionsModel)
-        .environmentObject(tM)
+        .environmentObject(timerModel)
         .environmentObject(selectActions)
         .environmentObject(allActions)
         .environmentObject(notificationManager)

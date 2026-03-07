@@ -11,14 +11,14 @@ import AVFoundation
 struct TimerCompletionView: View {
     
     @EnvironmentObject var selectActions : SelectedActionsViewModel
-    @EnvironmentObject var os : OptionsModel
+    @EnvironmentObject var optionsModel : OptionsModel
     
     @State var player : AVAudioPlayer?
     
     var isFinishedWork : Bool
     let cal = Calendar.current
     
-    @EnvironmentObject var tm : TimerModel
+    @EnvironmentObject var timerModel : TimerModel
     
     fileprivate func playSuccessSound() {
         let path = Bundle.main.path(forResource: "hornorganmusichockey.m4a", ofType: nil)!
@@ -49,7 +49,7 @@ struct TimerCompletionView: View {
                     .foregroundColor(Color.yellow)
                     .frame(width: geometry.size.width - 20, alignment: .center)
                     .onAppear(perform: {
-                        tm.switchMode()
+                        timerModel.switchMode()
                     })
                 if isFinishedWork {
                     List {
@@ -58,7 +58,7 @@ struct TimerCompletionView: View {
                         ForEach(
                             selectActions.actions.filter{
                                 
-                                ( cal.isDateInToday($0.date ?? Date(timeInterval: -36000, since: Date())) || $0.pinned) && $0.completed == false
+                                ( cal.isDateInToday($0.date ?? .distantPast) || $0.pinned) && $0.completed == false
                                 
                             } , id: \.id) {
                                 item in
@@ -74,7 +74,7 @@ struct TimerCompletionView: View {
             .frame(maxWidth: .infinity)
         }
         .onAppear(){
-            if os.options.doesPlaySounds {
+            if optionsModel.options.doesPlaySounds {
                 playSuccessSound()
             }
         }

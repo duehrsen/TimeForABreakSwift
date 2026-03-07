@@ -9,25 +9,23 @@ import SwiftUI
 
 struct OptionsInputSubView: View {
     
-    @EnvironmentObject var os : OptionsModel
+    @EnvironmentObject var optionsModel : OptionsModel
     
     var body: some View {
         Text("Work time")
             .font(.title2)
-        Stepper("\(os.options.worktimeMin) min", value: $os.options.worktimeMin, in: 1...60, step: 1) {_ in
-            //tM.resetTimer()
-        }.frame(width: 250)
+        Stepper("\(optionsModel.options.worktimeMin) min", value: $optionsModel.options.worktimeMin, in: 1...60, step: 1)
+            .frame(width: 250)
         Divider()
         
         Text("Break time")
             .font(.title2)
-        Stepper("\(os.options.breaktimeMin) min", value: $os.options.breaktimeMin, in: 1...40, step: 1) {_ in
-            //tM.resetTimer()
-        }.frame(width: 250)
+        Stepper("\(optionsModel.options.breaktimeMin) min", value: $optionsModel.options.breaktimeMin, in: 1...40, step: 1)
+            .frame(width: 250)
         
         Divider()
         
-        Toggle("Enable sound notifications", isOn: $os.options.doesPlaySounds)
+        Toggle("Enable sound notifications", isOn: $optionsModel.options.doesPlaySounds)
             .frame(width: 250)
         Divider()
 

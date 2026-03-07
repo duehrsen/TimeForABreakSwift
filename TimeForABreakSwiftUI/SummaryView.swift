@@ -16,16 +16,11 @@ struct SummaryView: View {
     var body: some View {
         NavigationStack {
             VStack{
-//                HStack {
-//                    Text("What you've been up to lately")
-//                        .padding()
-//                    Spacer()
-//                }
                 List {
                     Section("Completed Today") {
                     }
                     ForEach(selectActions.countedHistoryActions(actions: selectActions.actions
-                        .filter{cal.isDateInToday($0.date ?? Date(timeInterval: -36000, since: Date())) && $0.completed}), id: \.id) {
+                        .filter{cal.isDateInToday($0.date ?? .distantPast) && $0.completed}), id: \.id) {
                         action in
                         HStack(spacing: 6) {
                             Text(action.title)
@@ -35,13 +30,12 @@ struct SummaryView: View {
                     }
                     Section("Completed Yesterday") {
                     }
-                    ForEach(selectActions.countedHistoryActions(actions: selectActions.actions.filter{cal.isDateInYesterday($0.date ?? Date(timeInterval: -36000, since: Date())) && $0.completed}), id: \.id) {
+                    ForEach(selectActions.countedHistoryActions(actions: selectActions.actions.filter{cal.isDateInYesterday($0.date ?? .distantPast) && $0.completed}), id: \.id) {
                         item in
                         SimpleActionRowView(action: item)
                     }
                 }.listStyle(.insetGrouped)
             }
-            //.navigationTitle("Summary")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                toolbars(title: "Summary")

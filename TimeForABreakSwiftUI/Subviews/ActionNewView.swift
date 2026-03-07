@@ -42,10 +42,8 @@ struct ActionNewView: View {
                         presentationMode.wrappedValue.dismiss()
                     }) {
                         HStack(spacing: 15){
-                            //Image(systemName: "checkmark.circle.fill")        .foregroundColor(.white)
                             Text("Save")
                                 .foregroundColor(.white)
-                            //.font(.caption)
                         }
                         .padding()
                         .frame(width: UIScreen.main.bounds.width/2, alignment: .center)

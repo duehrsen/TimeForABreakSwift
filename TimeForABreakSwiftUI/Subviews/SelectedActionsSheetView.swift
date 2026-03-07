@@ -20,7 +20,7 @@ struct SelectedActionsSheetView: View {
             List {
                 Section(isFromCompletedSheet ? "Check off any you've done!" : "Your actions for today") {
                 }
-                ForEach(selectActions.actions.filter{cal.isDateInToday($0.date ?? Date(timeInterval: -36000, since: Date())) || $0.pinned} , id: \.id) {
+                ForEach(selectActions.actions.filter{cal.isDateInToday($0.date ?? .distantPast) || $0.pinned} , id: \.id) {
                     item in
                     ActionCompletionRowView(action: item, editable: true)
                 }

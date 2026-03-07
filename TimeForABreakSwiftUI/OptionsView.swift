@@ -8,36 +8,26 @@
 import SwiftUI
 
 struct OptionsView: View {
-    @EnvironmentObject var tM: TimerModel
-    @EnvironmentObject var os : OptionsModel
-    @State private var playSounds : Bool = false
-    @State private var workMin : Int = 60
-    @State private var breakMin: Int = 5
-    
+    @EnvironmentObject var timerModel: TimerModel
+    @EnvironmentObject var optionsModel : OptionsModel
     var body: some View {
         NavigationStack {
             GeometryReader { geometry in
-            VStack {                
-//                HStack {
-//                    Text("Adjust your time intervals")
-//                        .padding()
-//                    Spacer()
-//                }
+            VStack {
                 Spacer()
                 OptionsInputSubView()
                 Spacer()
                 
                 HStack(alignment: .center, spacing: 10) {
                     Button(action: {
-                        if os.options.worktimeMin > 0 && os.options.breaktimeMin > 0 {
-                            let newOptions = OptionSet(breaktimeMin: os.options.breaktimeMin, worktimeMin: os.options.worktimeMin, doesPlaySounds: os.options.doesPlaySounds)
-                            print("gonna save")
-                            os.save(options: newOptions) { result in
+                        if optionsModel.options.worktimeMin > 0 && optionsModel.options.breaktimeMin > 0 {
+                            let newOptions = OptionSet(breaktimeMin: optionsModel.options.breaktimeMin, worktimeMin: optionsModel.options.worktimeMin, doesPlaySounds: optionsModel.options.doesPlaySounds)
+                            optionsModel.save(options: newOptions) { result in
                                 if case .failure(let error) = result {
                                     print("[OptionsView] Failed to save options: \(error.localizedDescription)")
                                 }
                             }
-                            tM.updateFromOptions(optionSet: newOptions)
+                            timerModel.updateFromOptions(optionSet: newOptions)
                         }
                     }) {
                         HStack(spacing: 15){
@@ -52,25 +42,7 @@ struct OptionsView: View {
                         
                     }
                     
-//                    Button(action: {
-//                        actionVM.restoreDefaultsToDisk()
-//                        os.setDefault()
-//                    }) {
-//                        HStack(spacing: 15){
-//                            //Image(systemName: "rectangle.portrait.and.arrow.right")                              .foregroundColor(.white)
-//                            Text("Restore all")
-//                                .font(.body)
-//                                .foregroundColor(.white)
-//                        }
-//                        .padding()
-//                        .frame(width: UIScreen.main.bounds.width/2 - 20)
-//                        .background(Color.red)
-//                        .clipShape(Capsule())
-//                        .shadow(radius: 5)
-//                    }
-                    
                 }
-                //.navigationBarTitle("App Options")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     toolbars(title: "Options")

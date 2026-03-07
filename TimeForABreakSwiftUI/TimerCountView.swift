@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TimerCountView: View {
-    @EnvironmentObject var tm: TimerModel
+    @EnvironmentObject var timerModel: TimerModel
     @EnvironmentObject var selectActions: SelectedActionsViewModel
     @Environment(\.colorScheme) var colorScheme
 
@@ -30,7 +30,7 @@ struct TimerCountView: View {
 
         VStack(spacing: 25) {
             Button {
-                tm.toggle()
+                timerModel.toggle()
             } label: {
                 ZStack {
                     Circle()
@@ -39,19 +39,19 @@ struct TimerCountView: View {
                         .frame(minWidth: CGFloat(diameter * 0.7), idealWidth: diameter, maxWidth: diameter * 1.2, minHeight: CGFloat(diameter * 0.7), idealHeight: diameter, maxHeight: diameter * 1.2)
 
                     Circle()
-                        .trim(from: 0, to: tm.progress)
+                        .trim(from: 0, to: timerModel.progress)
                         .stroke(Color(UIColor.systemBlue).opacity(0.8), style: StrokeStyle(lineWidth: tplineWidth, lineCap: .butt))
                         .frame(minWidth: CGFloat(diameter * 0.7), idealWidth: diameter, maxWidth: diameter * 1.2, minHeight: CGFloat(diameter * 0.7), idealHeight: diameter, maxHeight: diameter * 1.2)
                         .rotationEffect(.init(degrees: -90))
                     VStack {
-                        Label("", systemImage: tm.isWorkTime ? "brain" : "cup.and.saucer.fill")
+                        Label("", systemImage: timerModel.isWorkTime ? "brain" : "cup.and.saucer.fill")
                             .font(.system(size: diameter / 3))
                             .opacity(0.8)
-                            .foregroundColor(tm.isWorkTime ? Color.pink : Color.blue)
-                        Text(tm.formattedTime)
+                            .foregroundColor(timerModel.isWorkTime ? Color.pink : Color.blue)
+                        Text(timerModel.formattedTime)
                             .font(.system(size: timerTextSize))
                             .fontWeight(.bold)
-                        Label("", systemImage: tm.started ? "pause.fill" : "play.fill")
+                        Label("", systemImage: timerModel.started ? "pause.fill" : "play.fill")
                             .foregroundColor(.blue)
                             .font(.system(size: playIconSize))
                     }
@@ -61,7 +61,7 @@ struct TimerCountView: View {
             VStack() {
                 HStack(spacing: 10) {
                 Button(action: {
-                    tm.reset()
+                    timerModel.reset()
                 }) {
                     HStack(spacing: 15) {
                         Image(systemName: "arrow.clockwise")
@@ -77,10 +77,10 @@ struct TimerCountView: View {
                 }
 
                 Button(action: {
-                    tm.switchMode()
+                    timerModel.switchMode()
                 }) {
                     HStack(spacing: 15) {
-                        Image(systemName: tm.isWorkTime ? "cup.and.saucer.fill" : "brain")
+                        Image(systemName: timerModel.isWorkTime ? "cup.and.saucer.fill" : "brain")
                             .foregroundColor(.white)
                         Text("Switch")
                             .foregroundColor(.white)
@@ -114,17 +114,17 @@ struct TimerCountView: View {
             SelectedActionsSheetView()
         })
         .sheet(isPresented: $showingCompleteSheet, content: {
-            TimerCompletionView(isFinishedWork: !tm.isWorkTime)
+            TimerCompletionView(isFinishedWork: !timerModel.isWorkTime)
         })
-        .onChange(of: tm.isComplete) { isComplete in
+        .onChange(of: timerModel.isComplete) { isComplete in
             if isComplete {
                 showingCompleteSheet = true
-                tm.acknowledgeCompletion()
+                timerModel.acknowledgeCompletion()
             }
         }
         .onAppear {
             if !didAppear {
-                tm.reset()
+                timerModel.reset()
                 didAppear = true
             }
         }
