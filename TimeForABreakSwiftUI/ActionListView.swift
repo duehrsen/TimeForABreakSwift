@@ -36,7 +36,7 @@ struct ActionListView: View {
     
     let cal = Calendar.current
     
-    var defaultAction : BreakAction = BreakAction(title: "Get up!", desc: "Leave your chair", duration: 1, category: "relax")
+    var defaultAction : BreakAction = BreakAction(title: "Get up!", description: "Leave your chair", categoryId: "mental", duration: 1)
     
     @ViewBuilder
     func actionInfo(for action: BreakAction) -> some View {
@@ -50,7 +50,7 @@ struct ActionListView: View {
                 if action.pinned {
                     Label("", systemImage: "pin.fill")
                                         .font(.caption)
-                } else if action.category == "external" {
+                } else if action.categoryId == "external" {
                     Label("", systemImage: "network")
                                         .font(.caption)
                 }

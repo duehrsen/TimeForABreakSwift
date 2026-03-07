@@ -16,7 +16,7 @@ struct TimerCountView: View {
     @State private var showingSheet: Bool = false
     @State private var showingCompleteSheet: Bool = false
 
-    var defaultAction: BreakAction = BreakAction(title: "Get up!", desc: "Leave your chair", duration: 1, category: "relax")
+    var defaultAction: BreakAction = BreakAction(title: "Get up!", description: "Leave your chair", categoryId: "mental", duration: 1)
 
     let cal = Calendar.current
 

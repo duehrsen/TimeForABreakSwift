@@ -29,7 +29,7 @@ class SelectedActionsViewModel: ObservableObject {
             } else {
                 let matchingTitles = actions.filter { action.title == $0.title }
                 if matchingTitles.count > 1 {
-                    let newAction = BreakAction(title: action.title, desc: action.desc, duration: action.duration, category: action.category, completed: action.completed, date: action.date, frequency: matchingTitles.count)
+                    let newAction = BreakAction(title: action.title, description: action.description, categoryId: action.categoryId, duration: action.duration, completed: action.completed, date: action.date, frequency: matchingTitles.count)
                     countedActions.append(newAction)
                     alreadyCountedTitles.append(action.title)
                 } else {
@@ -81,7 +81,7 @@ class SelectedActionsViewModel: ObservableObject {
     }
     
     func update(id: UUID, newtitle: String, duration: Int, completed: Bool = false, date: Date = Date()) {
-        let newItem = BreakAction(id: id, title: newtitle, desc: "", duration: duration, category: "regular", completed: completed, date: Date())
+        let newItem = BreakAction(id: id, title: newtitle, description: "", categoryId: "chores", duration: duration, completed: completed, date: Date())
         if let thisInd = actions.firstIndex(where: {$0.id == id} )
         {
             actions.replaceSubrange(thisInd...thisInd, with: repeatElement(newItem, count: 1))
@@ -108,7 +108,7 @@ class SelectedActionsViewModel: ObservableObject {
     }
     
     func add(action: String = "", duration: Int = 5, date: Date = Date()) {
-        let newAction = BreakAction(title: action, desc: action, duration: duration, category: "regular", date: date)
+        let newAction = BreakAction(title: action, description: action, categoryId: "chores", duration: duration, date: date)
         actions.insert(newAction, at: 0)
         saveToDisk()
     }

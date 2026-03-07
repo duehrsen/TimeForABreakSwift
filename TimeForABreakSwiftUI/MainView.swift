@@ -123,7 +123,7 @@ struct MainView: View {
                 }
                 
                 if (a.pinned && !isContained) {
-                    let newAction = BreakAction(title: a.title, desc: a.desc, duration: a.duration, category: a.category, completed: false, date: Date.now, linkurl: a.linkurl, pinned: true, frequency: a.frequency)
+                    let newAction = BreakAction(title: a.title, description: a.description, categoryId: a.categoryId, duration: a.duration, pinned: true, completed: false, date: Date.now, linkurl: a.linkurl, frequency: a.frequency)
                     selectActions.actions.insert(newAction, at: 0)
                 }
                                 

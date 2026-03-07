@@ -63,7 +63,7 @@ class ActionViewModel: ObservableObject {
     }
     
     func update(id: UUID, newtitle: String, duration: Int, completed: Bool = false) {
-        let newItem = BreakAction(id: id, title: newtitle, desc: "", duration: duration, category: "regular", completed: completed)
+        let newItem = BreakAction(id: id, title: newtitle, description: "", categoryId: "regular", duration: duration, completed: completed)
         if let thisInd = actions.firstIndex(where: {$0.id == id} )
         {
             actions.replaceSubrange(thisInd...thisInd, with: repeatElement(newItem, count: 1))
@@ -94,7 +94,7 @@ class ActionViewModel: ObservableObject {
     }
     
     func add(action: String = "", duration: Int = 5) {
-        let newAction = BreakAction(title: action, desc: action, duration: duration, category: "regular")
+        let newAction = BreakAction(title: action, description: action, categoryId: "regular", duration: duration)
         actions.insert(newAction, at: 0)
         saveToDisk()
     }
@@ -108,7 +108,7 @@ class ActionViewModel: ObservableObject {
             activityString = randomActivity.activity
             if (activityString.count > 2)
             {
-                let newAction = BreakAction(title: activityString, desc: "", duration: 60, category: "external")
+                let newAction = BreakAction(title: activityString, description: "", categoryId: "mental", duration: 60)
                 self.actions.insert(newAction, at: 0)
             }
         }

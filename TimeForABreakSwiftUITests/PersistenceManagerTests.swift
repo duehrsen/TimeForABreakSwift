@@ -48,7 +48,7 @@ final class PersistenceManagerTests: XCTestCase {
 
     func testSaveAndLoadRoundTrip() async throws {
         let sut = PersistenceManager<[BreakAction]>(fileName: testFileName, defaultValue: [])
-        let actions = [BreakAction(title: "Test Action", desc: "Description", duration: 5, category: "test")]
+        let actions = [BreakAction(title: "Test Action", description: "Description", categoryId: "test", duration: 5)]
 
         try await sut.save(data: actions)
         let loaded = try await sut.load()
@@ -62,8 +62,8 @@ final class PersistenceManagerTests: XCTestCase {
 
     func testSaveOverwritesPreviousData() async throws {
         let sut = PersistenceManager<[BreakAction]>(fileName: testFileName, defaultValue: [])
-        let first = [BreakAction(title: "First", desc: "", duration: 1, category: "test")]
-        let second = [BreakAction(title: "Second", desc: "", duration: 2, category: "test")]
+        let first = [BreakAction(title: "First", description: "", categoryId: "test", duration: 1)]
+        let second = [BreakAction(title: "Second", description: "", categoryId: "test", duration: 2)]
 
         try await sut.save(data: first)
         try await sut.save(data: second)
