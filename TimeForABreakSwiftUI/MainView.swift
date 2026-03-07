@@ -64,7 +64,7 @@ struct MainView: View {
                             title: timerModel.isWorkTime ? "Time for a break!" : "Break time's over",
                             body: timerModel.isWorkTime ? "You worked for \(timerModel.workTimeTotalSeconds/60) min" : "\(timerModel.breakTimeTotalSeconds/60) min break over.",
                             secondsUntilDone: timerModel.currentTimeRemaining,
-                            doesPlaySounds: optionsModel.options.doesPlaySounds) { error in
+                            doesPlaySounds: !optionsModel.options.isMuted) { error in
                             if error == nil {
                                 DispatchQueue.main.async {
                                     notificationManager.reloadLocNotifications()
