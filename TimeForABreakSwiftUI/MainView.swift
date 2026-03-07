@@ -90,7 +90,7 @@ struct MainView: View {
             do {
                 let loadedActions = try await allActions.load()
                 if loadedActions.count > 0 {
-                    allActions.actions = loadedActions
+                    allActions.actions = DataMigration.migrateCategories(in: loadedActions)
                 } else {
                     allActions.restoreDefaultsToDisk()
                 }
@@ -99,7 +99,7 @@ struct MainView: View {
             }
             do {
                 let loadedActions = try await selectActions.load()
-                selectActions.actions = loadedActions
+                selectActions.actions = DataMigration.migrateCategories(in: loadedActions)
             } catch {
                 selectActions.emptyData()
             }

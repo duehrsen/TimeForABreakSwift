@@ -19,6 +19,7 @@
 		4E40486E2F5C0A2900F47C6C /* ActionCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E40486D2F5C0A2900F47C6C /* ActionCategory.swift */; };
 		4E4048702F5C0A2D00F47C6C /* ActionCompletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E40486F2F5C0A2D00F47C6C /* ActionCompletion.swift */; };
 		4E4048722F5C0A4400F47C6C /* CodableClosedRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E4048712F5C0A4400F47C6C /* CodableClosedRange.swift */; };
+		4E4048742F5C9EEA00F47C6C /* DataMigration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E4048732F5C9EEA00F47C6C /* DataMigration.swift */; };
 		4E4440BA281919A000065E44 /* FrequencyActionRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E4440B9281919A000065E44 /* FrequencyActionRowView.swift */; };
 		4E58B485280BDEE40025D27F /* ToastViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E58B484280BDEE40025D27F /* ToastViewModifier.swift */; };
 		4E58B487280C076C0025D27F /* ActionNewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E58B486280C076C0025D27F /* ActionNewView.swift */; };
@@ -73,6 +74,7 @@
 		4E40486D2F5C0A2900F47C6C /* ActionCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionCategory.swift; sourceTree = "<group>"; };
 		4E40486F2F5C0A2D00F47C6C /* ActionCompletion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionCompletion.swift; sourceTree = "<group>"; };
 		4E4048712F5C0A4400F47C6C /* CodableClosedRange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableClosedRange.swift; sourceTree = "<group>"; };
+		4E4048732F5C9EEA00F47C6C /* DataMigration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataMigration.swift; sourceTree = "<group>"; };
 		4E4440B9281919A000065E44 /* FrequencyActionRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FrequencyActionRowView.swift; sourceTree = "<group>"; };
 		4E58B484280BDEE40025D27F /* ToastViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastViewModifier.swift; sourceTree = "<group>"; };
 		4E58B486280C076C0025D27F /* ActionNewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionNewView.swift; sourceTree = "<group>"; };
@@ -173,6 +175,7 @@
 				4E40486D2F5C0A2900F47C6C /* ActionCategory.swift */,
 				4E40486F2F5C0A2D00F47C6C /* ActionCompletion.swift */,
 				4E4048712F5C0A4400F47C6C /* CodableClosedRange.swift */,
+				4E4048732F5C9EEA00F47C6C /* DataMigration.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -391,6 +394,7 @@
 				4EA7BD1027F2B97A00B9C348 /* BreakAction.swift in Sources */,
 				4E1684EC27FFDE8400AF9990 /* NotificationManager.swift in Sources */,
 				4E58B485280BDEE40025D27F /* ToastViewModifier.swift in Sources */,
+				4E4048742F5C9EEA00F47C6C /* DataMigration.swift in Sources */,
 				4EB3AB14280ACC2C008FF804 /* ToolbarElements.swift in Sources */,
 				4EB2213628069665004BD397 /* TimerCompletionView.swift in Sources */,
 				4E0A660D27FBFCBB00A8F0E6 /* ActionEditView.swift in Sources */,
