@@ -12,10 +12,12 @@ import Alamofire
 class SelectedActionsViewModel: ObservableObject {
 
     private let persistence = PersistenceManager<[BreakAction]>(fileName: "selectedActions", defaultValue: [])
+    private let completionPersistence = PersistenceManager<[ActionCompletion]>(fileName: "actionCompletions", defaultValue: [])
 
     let cal = Calendar.current
 
     @Published var actions: [BreakAction] = []
+    @Published var completions: [ActionCompletion] = []
     
     func countedHistoryActions(actions: [BreakAction]) -> [BreakAction]
     {
@@ -112,5 +114,20 @@ class SelectedActionsViewModel: ObservableObject {
         actions.insert(newAction, at: 0)
         saveToDisk()
     }
-    
+
+    // MARK: - Action Completions
+
+    func loadCompletions() async throws -> [ActionCompletion] {
+        try await completionPersistence.load()
+    }
+
+    func saveCompletions() {
+        completionPersistence.saveToDisk(data: completions)
+    }
+
+    func addCompletion(actionId: UUID, quantity: Int? = nil, source: CompletionSource) {
+        let completion = ActionCompletion(actionId: actionId, date: Date(), quantity: quantity, source: source)
+        completions.append(completion)
+        saveCompletions()
+    }
 }
