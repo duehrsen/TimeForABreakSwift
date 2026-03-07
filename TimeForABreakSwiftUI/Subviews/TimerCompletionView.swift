@@ -16,6 +16,8 @@ struct TimerCompletionView: View {
 
     @State private var player: AVAudioPlayer?
     @State private var speechService = SpeechService()
+    @State private var showToast = false
+    @State private var toastMessage = ""
 
     var isFinishedWork: Bool
     let cal = Calendar.current
@@ -94,6 +96,14 @@ struct TimerCompletionView: View {
                     }
                     .listStyle(.plain)
                     .frame(width: geometry.size.width - 20, alignment: .center)
+
+                    VoiceInputView(
+                        actions: selectActions.actions,
+                        speechService: speechService
+                    ) { result in
+                        handleVoiceMatch(result)
+                    }
+                    .padding(.horizontal)
                 } else {
                     SelectedActionsSheetView(isFromCompletedSheet: true)
                         .frame(width: geometry.size.width - 20, alignment: .center)
@@ -111,5 +121,31 @@ struct TimerCompletionView: View {
             speechService.stop()
         }
         .edgesIgnoringSafeArea(.all)
+        .toast(message: toastMessage, sysImg: "checkmark.circle.fill", isShowing: $showToast, duration: Toast.longDuration)
+    }
+
+    private func handleVoiceMatch(_ result: PhraseMatching.MatchResult) {
+        let action = result.action
+
+        // Record the completion
+        selectActions.addCompletion(actionId: action.id, quantity: result.quantity, source: .voice)
+
+        // Mark the action as completed in selected actions
+        selectActions.update(id: action.id, newtitle: action.title, duration: action.duration, completed: true)
+
+        // Build feedback message
+        var feedback = "Got it! \(action.title)"
+        if let quantity = result.quantity, let unit = action.unit {
+            feedback = "Got it! \(quantity) \(unit) logged."
+        }
+
+        // Speak feedback if not muted
+        if !optionsModel.options.isMuted {
+            speechService.speak(feedback)
+        }
+
+        // Show toast
+        toastMessage = feedback
+        showToast = true
     }
 }
