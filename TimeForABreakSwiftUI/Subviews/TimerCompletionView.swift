@@ -9,34 +9,67 @@ import SwiftUI
 import AVFoundation
 
 struct TimerCompletionView: View {
-    
-    @EnvironmentObject var selectActions : SelectedActionsViewModel
-    @EnvironmentObject var optionsModel : OptionsModel
-    
-    @State var player : AVAudioPlayer?
-    
-    var isFinishedWork : Bool
+
+    @EnvironmentObject var selectActions: SelectedActionsViewModel
+    @EnvironmentObject var optionsModel: OptionsModel
+    @EnvironmentObject var timerModel: TimerModel
+
+    @State private var player: AVAudioPlayer?
+    @State private var speechService = SpeechService()
+
+    var isFinishedWork: Bool
     let cal = Calendar.current
-    
-    @EnvironmentObject var timerModel : TimerModel
-    
+
+    private var uncompletedActions: [BreakAction] {
+        selectActions.actions.filter {
+            (cal.isDateInToday($0.date ?? .distantPast) || $0.pinned) && $0.completed == false
+        }
+    }
+
     fileprivate func playSuccessSound() {
         let path = Bundle.main.path(forResource: "hornorganmusichockey.m4a", ofType: nil)!
         let url = URL(fileURLWithPath: path)
-        
+
         do {
             player = try AVAudioPlayer(contentsOf: url)
-            
             player?.play()
-            
         } catch let error {
             print(error.localizedDescription)
         }
     }
-    
+
+    fileprivate func speakAction() {
+        guard isFinishedWork else { return }
+        if let action = uncompletedActions.randomElement(), !action.spokenPrompt.isEmpty {
+            speechService.speak(action.spokenPrompt)
+        }
+    }
+
     var body: some View {
         GeometryReader { geometry in
             VStack(spacing: 30) {
+                // Mute/Unmute button
+                Button(action: {
+                    optionsModel.options.isMuted.toggle()
+                    optionsModel.saveToDisk()
+                    if optionsModel.options.isMuted {
+                        speechService.stop()
+                        player?.stop()
+                    }
+                }) {
+                    HStack(spacing: 10) {
+                        Image(systemName: optionsModel.options.isMuted ? "speaker.slash.fill" : "speaker.wave.2.fill")
+                            .font(.title2)
+                        Text(optionsModel.options.isMuted ? "Unmute" : "Mute")
+                            .font(.title3)
+                    }
+                    .padding(.horizontal, 24)
+                    .padding(.vertical, 12)
+                    .background(optionsModel.options.isMuted ? Color.red.opacity(0.2) : Color.blue.opacity(0.2))
+                    .clipShape(Capsule())
+                }
+                .padding(.top, 16)
+
                 Spacer()
                 Text(isFinishedWork ? "Time for a break!" : "Hope you are recharged!")
                     .font(.title2)
@@ -48,24 +81,19 @@ struct TimerCompletionView: View {
                     .font(.system(size: 80))
                     .foregroundColor(Color.yellow)
                     .frame(width: geometry.size.width - 20, alignment: .center)
-                    .onAppear(perform: {
+                    .onAppear {
                         timerModel.switchMode()
-                    })
+                    }
                 if isFinishedWork {
                     List {
-                        Section("Some actions left to do" ) {
+                        Section("Some actions left to do") {
                         }
-                        ForEach(
-                            selectActions.actions.filter{
-                                
-                                ( cal.isDateInToday($0.date ?? .distantPast) || $0.pinned) && $0.completed == false
-                                
-                            } , id: \.id) {
-                                item in
-                                SimpleActionRowView(action: item)
-                            }
-                    }.listStyle(.plain)
-                        .frame(width: geometry.size.width - 20, alignment: .center)
+                        ForEach(uncompletedActions, id: \.id) { item in
+                            SimpleActionRowView(action: item)
+                        }
+                    }
+                    .listStyle(.plain)
+                    .frame(width: geometry.size.width - 20, alignment: .center)
                 } else {
                     SelectedActionsSheetView(isFromCompletedSheet: true)
                         .frame(width: geometry.size.width - 20, alignment: .center)
@@ -73,12 +101,15 @@ struct TimerCompletionView: View {
             }
             .frame(maxWidth: .infinity)
         }
-        .onAppear(){
-            if optionsModel.options.doesPlaySounds {
+        .onAppear {
+            if !optionsModel.options.isMuted {
                 playSuccessSound()
+                speakAction()
             }
+        }
+        .onDisappear {
+            speechService.stop()
         }
         .edgesIgnoringSafeArea(.all)
     }
 }
-
