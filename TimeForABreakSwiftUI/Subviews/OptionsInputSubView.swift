@@ -25,7 +25,7 @@ struct OptionsInputSubView: View {
         
         Divider()
         
-        Toggle("Enable sound notifications", isOn: $optionsModel.options.doesPlaySounds)
+        Toggle("Mute all audio", isOn: $optionsModel.options.isMuted)
             .frame(width: 250)
         Divider()
 

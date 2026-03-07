@@ -21,7 +21,7 @@ struct OptionsView: View {
                 HStack(alignment: .center, spacing: 10) {
                     Button(action: {
                         if optionsModel.options.worktimeMin > 0 && optionsModel.options.breaktimeMin > 0 {
-                            let newOptions = OptionSet(breaktimeMin: optionsModel.options.breaktimeMin, worktimeMin: optionsModel.options.worktimeMin, doesPlaySounds: optionsModel.options.doesPlaySounds)
+                            let newOptions = OptionSet(breaktimeMin: optionsModel.options.breaktimeMin, worktimeMin: optionsModel.options.worktimeMin, doesPlaySounds: optionsModel.options.doesPlaySounds, isMuted: optionsModel.options.isMuted)
                             Task {
                                 try? await optionsModel.save(options: newOptions)
                             }

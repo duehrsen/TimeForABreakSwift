@@ -106,7 +106,7 @@ struct MainView: View {
             allActions.addActivityFromApi()
             do {
                 let loadedOptions = try await optionsModel.load()
-                optionsModel.updateOptionsModel(breakMin: loadedOptions.breaktimeMin, workMin: loadedOptions.worktimeMin, doesPlaySounds: loadedOptions.doesPlaySounds)
+                optionsModel.updateOptionsModel(breakMin: loadedOptions.breaktimeMin, workMin: loadedOptions.worktimeMin, doesPlaySounds: loadedOptions.doesPlaySounds, isMuted: loadedOptions.isMuted)
                 timerModel.updateFromOptions(optionSet: loadedOptions)
             } catch {
                 optionsModel.setDefault()
