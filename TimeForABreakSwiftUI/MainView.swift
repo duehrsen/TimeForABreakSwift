@@ -35,7 +35,7 @@ struct MainView: View {
                 .tag(0)
             ActionListView()
                 .tabItem {
-                    Label("Action List", systemImage:"list.bullet.circle.fill")
+                    Label("Actions", systemImage:"list.bullet.circle.fill")
                 }
                 .tag(1)
             SummaryView()

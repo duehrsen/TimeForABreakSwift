@@ -16,7 +16,7 @@ struct TimeRemainingSubView: View {
                 Image(systemName: timerModel.isWorkTime ? "brain" : "cup.and.saucer.fill")
                     .foregroundColor(timerModel.isWorkTime ? Color.pink : Color.blue)
                 Text(timerModel.formattedTime)
-                    .font(.system(size: 24))
+                    .font(.system(size: 18))
             }
         }
     }
