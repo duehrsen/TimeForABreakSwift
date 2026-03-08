@@ -25,8 +25,12 @@
 		4E40487E2F5CD9BD00F47C6C /* VoiceRecognitionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E40487D2F5CD9BD00F47C6C /* VoiceRecognitionService.swift */; };
 		4E4048802F5CDA1A00F47C6C /* VoiceInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E40487F2F5CDA1A00F47C6C /* VoiceInputView.swift */; };
 		4E4440BA281919A000065E44 /* FrequencyActionRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E4440B9281919A000065E44 /* FrequencyActionRowView.swift */; };
-		4E50A0F62F5D26C4007D7BBE /* BreakTimerAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E50A0F52F5D26C4007D7BBE /* BreakTimerAttributes.swift */; };
 		4E50A0F82F5D26DE007D7BBE /* LiveActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E50A0F72F5D26DE007D7BBE /* LiveActivityManager.swift */; };
+		4E50A1002F5D28C0007D7BBE /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E50A0FF2F5D28C0007D7BBE /* WidgetKit.framework */; };
+		4E50A1022F5D28C0007D7BBE /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E50A1012F5D28C0007D7BBE /* SwiftUI.framework */; };
+		4E50A1112F5D28C1007D7BBE /* TimeForABreakWidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 4E50A0FD2F5D28C0007D7BBE /* TimeForABreakWidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		4E50A1182F5D31FC007D7BBE /* BreakTimerAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E50A0F52F5D26C4007D7BBE /* BreakTimerAttributes.swift */; };
+		4E50A1192F5D3202007D7BBE /* BreakTimerAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E50A0F52F5D26C4007D7BBE /* BreakTimerAttributes.swift */; };
 		4E58B485280BDEE40025D27F /* ToastViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E58B484280BDEE40025D27F /* ToastViewModifier.swift */; };
 		4E58B487280C076C0025D27F /* ActionNewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E58B486280C076C0025D27F /* ActionNewView.swift */; };
 		4E74E0732801514B0094CE5D /* SummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E74E0722801514B0094CE5D /* SummaryView.swift */; };
@@ -63,7 +67,28 @@
 			remoteGlobalIDString = 4EDAFE5027E9A53C00FFB703;
 			remoteInfo = TimeForABreakSwiftUI;
 		};
+		4E50A10F2F5D28C1007D7BBE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4EDAFE4927E9A53C00FFB703 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4E50A0FC2F5D28C0007D7BBE;
+			remoteInfo = TimeForABreakWidgetsExtension;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		4E50A1162F5D28C1007D7BBE /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				4E50A1112F5D28C1007D7BBE /* TimeForABreakWidgetsExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		4E0A660A27FBF67B00A8F0E6 /* ActionCompletionRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionCompletionRowView.swift; sourceTree = "<group>"; };
@@ -88,6 +113,10 @@
 		4E4440B9281919A000065E44 /* FrequencyActionRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FrequencyActionRowView.swift; sourceTree = "<group>"; };
 		4E50A0F52F5D26C4007D7BBE /* BreakTimerAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreakTimerAttributes.swift; sourceTree = "<group>"; };
 		4E50A0F72F5D26DE007D7BBE /* LiveActivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityManager.swift; sourceTree = "<group>"; };
+		4E50A0FD2F5D28C0007D7BBE /* TimeForABreakWidgetsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = TimeForABreakWidgetsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		4E50A0FF2F5D28C0007D7BBE /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		4E50A1012F5D28C0007D7BBE /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		4E50A1172F5D2AAB007D7BBE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		4E58B484280BDEE40025D27F /* ToastViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastViewModifier.swift; sourceTree = "<group>"; };
 		4E58B486280C076C0025D27F /* ActionNewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionNewView.swift; sourceTree = "<group>"; };
 		4E74E0722801514B0094CE5D /* SummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryView.swift; sourceTree = "<group>"; };
@@ -116,8 +145,19 @@
 		4EE9FB7E2802A3C500D0F02D /* SimpleActionRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleActionRowView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		4E50A1122F5D28C1007D7BBE /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 4E50A0FC2F5D28C0007D7BBE /* TimeForABreakWidgetsExtension */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		4E0FE7A32F56C909007A1092 /* TimeForABreakSwiftUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = TimeForABreakSwiftUITests; sourceTree = "<group>"; };
+		4E50A1032F5D28C0007D7BBE /* TimeForABreakWidgets */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (4E50A1122F5D28C1007D7BBE /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = TimeForABreakWidgets; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +165,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4E50A0FA2F5D28C0007D7BBE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4E50A1022F5D28C0007D7BBE /* SwiftUI.framework in Frameworks */,
+				4E50A1002F5D28C0007D7BBE /* WidgetKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -145,6 +194,15 @@
 				4E0FE79D2F56C8B3007A1092 /* TimerModelTests.swift */,
 			);
 			path = TimeForABreakSwiftUITests;
+			sourceTree = "<group>";
+		};
+		4E50A0FE2F5D28C0007D7BBE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4E50A0FF2F5D28C0007D7BBE /* WidgetKit.framework */,
+				4E50A1012F5D28C0007D7BBE /* SwiftUI.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		4E8A329928041E260078AAF0 /* Subviews */ = {
@@ -212,6 +270,8 @@
 				4E2D19B328053A3A00459DDB /* Launch Screen.storyboard */,
 				4EDAFE5327E9A53C00FFB703 /* TimeForABreakSwiftUI */,
 				4E0FE7A32F56C909007A1092 /* TimeForABreakSwiftUITests */,
+				4E50A1032F5D28C0007D7BBE /* TimeForABreakWidgets */,
+				4E50A0FE2F5D28C0007D7BBE /* Frameworks */,
 				4EDAFE5227E9A53C00FFB703 /* Products */,
 				4E0FE79C2F56C894007A1092 /* TimeForABreakSwiftUITests */,
 			);
@@ -222,6 +282,7 @@
 			children = (
 				4EDAFE5127E9A53C00FFB703 /* Time For A Break.app */,
 				4E0FE7A22F56C909007A1092 /* TimeForABreakSwiftUITests.xctest */,
+				4E50A0FD2F5D28C0007D7BBE /* TimeForABreakWidgetsExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -229,6 +290,7 @@
 		4EDAFE5327E9A53C00FFB703 /* TimeForABreakSwiftUI */ = {
 			isa = PBXGroup;
 			children = (
+				4E50A1172F5D2AAB007D7BBE /* Info.plist */,
 				4E0FE79A2F56C51D007A1092 /* Assets.xcassets */,
 				4EB3AB0A280A42FB008FF804 /* Media */,
 				4EA7BD0C27F2B93A00B9C348 /* Data */,
@@ -292,6 +354,28 @@
 			productReference = 4E0FE7A22F56C909007A1092 /* TimeForABreakSwiftUITests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		4E50A0FC2F5D28C0007D7BBE /* TimeForABreakWidgetsExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4E50A1132F5D28C1007D7BBE /* Build configuration list for PBXNativeTarget "TimeForABreakWidgetsExtension" */;
+			buildPhases = (
+				4E50A0F92F5D28C0007D7BBE /* Sources */,
+				4E50A0FA2F5D28C0007D7BBE /* Frameworks */,
+				4E50A0FB2F5D28C0007D7BBE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				4E50A1032F5D28C0007D7BBE /* TimeForABreakWidgets */,
+			);
+			name = TimeForABreakWidgetsExtension;
+			packageProductDependencies = (
+			);
+			productName = TimeForABreakWidgetsExtension;
+			productReference = 4E50A0FD2F5D28C0007D7BBE /* TimeForABreakWidgetsExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		4EDAFE5027E9A53C00FFB703 /* TimeForABreakSwiftUI */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4EDAFE5F27E9A53D00FFB703 /* Build configuration list for PBXNativeTarget "TimeForABreakSwiftUI" */;
@@ -299,10 +383,12 @@
 				4EDAFE4D27E9A53C00FFB703 /* Sources */,
 				4EDAFE4E27E9A53C00FFB703 /* Frameworks */,
 				4EDAFE4F27E9A53C00FFB703 /* Resources */,
+				4E50A1162F5D28C1007D7BBE /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				4E50A1102F5D28C1007D7BBE /* PBXTargetDependency */,
 			);
 			name = TimeForABreakSwiftUI;
 			packageProductDependencies = (
@@ -325,6 +411,9 @@
 					4E0FE7A12F56C909007A1092 = {
 						CreatedOnToolsVersion = 26.3;
 						TestTargetID = 4EDAFE5027E9A53C00FFB703;
+					};
+					4E50A0FC2F5D28C0007D7BBE = {
+						CreatedOnToolsVersion = 26.3;
 					};
 					4EDAFE5027E9A53C00FFB703 = {
 						CreatedOnToolsVersion = 13.3;
@@ -349,12 +438,20 @@
 			targets = (
 				4EDAFE5027E9A53C00FFB703 /* TimeForABreakSwiftUI */,
 				4E0FE7A12F56C909007A1092 /* TimeForABreakSwiftUITests */,
+				4E50A0FC2F5D28C0007D7BBE /* TimeForABreakWidgetsExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		4E0FE7A02F56C909007A1092 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4E50A0FB2F5D28C0007D7BBE /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -382,13 +479,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		4E50A0F92F5D28C0007D7BBE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4E50A1192F5D3202007D7BBE /* BreakTimerAttributes.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4EDAFE4D27E9A53C00FFB703 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				4E4048802F5CDA1A00F47C6C /* VoiceInputView.swift in Sources */,
 				4EB3AB0C280A866A008FF804 /* OptionsModel.swift in Sources */,
-				4E50A0F62F5D26C4007D7BBE /* BreakTimerAttributes.swift in Sources */,
 				4E2D19B228052EDE00459DDB /* SelectedActionsViewModel.swift in Sources */,
 				4E4048702F5C0A2D00F47C6C /* ActionCompletion.swift in Sources */,
 				4EA7BD0E27F2B96A00B9C348 /* DataProvider.swift in Sources */,
@@ -426,6 +530,7 @@
 				4EE2468F27EFE0C20099CE24 /* StandardButton.swift in Sources */,
 				4EE9FB7F2802A3C500D0F02D /* SimpleActionRowView.swift in Sources */,
 				4E40487E2F5CD9BD00F47C6C /* VoiceRecognitionService.swift in Sources */,
+				4E50A1182F5D31FC007D7BBE /* BreakTimerAttributes.swift in Sources */,
 				4E40487A2F5CD92900F47C6C /* PhraseMatching.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -437,6 +542,11 @@
 			isa = PBXTargetDependency;
 			target = 4EDAFE5027E9A53C00FFB703 /* TimeForABreakSwiftUI */;
 			targetProxy = 4E0FE7A62F56C909007A1092 /* PBXContainerItemProxy */;
+		};
+		4E50A1102F5D28C1007D7BBE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4E50A0FC2F5D28C0007D7BBE /* TimeForABreakWidgetsExtension */;
+			targetProxy = 4E50A10F2F5D28C1007D7BBE /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -491,6 +601,79 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Time For A Break.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Time For A Break";
+			};
+			name = Release;
+		};
+		4E50A1142F5D28C1007D7BBE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = S6462Z9W3N;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TimeForABreakWidgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = TimeForABreakWidgets;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ca.duehrsen.TimeForABreakSwiftUI.TimeForABreakWidgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		4E50A1152F5D28C1007D7BBE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = S6462Z9W3N;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TimeForABreakWidgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = TimeForABreakWidgets;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ca.duehrsen.TimeForABreakSwiftUI.TimeForABreakWidgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -624,8 +807,11 @@
 				DEVELOPMENT_TEAM = S6462Z9W3N;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TimeForABreakSwiftUI/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Time For A Break needs microphone access to listen for voice input.";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Time For A Break needs speech recognition to log completed activities by voice.";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -658,8 +844,11 @@
 				DEVELOPMENT_TEAM = S6462Z9W3N;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TimeForABreakSwiftUI/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Time For A Break needs microphone access to listen for voice input.";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Time For A Break needs speech recognition to log completed activities by voice.";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -688,6 +877,15 @@
 			buildConfigurations = (
 				4E0FE7A92F56C909007A1092 /* Debug */,
 				4E0FE7AA2F56C909007A1092 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4E50A1132F5D28C1007D7BBE /* Build configuration list for PBXNativeTarget "TimeForABreakWidgetsExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4E50A1142F5D28C1007D7BBE /* Debug */,
+				4E50A1152F5D28C1007D7BBE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
