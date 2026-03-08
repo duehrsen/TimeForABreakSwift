@@ -26,6 +26,7 @@
 		4E4048802F5CDA1A00F47C6C /* VoiceInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E40487F2F5CDA1A00F47C6C /* VoiceInputView.swift */; };
 		4E4440BA281919A000065E44 /* FrequencyActionRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E4440B9281919A000065E44 /* FrequencyActionRowView.swift */; };
 		4E50A0F62F5D26C4007D7BBE /* BreakTimerAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E50A0F52F5D26C4007D7BBE /* BreakTimerAttributes.swift */; };
+		4E50A0F82F5D26DE007D7BBE /* LiveActivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E50A0F72F5D26DE007D7BBE /* LiveActivityManager.swift */; };
 		4E58B485280BDEE40025D27F /* ToastViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E58B484280BDEE40025D27F /* ToastViewModifier.swift */; };
 		4E58B487280C076C0025D27F /* ActionNewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E58B486280C076C0025D27F /* ActionNewView.swift */; };
 		4E74E0732801514B0094CE5D /* SummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E74E0722801514B0094CE5D /* SummaryView.swift */; };
@@ -86,6 +87,7 @@
 		4E40487F2F5CDA1A00F47C6C /* VoiceInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceInputView.swift; sourceTree = "<group>"; };
 		4E4440B9281919A000065E44 /* FrequencyActionRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FrequencyActionRowView.swift; sourceTree = "<group>"; };
 		4E50A0F52F5D26C4007D7BBE /* BreakTimerAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreakTimerAttributes.swift; sourceTree = "<group>"; };
+		4E50A0F72F5D26DE007D7BBE /* LiveActivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityManager.swift; sourceTree = "<group>"; };
 		4E58B484280BDEE40025D27F /* ToastViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastViewModifier.swift; sourceTree = "<group>"; };
 		4E58B486280C076C0025D27F /* ActionNewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionNewView.swift; sourceTree = "<group>"; };
 		4E74E0722801514B0094CE5D /* SummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryView.swift; sourceTree = "<group>"; };
@@ -191,6 +193,7 @@
 				4E4048792F5CD92900F47C6C /* PhraseMatching.swift */,
 				4E40487D2F5CD9BD00F47C6C /* VoiceRecognitionService.swift */,
 				4E50A0F52F5D26C4007D7BBE /* BreakTimerAttributes.swift */,
+				4E50A0F72F5D26DE007D7BBE /* LiveActivityManager.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -403,6 +406,7 @@
 				4E14B7882F5802BE005E7A0F /* PersistenceManager.swift in Sources */,
 				4E58B487280C076C0025D27F /* ActionNewView.swift in Sources */,
 				4E0A660B27FBF67B00A8F0E6 /* ActionCompletionRowView.swift in Sources */,
+				4E50A0F82F5D26DE007D7BBE /* LiveActivityManager.swift in Sources */,
 				4EE2469627F0454C0099CE24 /* TimerModel.swift in Sources */,
 				4E2FEF9F27F5533200A02DF2 /* TimerCountView.swift in Sources */,
 				4EBD8DD227FA115900234307 /* MainView.swift in Sources */,
