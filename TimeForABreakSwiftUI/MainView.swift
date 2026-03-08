@@ -16,6 +16,7 @@ struct MainView: View {
     @StateObject var allActions = ActionViewModel()
     @StateObject private var notificationManager = NotificationManager()
     @StateObject var optionsModel = OptionsModel()
+    @StateObject private var liveActivityManager = LiveActivityManager()
     
     @State private var switchedToBackground : Bool = false
     @State private var selectedTab = 0
@@ -24,6 +25,17 @@ struct MainView: View {
     let numTabs = 4
     
     private func handleSwipe(translation : CGFloat) {
+    }
+
+    private func nextActionPreview() -> String {
+        let cal = Calendar.current
+        let uncompleted = selectActions.actions.filter {
+            (cal.isDateInToday($0.date ?? .distantPast) || $0.pinned) && !$0.completed
+        }
+        if let next = uncompleted.first {
+            return "Next: \(next.title)"
+        }
+        return "Focus time"
     }
     
     var body: some View {
@@ -81,6 +93,14 @@ struct MainView: View {
                     switchedToBackground = false
                     timerModel.movingToActive()
                     notificationManager.cancelAllNotifications()
+                    if timerModel.started {
+                        liveActivityManager.updateActivity(
+                            isWorkTime: timerModel.isWorkTime,
+                            isRunning: true,
+                            timeRemaining: timerModel.currentTimeRemaining,
+                            totalSeconds: timerModel.totalSecondsForCurrentMode
+                        )
+                    }
                 @unknown default:
                     break
                 }
@@ -139,6 +159,35 @@ struct MainView: View {
             default:
                 break
             }
+        }
+        .onChange(of: timerModel.started) { isStarted in
+            if isStarted {
+                liveActivityManager.startActivity(
+                    isWorkTime: timerModel.isWorkTime,
+                    timeRemaining: timerModel.currentTimeRemaining,
+                    totalSeconds: timerModel.totalSecondsForCurrentMode,
+                    actionPreview: nextActionPreview()
+                )
+            } else if !timerModel.isComplete {
+                liveActivityManager.updateActivity(
+                    isWorkTime: timerModel.isWorkTime,
+                    isRunning: false,
+                    timeRemaining: timerModel.currentTimeRemaining,
+                    totalSeconds: timerModel.totalSecondsForCurrentMode
+                )
+            }
+        }
+        .onChange(of: timerModel.isComplete) { isComplete in
+            if isComplete {
+                liveActivityManager.endActivity()
+            }
+        }
+        .onChange(of: timerModel.isWorkTime) { _ in
+            liveActivityManager.endActivity()
+        }
+        .onOpenURL { url in
+            guard url.scheme == "timeforabreak", url.host == "voice" else { return }
+            selectedTab = 0
         }
         .environmentObject(optionsModel)
         .environmentObject(timerModel)
