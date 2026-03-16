@@ -29,6 +29,114 @@ enum PhraseMatching {
         "forty-six": 46, "forty-seven": 47, "forty-eight": 48, "forty-nine": 49, "fifty": 50
     ]
 
+    // MARK: - Verb normalization and stop words
+
+    /// Common English verbs and their most frequent inflected forms.
+    /// Used to normalize both transcript text and candidate phrases so that
+    /// "took a walk" still matches a phrase like "take a walk".
+    private static let verbVariants: [String: [String]] = [
+        "ask": ["ask", "asking", "asked"],
+        "bake": ["bake", "baking", "baked"],
+        "bring": ["bring", "bringing", "brought"],
+        "build": ["build", "building", "built"],
+        "call": ["call", "calling", "called"],
+        "clean": ["clean", "cleaning", "cleaned"],
+        "climb": ["climb", "climbing", "climbed"],
+        "close": ["close", "closing", "closed"],
+        "cook": ["cook", "cooking", "cooked"],
+        "cry": ["cry", "crying", "cried"],
+        "dance": ["dance", "dancing", "danced"],
+        "dig": ["dig", "digging", "dug"],
+        "do": ["do", "doing", "did", "done"],
+        "draw": ["draw", "drawing", "drew", "drawn"],
+        "drink": ["drink", "drinking", "drank", "drunk"],
+        "drive": ["drive", "driving", "drove", "driven"],
+        "eat": ["eat", "eating", "ate", "eaten"],
+        "explain": ["explain", "explaining", "explained"],
+        "fall": ["fall", "falling", "fell", "fallen"],
+        "feel": ["feel", "feeling", "felt"],
+        "fight": ["fight", "fighting", "fought"],
+        "find": ["find", "finding", "found"],
+        "finish": ["finish", "finishing", "finished"],
+        "fix": ["fix", "fixing", "fixed"],
+        "fly": ["fly", "flying", "flew", "flown"],
+        "forget": ["forget", "forgetting", "forgot", "forgotten"],
+        "get": ["get", "getting", "got", "gotten"],
+        "give": ["give", "giving", "gave", "given"],
+        "go": ["go", "going", "went", "gone"],
+        "grow": ["grow", "growing", "grew", "grown"],
+        "hang": ["hang", "hanging", "hung"],
+        "hear": ["hear", "hearing", "heard"],
+        "help": ["help", "helping", "helped"],
+        "hide": ["hide", "hiding", "hid", "hidden"],
+        "hit": ["hit", "hitting"],
+        "hold": ["hold", "holding", "held"],
+        "hop": ["hop", "hopping", "hopped"],
+        "hug": ["hug", "hugging", "hugged"],
+        "jump": ["jump", "jumping", "jumped"],
+        "kick": ["kick", "kicking", "kicked"],
+        "know": ["know", "knowing", "knew", "known"],
+        "laugh": ["laugh", "laughing", "laughed"],
+        "learn": ["learn", "learning", "learned", "learnt"],
+        "leave": ["leave", "leaving", "left"],
+        "listen": ["listen", "listening", "listened"],
+        "live": ["live", "living", "lived"],
+        "look": ["look", "looking", "looked"],
+        "lose": ["lose", "losing", "lost"],
+        "love": ["love", "loving", "loved"],
+        "make": ["make", "making", "made"],
+        "meet": ["meet", "meeting", "met"],
+        "move": ["move", "moving", "moved"],
+        "need": ["need", "needing", "needed"],
+        "open": ["open", "opening", "opened"],
+        "paint": ["paint", "painting", "painted"],
+        "play": ["play", "playing", "played"],
+        "push": ["push", "pushing", "pushed"],
+        "read": ["read", "reading"], // past pronounced differently but same spelling
+        "ride": ["ride", "riding", "rode", "ridden"],
+        "run": ["run", "running", "ran"],
+        "say": ["say", "saying", "said"],
+        "see": ["see", "seeing", "saw", "seen"],
+        "sell": ["sell", "selling", "sold"],
+    ]
+
+    /// Very small stop-word set to de-emphasize these tokens when matching.
+    private static let stopWords: Set<String> = [
+        "a", "an", "the", "in", "on", "at", "of", "to", "for",
+        "and", "or", "but", "with", "from", "up", "down", "out"
+    ]
+
+    /// Tokenizes text into words, lowercased, stripping simple punctuation.
+    private static func tokenize(_ text: String) -> [String] {
+        text
+            .lowercased()
+            .replacingOccurrences(of: "[^a-z0-9\\s]", with: " ", options: .regularExpression)
+            .split(whereSeparator: { $0.isWhitespace })
+            .map(String.init)
+    }
+
+    /// Normalizes verbs in the text so that inflected forms map back to a base verb.
+    /// e.g. "I took a walk" -> tokens ["i", "take", "a", "walk"]
+    private static func normalizedTokens(_ text: String) -> [String] {
+        let raw = tokenize(text)
+        return raw.map { token in
+            // Keep stop words as-is so phrases that include them still work,
+            // but normalize verb forms where we recognize them.
+            for (base, variants) in verbVariants {
+                if variants.contains(token) {
+                    return base
+                }
+            }
+            return token
+        }
+    }
+
+    /// Normalizes a string back into a space-joined representation for
+    /// substring checks that are robust to verb inflection.
+    private static func normalizedString(_ text: String) -> String {
+        normalizedTokens(text).joined(separator: " ")
+    }
+
     // MARK: - Quantity Extraction
 
     /// Extracts a numeric quantity from spoken text.
@@ -60,7 +168,7 @@ enum PhraseMatching {
     /// and `triggerPhrases`. Matches longest phrases first for specificity
     /// (e.g. "watered plants" matches before "water").
     static func findMatchingAction(spokenText: String, actions: [BreakAction]) -> BreakAction? {
-        let lowercased = spokenText.lowercased()
+        let normalizedSpoken = normalizedString(spokenText)
 
         // Build a list of (phrase, action) pairs, sorted longest first
         var candidates: [(phrase: String, action: BreakAction)] = []
@@ -77,7 +185,8 @@ enum PhraseMatching {
         candidates.sort { $0.phrase.count > $1.phrase.count }
 
         for candidate in candidates {
-            if lowercased.contains(candidate.phrase) {
+            let normalizedPhrase = normalizedString(candidate.phrase)
+            if normalizedSpoken.contains(normalizedPhrase) {
                 return candidate.action
             }
         }
@@ -85,22 +194,54 @@ enum PhraseMatching {
         return nil
     }
 
+    /// Returns all actions whose suggested/trigger phrases match the spoken text
+    /// (after verb normalization). Used to offer the user a list of possible matches.
+    static func findMatchingActions(spokenText: String, actions: [BreakAction]) -> [BreakAction] {
+        let normalizedSpoken = normalizedString(spokenText)
+
+        var candidates: [(phrase: String, action: BreakAction)] = []
+
+        for action in actions {
+            for phrase in action.suggestedPhrases {
+                candidates.append((phrase: phrase.lowercased(), action: action))
+            }
+            for phrase in action.triggerPhrases {
+                candidates.append((phrase: phrase.lowercased(), action: action))
+            }
+        }
+
+        candidates.sort { $0.phrase.count > $1.phrase.count }
+
+        var matched: [BreakAction] = []
+        for candidate in candidates {
+            let normalizedPhrase = normalizedString(candidate.phrase)
+            if normalizedSpoken.contains(normalizedPhrase) {
+                if !matched.contains(where: { $0.id == candidate.action.id }) {
+                    matched.append(candidate.action)
+                }
+            }
+        }
+
+        return matched
+    }
+
     // MARK: - Full Transcript Processing
 
-    /// Combines quantity extraction and action matching.
+    /// Combines quantity extraction and action matching for a specific action.
     /// Falls back to `defaultQuantity` for quantifiable actions when no number is spoken.
+    static func matchResult(for action: BreakAction, in text: String) -> MatchResult {
+        var quantity = extractQuantity(from: text)
+        if quantity == nil && action.isQuantifiable {
+            quantity = action.defaultQuantity
+        }
+        return MatchResult(action: action, quantity: quantity)
+    }
+
+    /// Backwards-compatible helper: returns a single best match if available.
     static func processTranscript(_ text: String, actions: [BreakAction]) -> MatchResult? {
         guard let action = findMatchingAction(spokenText: text, actions: actions) else {
             return nil
         }
-
-        var quantity = extractQuantity(from: text)
-
-        // Fall back to defaultQuantity for quantifiable actions
-        if quantity == nil && action.isQuantifiable {
-            quantity = action.defaultQuantity
-        }
-
-        return MatchResult(action: action, quantity: quantity)
+        return matchResult(for: action, in: text)
     }
 }

@@ -10,15 +10,91 @@ import SwiftUI
 struct TimerCountView: View {
     @EnvironmentObject var timerModel: TimerModel
     @EnvironmentObject var selectActions: SelectedActionsViewModel
+    @EnvironmentObject var optionsModel: OptionsModel
     @Environment(\.colorScheme) var colorScheme
 
     @State private var didAppear: Bool = false
-    @State private var showingSheet: Bool = false
+    @State private var showingListSheet: Bool = false
+    @State private var showingVoiceSheet: Bool = false
     @State private var showingCompleteSheet: Bool = false
+
+    @State private var previousCompletedCount: Int = 0
+    @State private var segmentRingInitialized: Bool = false
+    @State private var animatingSegmentIndex: Int? = nil
+    @State private var segmentAnimationPhase: SegmentAnimationPhase = .preHighlight
 
     var defaultAction: BreakAction = BreakAction(title: "Get up!", description: "Leave your chair", categoryId: "mental", duration: 1)
 
     let cal = Calendar.current
+
+    private var todayActions: [BreakAction] {
+        selectActions.actions.filter { cal.isDateInToday($0.date ?? .distantPast) || $0.pinned }
+    }
+
+    private var segmentCount: Int {
+        let count = todayActions.count
+        guard count >= 6 else { return 0 }
+        return min(count, 10)
+    }
+
+    private var completedCount: Int {
+        guard segmentCount > 0 else { return 0 }
+        let slice = Array(todayActions.prefix(segmentCount))
+        return slice.filter(\.completed).count
+    }
+
+    /// Signature that changes when any of today’s actions’ completion state changes (for onChange).
+    private var completionStateSignature: String {
+        todayActions.prefix(segmentCount).map { "\($0.id)-\($0.completed)" }.joined(separator: "|")
+    }
+
+    private var ringRadius: CGFloat {
+        let diameter: CGFloat = 225
+        let bglineWidth: CGFloat = 12
+        let gap: CGFloat = 20
+        let ringThickness: CGFloat = 13
+        return diameter / 2 + bglineWidth + gap + ringThickness / 2
+    }
+
+    private func runSegmentCompletionAnimation(for index: Int) {
+        guard segmentCount > 0 else { return }
+        let reduceMotion = UIAccessibility.isReduceMotionEnabled
+        animatingSegmentIndex = index
+        segmentAnimationPhase = .preHighlight
+
+        if reduceMotion {
+            segmentAnimationPhase = .fill
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                segmentAnimationPhase = .settle
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.14) {
+                    animatingSegmentIndex = nil
+                    previousCompletedCount = completedCount
+                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                }
+            }
+            return
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.10) {
+            segmentAnimationPhase = .lift
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+            segmentAnimationPhase = .fill
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.37) {
+            withAnimation(.spring(response: 0.22, dampingFraction: 0.75)) {
+                segmentAnimationPhase = .snap
+            }
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.59) {
+            segmentAnimationPhase = .settle
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.73) {
+            animatingSegmentIndex = nil
+            previousCompletedCount = completedCount
+            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+        }
+    }
 
     var body: some View {
 
@@ -27,12 +103,25 @@ struct TimerCountView: View {
         let playIconSize: CGFloat = 40
         let bglineWidth: CGFloat = 12
         let tplineWidth: CGFloat = 4
+        let ringThickness: CGFloat = 13
+        let ringSize: CGFloat = segmentCount > 0 ? (ringRadius + ringThickness) * 2 : 0
 
         VStack(spacing: 25) {
             Button {
                 timerModel.toggle()
             } label: {
                 ZStack {
+                    if segmentCount > 0 {
+                        ActionSegmentRingView(
+                            segmentCount: segmentCount,
+                            completedCount: completedCount,
+                            animatingIndex: animatingSegmentIndex,
+                            phase: segmentAnimationPhase,
+                            ringRadius: ringRadius,
+                            thickness: ringThickness
+                        )
+                        .frame(width: ringSize, height: ringSize)
+                    }
                     Circle()
                         .trim(from: 0, to: 1)
                         .stroke(Color.orange.opacity(0.3), style: StrokeStyle(lineWidth: bglineWidth, lineCap: .round))
@@ -94,24 +183,47 @@ struct TimerCountView: View {
             }
         }
 
-            Button(action: {
-                showingSheet.toggle()
-            }) {
-                HStack(spacing: 15) {
-                    Image(systemName: "eyes.inverse")
-                        .foregroundColor(.white)
-                    Text("Show Today's Actions")
-                        .foregroundColor(.white)
-                        .font(.caption)
+            HStack(spacing: 16) {
+                Button(action: {
+                    showingVoiceSheet.toggle()
+                }) {
+                    HStack(spacing: 10) {
+                        Image(systemName: "mic.fill")
+                            .foregroundColor(.white)
+                        Text("Log by voice")
+                            .foregroundColor(.white)
+                            .font(.caption)
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 8)
+                    .background(Color.blue)
+                    .clipShape(Capsule())
+                    .shadow(radius: 5)
                 }
-                .padding()
-                .background(Color.green)
-                .clipShape(Capsule())
-                .shadow(radius: 5)
+
+                Button(action: {
+                    showingListSheet.toggle()
+                }) {
+                    HStack(spacing: 10) {
+                        Image(systemName: "checklist")
+                            .foregroundColor(.white)
+                        Text("Log from list")
+                            .foregroundColor(.white)
+                            .font(.caption)
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 8)
+                    .background(Color.green)
+                    .clipShape(Capsule())
+                    .shadow(radius: 5)
+                }
             }
         }
-        .sheet(isPresented: $showingSheet, content: {
+        .sheet(isPresented: $showingListSheet, content: {
             SelectedActionsSheetView()
+        })
+        .sheet(isPresented: $showingVoiceSheet, content: {
+            TimerVoiceLogSheetView()
         })
         .sheet(isPresented: $showingCompleteSheet, content: {
             TimerCompletionView(isFinishedWork: !timerModel.isWorkTime)
@@ -126,6 +238,17 @@ struct TimerCountView: View {
             if !didAppear {
                 timerModel.reset()
                 didAppear = true
+            }
+            if !segmentRingInitialized && segmentCount > 0 {
+                previousCompletedCount = completedCount
+                segmentRingInitialized = true
+            }
+        }
+        .onChange(of: completionStateSignature) { _ in
+            let count = completedCount
+            if segmentRingInitialized && segmentCount > 0 && count > previousCompletedCount {
+                let targetIndex = min(previousCompletedCount, segmentCount - 1)
+                runSegmentCompletionAnimation(for: targetIndex)
             }
         }
     }

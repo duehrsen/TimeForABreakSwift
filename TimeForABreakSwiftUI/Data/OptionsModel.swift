@@ -8,17 +8,33 @@
 import Combine
 import SwiftUI
 
-struct OptionSet : Codable {
-    var breaktimeMin : Int
-    var worktimeMin : Int
-    var doesPlaySounds : Bool
-    var isMuted : Bool = false
+struct OptionSet: Codable {
+    var breaktimeMin: Int
+    var worktimeMin: Int
+    var doesPlaySounds: Bool
+    var isMuted: Bool = false
 
-    init(breaktimeMin: Int, worktimeMin: Int, doesPlaySounds: Bool, isMuted: Bool = false) {
+    /// Optional titles for the daily suggested actions set.
+    /// If nil or empty, `DataProvider.defaultDailySuggestedActionTitles()` is used.
+    var dailySuggestedTitles: [String]? = nil
+
+    /// Number of action ring segments (daily goal). 6...10. Applies from the next day.
+    var dailyActionGoal: Int = 8
+
+    init(
+        breaktimeMin: Int,
+        worktimeMin: Int,
+        doesPlaySounds: Bool,
+        isMuted: Bool = false,
+        dailySuggestedTitles: [String]? = nil,
+        dailyActionGoal: Int = 8
+    ) {
         self.breaktimeMin = breaktimeMin
         self.worktimeMin = worktimeMin
         self.doesPlaySounds = doesPlaySounds
         self.isMuted = isMuted
+        self.dailySuggestedTitles = dailySuggestedTitles
+        self.dailyActionGoal = min(10, max(6, dailyActionGoal))
     }
 
     init(from decoder: Decoder) throws {
@@ -32,12 +48,21 @@ struct OptionSet : Codable {
             // Migrate: derive from existing doesPlaySounds preference
             isMuted = !doesPlaySounds
         }
+        dailySuggestedTitles = try container.decodeIfPresent([String].self, forKey: .dailySuggestedTitles)
+        let raw = try container.decodeIfPresent(Int.self, forKey: .dailyActionGoal) ?? 8
+        dailyActionGoal = min(10, max(6, raw))
     }
 }
 
 class OptionsModel: ObservableObject {
 
-    static let defaultOptions = OptionSet(breaktimeMin: 5, worktimeMin: 20, doesPlaySounds: false, isMuted: false)
+    static let defaultOptions = OptionSet(
+        breaktimeMin: 5,
+        worktimeMin: 20,
+        doesPlaySounds: false,
+        isMuted: false,
+        dailySuggestedTitles: DataProvider.defaultDailySuggestedActionTitles()
+    )
 
     private let persistence = PersistenceManager<OptionSet>(fileName: "options", defaultValue: OptionsModel.defaultOptions)
 
@@ -65,5 +90,25 @@ class OptionsModel: ObservableObject {
 
     func saveToDisk() {
         persistence.saveToDisk(data: options)
+    }
+
+    // MARK: - Action ring segment count (effective for “today”; new goal applies next day)
+
+    private static let actionRingEffectiveDayKey = "actionRingEffectiveDay"
+    private static let actionRingSegmentCountKey = "actionRingSegmentCount"
+
+    /// Segment count to show in the action ring today. Updated only when the calendar day changes.
+    func effectiveSegmentCountForToday(calendar: Calendar = .current) -> Int {
+        let today = calendar.startOfDay(for: Date())
+        let defaults = UserDefaults.standard
+        let storedDay = defaults.object(forKey: Self.actionRingEffectiveDayKey) as? Date
+        let storedCount = defaults.integer(forKey: Self.actionRingSegmentCountKey)
+        if storedCount > 0, let d = storedDay, calendar.isDate(d, inSameDayAs: today) {
+            return storedCount
+        }
+        let count = min(10, max(6, options.dailyActionGoal))
+        defaults.set(today, forKey: Self.actionRingEffectiveDayKey)
+        defaults.set(count, forKey: Self.actionRingSegmentCountKey)
+        return count
     }
 }

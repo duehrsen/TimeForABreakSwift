@@ -19,6 +19,54 @@ class SelectedActionsViewModel: ObservableObject {
     @Published var actions: [BreakAction] = []
     @Published var completions: [ActionCompletion] = []
     
+    // MARK: - Helpers
+
+    func yesterdayActions() -> [BreakAction] {
+        actions.filter { cal.isDateInYesterday($0.date ?? .distantPast) }
+    }
+
+    /// Replace today's non-pinned actions with a new set built from the given templates.
+    /// Pinned actions are preserved and left untouched.
+    func setTodaysActions(from templates: [BreakAction]) {
+        let today = cal.startOfDay(for: Date())
+
+        // Remove any non-pinned actions dated today
+        actions.removeAll { action in
+            guard !action.pinned, let date = action.date else {
+                return false
+            }
+            return cal.isDate(date, inSameDayAs: today)
+        }
+
+        // Add new actions for today (fresh IDs, reset completion/date)
+        let newActions: [BreakAction] = templates.map { template in
+            BreakAction(
+                id: UUID(),
+                title: template.title,
+                description: template.description,
+                spokenPrompt: template.spokenPrompt,
+                categoryId: template.categoryId,
+                duration: template.duration,
+                isQuantifiable: template.isQuantifiable,
+                unit: template.unit,
+                defaultQuantity: template.defaultQuantity,
+                triggerPhrases: template.triggerPhrases,
+                suggestedPhrases: template.suggestedPhrases,
+                timesPerDay: template.timesPerDay,
+                preferredTimeRange: template.preferredTimeRange,
+                isBuiltIn: template.isBuiltIn,
+                pinned: template.pinned,
+                completed: false,
+                date: Date(),
+                linkurl: template.linkurl,
+                frequency: 1
+            )
+        }
+
+        actions.append(contentsOf: newActions)
+        saveToDisk()
+    }
+    
     func countedHistoryActions(actions: [BreakAction]) -> [BreakAction]
     {
         var countedActions : [BreakAction] = []
@@ -87,6 +135,7 @@ class SelectedActionsViewModel: ObservableObject {
         if let thisInd = actions.firstIndex(where: {$0.id == id} )
         {
             actions.replaceSubrange(thisInd...thisInd, with: repeatElement(newItem, count: 1))
+            objectWillChange.send()
         }
         saveToDisk()
     }

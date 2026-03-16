@@ -9,6 +9,11 @@
 /* Begin PBXBuildFile section */
 		4E0A660B27FBF67B00A8F0E6 /* ActionCompletionRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E0A660A27FBF67B00A8F0E6 /* ActionCompletionRowView.swift */; };
 		4E0A660D27FBFCBB00A8F0E6 /* ActionEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E0A660C27FBFCBB00A8F0E6 /* ActionEditView.swift */; };
+		4E0B71CF2F67A57B0080519A /* DaySetupSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E0B71CE2F67A57B0080519A /* DaySetupSheetView.swift */; };
+		4E0B71D12F67A57B0080519A /* DayActionPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E0B71D02F67A57B0080519A /* DayActionPickerView.swift */; };
+		4E0B71D32F67AE990080519A /* TimerVoiceLogSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E0B71D22F67AE990080519A /* TimerVoiceLogSheetView.swift */; };
+		4E0B71D52F67AF010080519A /* DayPlanSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E0B71D42F67AF010080519A /* DayPlanSummaryView.swift */; };
+		4E0B71D82F67B0020080519A /* ActionSegmentRingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E0B71D72F67B0020080519A /* ActionSegmentRingView.swift */; };
 		4E0FE79B2F56C51D007A1092 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4E0FE79A2F56C51D007A1092 /* Assets.xcassets */; };
 		4E14B7882F5802BE005E7A0F /* PersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E14B7872F5802BE005E7A0F /* PersistenceManager.swift */; };
 		4E1684EC27FFDE8400AF9990 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E1684EB27FFDE8400AF9990 /* NotificationManager.swift */; };
@@ -93,6 +98,11 @@
 /* Begin PBXFileReference section */
 		4E0A660A27FBF67B00A8F0E6 /* ActionCompletionRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionCompletionRowView.swift; sourceTree = "<group>"; };
 		4E0A660C27FBFCBB00A8F0E6 /* ActionEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionEditView.swift; sourceTree = "<group>"; };
+		4E0B71CE2F67A57B0080519A /* DaySetupSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaySetupSheetView.swift; sourceTree = "<group>"; };
+		4E0B71D02F67A57B0080519A /* DayActionPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayActionPickerView.swift; sourceTree = "<group>"; };
+		4E0B71D22F67AE990080519A /* TimerVoiceLogSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerVoiceLogSheetView.swift; sourceTree = "<group>"; };
+		4E0B71D42F67AF010080519A /* DayPlanSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayPlanSummaryView.swift; sourceTree = "<group>"; };
+		4E0B71D72F67B0020080519A /* ActionSegmentRingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionSegmentRingView.swift; sourceTree = "<group>"; };
 		4E0FE79A2F56C51D007A1092 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4E0FE79D2F56C8B3007A1092 /* TimerModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerModelTests.swift; sourceTree = "<group>"; };
 		4E0FE7A22F56C909007A1092 /* TimeForABreakSwiftUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TimeForABreakSwiftUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -208,6 +218,7 @@
 		4E8A329928041E260078AAF0 /* Subviews */ = {
 			isa = PBXGroup;
 			children = (
+				4E0B71D22F67AE990080519A /* TimerVoiceLogSheetView.swift */,
 				4EB2213528069665004BD397 /* TimerCompletionView.swift */,
 				4E8A32912803E7180078AAF0 /* AvailableActionsSheetView.swift */,
 				4E8A328F2803C3CA0078AAF0 /* SelectedActionsSheetView.swift */,
@@ -220,6 +231,10 @@
 				4EB3AB0F280AB894008FF804 /* TimeRemainingSubView.swift */,
 				4EB3AB13280ACC2C008FF804 /* ToolbarElements.swift */,
 				4E40487F2F5CDA1A00F47C6C /* VoiceInputView.swift */,
+				4E0B71CE2F67A57B0080519A /* DaySetupSheetView.swift */,
+				4E0B71D02F67A57B0080519A /* DayActionPickerView.swift */,
+				4E0B71D42F67AF010080519A /* DayPlanSummaryView.swift */,
+				4E0B71D72F67B0020080519A /* ActionSegmentRingView.swift */,
 			);
 			path = Subviews;
 			sourceTree = "<group>";
@@ -495,6 +510,7 @@
 				4EB3AB0C280A866A008FF804 /* OptionsModel.swift in Sources */,
 				4E2D19B228052EDE00459DDB /* SelectedActionsViewModel.swift in Sources */,
 				4E4048702F5C0A2D00F47C6C /* ActionCompletion.swift in Sources */,
+				4E0B71D12F67A57B0080519A /* DayActionPickerView.swift in Sources */,
 				4EA7BD0E27F2B96A00B9C348 /* DataProvider.swift in Sources */,
 				4E4048722F5C0A4400F47C6C /* CodableClosedRange.swift in Sources */,
 				4EB3AB0E280AA6A5008FF804 /* OptionsInputSubView.swift in Sources */,
@@ -518,7 +534,10 @@
 				4EDAFE5527E9A53C00FFB703 /* TimeForABreakSwiftUIApp.swift in Sources */,
 				4E4048782F5CA9CD00F47C6C /* SpeechService.swift in Sources */,
 				4EA7BD1027F2B97A00B9C348 /* BreakAction.swift in Sources */,
+				4E0B71D32F67AE990080519A /* TimerVoiceLogSheetView.swift in Sources */,
 				4E1684EC27FFDE8400AF9990 /* NotificationManager.swift in Sources */,
+				4E0B71D52F67AF010080519A /* DayPlanSummaryView.swift in Sources */,
+				4E0B71D82F67B0020080519A /* ActionSegmentRingView.swift in Sources */,
 				4E58B485280BDEE40025D27F /* ToastViewModifier.swift in Sources */,
 				4E4048742F5C9EEA00F47C6C /* DataMigration.swift in Sources */,
 				4EB3AB14280ACC2C008FF804 /* ToolbarElements.swift in Sources */,
@@ -526,6 +545,7 @@
 				4E0A660D27FBFCBB00A8F0E6 /* ActionEditView.swift in Sources */,
 				4E8A32922803E7180078AAF0 /* AvailableActionsSheetView.swift in Sources */,
 				4E8A32AD280423820078AAF0 /* ThickDivider.swift in Sources */,
+				4E0B71CF2F67A57B0080519A /* DaySetupSheetView.swift in Sources */,
 				4EB3AB10280AB894008FF804 /* TimeRemainingSubView.swift in Sources */,
 				4EE2468F27EFE0C20099CE24 /* StandardButton.swift in Sources */,
 				4EE9FB7F2802A3C500D0F02D /* SimpleActionRowView.swift in Sources */,
@@ -557,8 +577,10 @@
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = S6462Z9W3N;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -584,8 +606,10 @@
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = S6462Z9W3N;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;

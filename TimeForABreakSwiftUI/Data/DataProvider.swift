@@ -166,8 +166,20 @@ enum DataProvider {
             spokenPrompt: "Time to stand up and stretch!", categoryId: "mental", duration: 2,
             suggestedPhrases: ["stood up", "standing", "stretched", "got up", "stand up", "standing break"],
             isBuiltIn: true))
-
         return actions
+    }
+
+    /// Default set of titles used for the \"Use suggested set\" option
+    /// when the user hasn't customized their daily suggested actions.
+    static func defaultDailySuggestedActionTitles() -> [String] {
+        [
+            "Drink water",
+            "Stretch shoulders",
+            "Eye relaxation",
+            "Stand and stretch",
+            "Deep breathing",
+            "Take a short walk"
+        ]
     }
 
     /// Backward-compatible alias used by restoreDefaultsToDisk().

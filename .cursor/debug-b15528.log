@@ -1,0 +1,4 @@
+{"message":"startListening entry","runId":"mic-crash-investigation","hypothesisId":"H1","data":{"speechAvailable":true,"listeningState":"idle"},"timestamp":1773640336594,"location":"VoiceRecognitionService.swift:startListening","sessionId":"b15528"}
+{"message":"Configuring audio session","runId":"mic-crash-investigation","hypothesisId":"H2","data":{},"timestamp":1773640336594,"location":"VoiceRecognitionService.swift:startListening","sessionId":"b15528"}
+{"hypothesisId":"H2","sessionId":"b15528","runId":"mic-crash-investigation","message":"About to install tap","timestamp":1773640336679,"location":"VoiceRecognitionService.swift:startListening","data":{"channels":2,"sampleRate":0,"audioEngineRunning":false}}
+{"hypothesisId":"H4","sessionId":"b15528","runId":"mic-crash-investigation","message":"Invalid recording format; skipping tap","timestamp":1773640336681,"location":"VoiceRecognitionService.swift:startListening","data":{"channels":2,"sampleRate":0}}

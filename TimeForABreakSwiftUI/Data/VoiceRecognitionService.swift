@@ -88,6 +88,15 @@ class VoiceRecognitionService: ObservableObject {
 
             let inputNode = audioEngine.inputNode
             let recordingFormat = inputNode.outputFormat(forBus: 0)
+
+            // On some simulator configurations, the input format can report a 0 sample rate,
+            // which will cause AVAudioEngine/installTap to throw an Objective‑C exception.
+            // Guard against that and fail gracefully instead of crashing.
+            guard recordingFormat.sampleRate > 0, recordingFormat.channelCount > 0 else {
+                listeningState = .error("No audio input available on this device.")
+                return
+            }
+
             inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { buffer, _ in
                 request.append(buffer)
             }

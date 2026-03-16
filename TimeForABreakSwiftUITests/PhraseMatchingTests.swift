@@ -65,6 +65,23 @@ struct PhraseMatchingTests {
         ]
     }
 
+    private var verbVariantActions: [BreakAction] {
+        [
+            makeAction(
+                title: "Take a short walk",
+                isQuantifiable: true,
+                unit: "minutes",
+                defaultQuantity: 2,
+                suggestedPhrases: ["take a walk", "short walk", "walk"]
+            ),
+            makeAction(
+                title: "Tidy up one area",
+                isQuantifiable: false,
+                suggestedPhrases: ["tidy up", "clean up", "quick tidy up"]
+            )
+        ]
+    }
+
     // MARK: - extractQuantity tests
 
     @Test func extractQuantityFromDigits() {
@@ -136,6 +153,43 @@ struct PhraseMatchingTests {
         ]
         let result = PhraseMatching.findMatchingAction(spokenText: "I did my custom phrase", actions: actions)
         #expect(result?.title == "Custom action")
+    }
+
+    @Test func verbVariantsMatchInflectedForms() {
+        // "took a walk" should match "Take a short walk" via verb normalization
+        let result = PhraseMatching.findMatchingAction(
+            spokenText: "I took a walk outside",
+            actions: verbVariantActions
+        )
+        #expect(result?.title == "Take a short walk")
+    }
+
+    @Test func verbVariantsMatchProgressiveForm() {
+        // "was walking" should also match "Take a short walk"
+        let result = PhraseMatching.findMatchingAction(
+            spokenText: "I was walking around the block",
+            actions: verbVariantActions
+        )
+        #expect(result?.title == "Take a short walk")
+    }
+
+    @Test func findMatchingActionsReturnsMultipleCandidates() {
+        // Both actions mention "tidy/clean up" concepts; ensure multi-match API returns both
+        let extra = makeAction(
+            title: "Clean the desk",
+            isQuantifiable: false,
+            suggestedPhrases: ["clean up", "clean desk"]
+        )
+        let actions = verbVariantActions + [extra]
+
+        let matches = PhraseMatching.findMatchingActions(
+            spokenText: "I cleaned up",
+            actions: actions
+        )
+
+        let titles = Set(matches.map { $0.title })
+        #expect(titles.contains("Tidy up one area"))
+        #expect(titles.contains("Clean the desk"))
     }
 
     // MARK: - processTranscript tests

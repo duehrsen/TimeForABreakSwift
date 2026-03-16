@@ -77,7 +77,6 @@ struct DayActionPickerView: View {
                                 }
                             }
                         }
-                        .toggleStyle(.checkbox)
 
                         if (selectionCounts[action.id] ?? 0) > 0 {
                             Stepper(

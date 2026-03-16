@@ -21,6 +21,8 @@ struct MainView: View {
     @State private var switchedToBackground : Bool = false
     @State private var selectedTab = 0
     @State private var minDragForSwipe : CGFloat = 60
+    @State private var showDaySetupSheet: Bool = false
+    @State private var showDaySummarySheet: Bool = false
     
     let numTabs = 4
     
@@ -36,6 +38,25 @@ struct MainView: View {
             return "Next: \(next.title)"
         }
         return "Focus time"
+    }
+
+    private func markDaySetupDone() {
+        let today = Calendar.current.startOfDay(for: Date())
+        UserDefaults.standard.set(today, forKey: "lastDaySetupDate")
+        showDaySetupSheet = false
+        showDaySummarySheet = true
+    }
+
+    private func evaluateDaySetupIfNeeded() {
+        let cal = Calendar.current
+        let today = cal.startOfDay(for: Date())
+        if let last = UserDefaults.standard.object(forKey: "lastDaySetupDate") as? Date {
+            if !cal.isDate(last, inSameDayAs: today) {
+                showDaySetupSheet = true
+            }
+        } else {
+            showDaySetupSheet = true
+        }
     }
     
     var body: some View {
@@ -126,11 +147,13 @@ struct MainView: View {
             allActions.addActivityFromApi()
             do {
                 let loadedOptions = try await optionsModel.load()
+                optionsModel.options = loadedOptions
                 optionsModel.updateOptionsModel(breakMin: loadedOptions.breaktimeMin, workMin: loadedOptions.worktimeMin, doesPlaySounds: loadedOptions.doesPlaySounds, isMuted: loadedOptions.isMuted)
                 timerModel.updateFromOptions(optionSet: loadedOptions)
             } catch {
                 optionsModel.setDefault()
             }
+            evaluateDaySetupIfNeeded()
         }
         // Fetch pinned actions daily
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification), perform: { _ in
@@ -188,6 +211,21 @@ struct MainView: View {
         .onOpenURL { url in
             guard url.scheme == "timeforabreak", url.host == "voice" else { return }
             selectedTab = 0
+        }
+        .sheet(isPresented: $showDaySetupSheet) {
+            DaySetupSheetView(
+                onComplete: { markDaySetupDone() }
+            )
+            .environmentObject(selectActions)
+            .environmentObject(allActions)
+            .environmentObject(optionsModel)
+        }
+        .sheet(isPresented: $showDaySummarySheet) {
+            DayPlanSummaryView()
+                .environmentObject(selectActions)
+                .onDisappear {
+                    showDaySummarySheet = false
+                }
         }
         .environmentObject(optionsModel)
         .environmentObject(timerModel)
