@@ -8,6 +8,7 @@
 import Combine
 import SwiftUI
 
+/// Serializable user preference set controlling timer durations and audio behavior.
 struct OptionSet: Codable {
     var breaktimeMin: Int
     var worktimeMin: Int
@@ -54,6 +55,8 @@ struct OptionSet: Codable {
     }
 }
 
+/// Observable wrapper around `OptionSet` with disk persistence and helper logic
+/// (for example the effective action ring segment count for the current day).
 class OptionsModel: ObservableObject {
 
     static let defaultOptions = OptionSet(

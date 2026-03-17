@@ -27,14 +27,40 @@ struct TimerCountView: View {
 
     let cal = Calendar.current
 
+    private enum Layout {
+        static let timerDiameter: CGFloat = 225
+        static let timerBackgroundLineWidth: CGFloat = 12
+        static let timerProgressLineWidth: CGFloat = 4
+        static let timerVerticalSpacing: CGFloat = 25
+        static let segmentRingGap: CGFloat = 20
+        static let segmentRingThickness: CGFloat = 13
+        static let buttonHorizontalSpacing: CGFloat = 10
+        static let loggingButtonsSpacing: CGFloat = 16
+        static let timerTextSize: CGFloat = 60
+        static let playIconSize: CGFloat = 40
+    }
+
+    private enum ActionRingLimits {
+        static let minSegments = 6
+        static let maxSegments = 10
+    }
+
+    private enum SegmentAnimationTiming {
+        static let preHighlight: TimeInterval = 0.10
+        static let lift: TimeInterval = 0.15
+        static let fill: TimeInterval = 0.12
+        static let snap: TimeInterval = 0.22
+        static let settle: TimeInterval = 0.14
+    }
+
     private var todayActions: [BreakAction] {
         selectActions.actions.filter { cal.isDateInToday($0.date ?? .distantPast) || $0.pinned }
     }
 
     private var segmentCount: Int {
         let count = todayActions.count
-        guard count >= 6 else { return 0 }
-        return min(count, 10)
+        guard count >= ActionRingLimits.minSegments else { return 0 }
+        return min(count, ActionRingLimits.maxSegments)
     }
 
     private var completedCount: Int {
@@ -49,10 +75,10 @@ struct TimerCountView: View {
     }
 
     private var ringRadius: CGFloat {
-        let diameter: CGFloat = 225
-        let bglineWidth: CGFloat = 12
-        let gap: CGFloat = 20
-        let ringThickness: CGFloat = 13
+        let diameter = Layout.timerDiameter
+        let bglineWidth = Layout.timerBackgroundLineWidth
+        let gap = Layout.segmentRingGap
+        let ringThickness = Layout.segmentRingThickness
         return diameter / 2 + bglineWidth + gap + ringThickness / 2
     }
 
@@ -64,9 +90,9 @@ struct TimerCountView: View {
 
         if reduceMotion {
             segmentAnimationPhase = .fill
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + SegmentAnimationTiming.fill) {
                 segmentAnimationPhase = .settle
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.14) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + SegmentAnimationTiming.settle) {
                     animatingSegmentIndex = nil
                     previousCompletedCount = completedCount
                     UIImpactFeedbackGenerator(style: .light).impactOccurred()
@@ -75,21 +101,21 @@ struct TimerCountView: View {
             return
         }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.10) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + SegmentAnimationTiming.preHighlight) {
             segmentAnimationPhase = .lift
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + SegmentAnimationTiming.preHighlight + SegmentAnimationTiming.lift) {
             segmentAnimationPhase = .fill
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.37) {
-            withAnimation(.spring(response: 0.22, dampingFraction: 0.75)) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + SegmentAnimationTiming.preHighlight + SegmentAnimationTiming.lift + SegmentAnimationTiming.fill) {
+            withAnimation(.spring(response: SegmentAnimationTiming.snap, dampingFraction: 0.75)) {
                 segmentAnimationPhase = .snap
             }
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.59) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + SegmentAnimationTiming.preHighlight + SegmentAnimationTiming.lift + SegmentAnimationTiming.fill + SegmentAnimationTiming.snap) {
             segmentAnimationPhase = .settle
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.73) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + SegmentAnimationTiming.preHighlight + SegmentAnimationTiming.lift + SegmentAnimationTiming.fill + SegmentAnimationTiming.snap + SegmentAnimationTiming.settle) {
             animatingSegmentIndex = nil
             previousCompletedCount = completedCount
             UIImpactFeedbackGenerator(style: .light).impactOccurred()
@@ -98,15 +124,15 @@ struct TimerCountView: View {
 
     var body: some View {
 
-        let diameter: CGFloat = 225
-        let timerTextSize: CGFloat = 60
-        let playIconSize: CGFloat = 40
-        let bglineWidth: CGFloat = 12
-        let tplineWidth: CGFloat = 4
-        let ringThickness: CGFloat = 13
+        let diameter = Layout.timerDiameter
+        let timerTextSize = Layout.timerTextSize
+        let playIconSize = Layout.playIconSize
+        let bglineWidth = Layout.timerBackgroundLineWidth
+        let tplineWidth = Layout.timerProgressLineWidth
+        let ringThickness = Layout.segmentRingThickness
         let ringSize: CGFloat = segmentCount > 0 ? (ringRadius + ringThickness) * 2 : 0
 
-        VStack(spacing: 25) {
+        VStack(spacing: Layout.timerVerticalSpacing) {
             Button {
                 timerModel.toggle()
             } label: {
@@ -147,8 +173,8 @@ struct TimerCountView: View {
                 }
             }
 
-            VStack() {
-                HStack(spacing: 10) {
+            VStack {
+                HStack(spacing: Layout.buttonHorizontalSpacing) {
                 Button(action: {
                     timerModel.reset()
                 }) {

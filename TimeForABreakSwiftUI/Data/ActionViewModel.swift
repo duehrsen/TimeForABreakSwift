@@ -9,6 +9,8 @@ import Combine
 import SwiftUI
 import Alamofire
 
+/// Backing store for the master catalog of all available break actions.
+/// Handles CRUD, persistence, and fetching default/remote actions.
 class ActionViewModel: ObservableObject {
 
     private let persistence = PersistenceManager<[BreakAction]>(fileName: "breakActions", defaultValue: [])

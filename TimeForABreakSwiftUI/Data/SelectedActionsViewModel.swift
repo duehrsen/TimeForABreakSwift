@@ -9,6 +9,8 @@ import Combine
 import SwiftUI
 import Alamofire
 
+/// Manages the user's selected break actions for today and historical completions.
+/// Responsible for building today's list, persisting it, and tracking completion history.
 class SelectedActionsViewModel: ObservableObject {
 
     private let persistence = PersistenceManager<[BreakAction]>(fileName: "selectedActions", defaultValue: [])
@@ -21,6 +23,7 @@ class SelectedActionsViewModel: ObservableObject {
     
     // MARK: - Helpers
 
+    /// Returns actions that were scheduled for yesterday (by date).
     func yesterdayActions() -> [BreakAction] {
         actions.filter { cal.isDateInYesterday($0.date ?? .distantPast) }
     }

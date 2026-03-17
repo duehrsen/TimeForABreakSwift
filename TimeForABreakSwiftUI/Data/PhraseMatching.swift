@@ -6,7 +6,7 @@
 import Foundation
 
 /// Pure logic for matching spoken text to break actions and extracting quantities.
-/// No audio framework dependencies — fully testable.
+/// No audio framework dependencies — fully testable and shared by voice UIs.
 enum PhraseMatching {
 
     struct MatchResult {

@@ -202,6 +202,9 @@
 			isa = PBXGroup;
 			children = (
 				4E0FE79D2F56C8B3007A1092 /* TimerModelTests.swift */,
+				4E0FE7A82F56CC9D007A1092 /* DataModelTests.swift */,
+				4E0FE7AA2F56CD02007A1092 /* PhraseMatchingTests.swift */,
+				4E0FE7AB2F56CD32007A1092 /* SelectedActionsViewModelTests.swift */,
 			);
 			path = TimeForABreakSwiftUITests;
 			sourceTree = "<group>";

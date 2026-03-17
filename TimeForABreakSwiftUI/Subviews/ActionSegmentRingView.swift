@@ -47,12 +47,24 @@ struct ActionSegmentRingView: View {
     var incompleteColor: Color = Color(.systemGray4).opacity(0.6)
     var completedColor: Color = Color.green
 
-    private let zoneAngleDeg: Double = 360.0
-    private var arcAngleDeg: Double { (zoneAngleDeg / Double(max(1, segmentCount))) * 0.8 }
+    private enum RingGeometry {
+        static let fullCircleDeg: Double = 360.0
+        static let visiblePortionPerSegment: Double = 0.8
+    }
+
+    private enum SegmentAnimationLayout {
+        static let liftOffset: CGFloat = 6
+        static let preHighlightScale: CGFloat = 1.04
+        static let fillScale: CGFloat = 1.03
+    }
+
+    private var arcAngleDeg: Double {
+        (RingGeometry.fullCircleDeg / Double(max(1, segmentCount))) * RingGeometry.visiblePortionPerSegment
+    }
 
     private func startAngleDeg(for index: Int) -> Double {
         // Segment 0 at bottom-left (7:30), then clockwise
-        return 225 + Double(index) * (zoneAngleDeg / Double(segmentCount))
+        return 225 + Double(index) * (RingGeometry.fullCircleDeg / Double(segmentCount))
     }
 
     private func isCompleted(_ index: Int) -> Bool {
@@ -66,8 +78,8 @@ struct ActionSegmentRingView: View {
     private func scale(for index: Int) -> CGFloat {
         guard isAnimating(index) else { return 1.0 }
         switch phase {
-        case .preHighlight, .lift: return 1.04
-        case .fill: return 1.03
+        case .preHighlight, .lift: return SegmentAnimationLayout.preHighlightScale
+        case .fill: return SegmentAnimationLayout.fillScale
         case .snap, .settle: return 1.0
         }
     }
@@ -76,7 +88,7 @@ struct ActionSegmentRingView: View {
         guard isAnimating(index) else { return 0 }
         switch phase {
         case .preHighlight: return 0
-        case .lift, .fill: return 6
+        case .lift, .fill: return SegmentAnimationLayout.liftOffset
         case .snap, .settle: return 0
         }
     }

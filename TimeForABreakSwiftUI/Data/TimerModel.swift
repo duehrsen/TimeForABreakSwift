@@ -8,6 +8,8 @@
 import Combine
 import SwiftUI
 
+/// Drives the core Pomodoro-style timer state for the app.
+/// Owns the current countdown, work/break mode, and completion lifecycle.
 @MainActor
 class TimerModel: ObservableObject {
 
@@ -36,7 +38,7 @@ class TimerModel: ObservableObject {
 
     // MARK: - Computed Properties
 
-    /// Formats currentTimeRemaining as "MM:SS".
+    /// Formats `currentTimeRemaining` as `\"MM:SS\"`.
     var formattedTime: String {
         let minutes = currentTimeRemaining / 60
         let seconds = currentTimeRemaining % 60
@@ -45,6 +47,7 @@ class TimerModel: ObservableObject {
 
     // MARK: - Timer Control Methods
 
+    /// Starts the countdown if it is not already running.
     func start() {
         guard !started else { return }
         started = true
@@ -52,6 +55,7 @@ class TimerModel: ObservableObject {
         startCountdown()
     }
 
+    /// Pauses the countdown without resetting elapsed time.
     func pause() {
         guard started else { return }
         started = false
@@ -59,6 +63,7 @@ class TimerModel: ObservableObject {
         timerTask = nil
     }
 
+    /// Convenience to start or pause depending on current state.
     func toggle() {
         if started {
             pause()
@@ -67,6 +72,8 @@ class TimerModel: ObservableObject {
         }
     }
 
+    /// Resets the timer to the full duration for the current mode.
+    /// Leaves `isWorkTime` unchanged.
     func reset() {
         pause()
         currentTimeRemaining = totalSecondsForCurrentMode
@@ -74,6 +81,7 @@ class TimerModel: ObservableObject {
         isComplete = false
     }
 
+    /// Switches between work and break modes and resets the countdown.
     func switchMode() {
         pause()
         isWorkTime.toggle()
@@ -82,7 +90,7 @@ class TimerModel: ObservableObject {
         isComplete = false
     }
 
-    /// Called by the view after it has presented the completion sheet.
+    /// Called by the view after it has presented any completion UI.
     func acknowledgeCompletion() {
         isComplete = false
     }

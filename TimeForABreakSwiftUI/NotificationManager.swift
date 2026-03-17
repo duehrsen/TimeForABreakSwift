@@ -10,6 +10,8 @@ import Foundation
 import UserNotifications
 import SwiftUI
 
+/// Thin wrapper around `UNUserNotificationCenter` used by the app to schedule and inspect
+/// local timer-completion notifications.
 final class NotificationManager : ObservableObject {
     @Published private(set) var notifications : [UNNotificationRequest] = []
     @Published private(set) var authorizationStatus :  UNAuthorizationStatus?
