@@ -10,72 +10,87 @@ import SwiftUI
 struct OptionsView: View {
     @EnvironmentObject var timerModel: TimerModel
     @EnvironmentObject var optionsModel : OptionsModel
+    @EnvironmentObject var allActions: ActionViewModel
+    @State private var showSaveToast = false
     var body: some View {
         NavigationStack {
-            GeometryReader { geometry in
-                VStack {
-                    Spacer()
+            List {
+                Section("Timer") {
                     OptionsInputSubView()
-                    Spacer()
+                }
 
-                    List {
-                        Section("Daily suggested actions") {
-                            NavigationLink {
-                                SuggestedActionsOptionsView()
-                            } label: {
-                                HStack {
-                                    Text("Edit suggested set")
-                                    Spacer()
-                                    Text("\(optionsModel.options.dailySuggestedTitles?.count ?? DataProvider.defaultDailySuggestedActionTitles().count) actions")
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                }
-                            }
+                Section("Daily suggested actions") {
+                    NavigationLink {
+                        SuggestedActionsOptionsView()
+                    } label: {
+                        HStack {
+                            Text("Edit suggested set")
+                            Spacer()
+                            Text("\(optionsModel.options.dailySuggestedTitles?.count ?? DataProvider.defaultDailySuggestedActionTitles().count) actions")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
                         }
                     }
-                    .frame(height: 160)
+                }
 
-                    HStack(alignment: .center, spacing: 10) {
-                        Button(action: {
-                            if optionsModel.options.worktimeMin > 0 && optionsModel.options.breaktimeMin > 0 {
-                                let newOptions = OptionSet(
-                                    breaktimeMin: optionsModel.options.breaktimeMin,
-                                    worktimeMin: optionsModel.options.worktimeMin,
-                                    doesPlaySounds: optionsModel.options.doesPlaySounds,
-                                    isMuted: optionsModel.options.isMuted,
-                                    dailySuggestedTitles: optionsModel.options.dailySuggestedTitles,
-                                    dailyActionGoal: optionsModel.options.dailyActionGoal
-                                )
-                                Task {
-                                    try? await optionsModel.save(options: newOptions)
-                                }
-                                timerModel.updateFromOptions(optionSet: newOptions)
-                            }
-                        }) {
-                            HStack(spacing: 15){
-                                Text("Save")
-                                    .foregroundColor(.white)
-                            }
-                            .padding()
-                            .frame(width: geometry.size.width / 2 - 20)
-                            .background(Color.green)
-                            .clipShape(Capsule())
-                            .shadow(radius: 5)
-
+                Section("Break actions") {
+                    NavigationLink {
+                        ActionListView()
+                    } label: {
+                        HStack {
+                            Text("Manage actions")
+                            Spacer()
+                            Text("\(allActions.actions.count) total")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
                         }
-
                     }
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbar {
-                        toolbars(title: "Options")
+                }
 
+                Section {
+                    Button(action: {
+                        if optionsModel.options.worktimeMin > 0 && optionsModel.options.breaktimeMin > 0 {
+                            let newOptions = OptionSet(
+                                breaktimeMin: optionsModel.options.breaktimeMin,
+                                worktimeMin: optionsModel.options.worktimeMin,
+                                doesPlaySounds: optionsModel.options.doesPlaySounds,
+                                isMuted: optionsModel.options.isMuted,
+                                dailySuggestedTitles: optionsModel.options.dailySuggestedTitles,
+                                dailyActionGoal: optionsModel.options.dailyActionGoal
+                            )
+                            Task {
+                                try? await optionsModel.save(options: newOptions)
+                            }
+                            timerModel.updateFromOptions(optionSet: newOptions)
+                            showSaveToast = true
+                        }
+                    }) {
+                        HStack(spacing: 15){
+                            Spacer()
+                            Text("Save")
+                                .foregroundColor(.white)
+                            Spacer()
+                        }
+                        .padding()
+                        .background(Color.green)
+                        .clipShape(Capsule())
+                        .shadow(radius: 5)
                     }
-
-
-                    Spacer()
-
                 }
             }
+            .listStyle(.insetGrouped)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                toolbars(title: "Options")
+            }
+            .toast(
+                message: "Options saved",
+                isShowing: $showSaveToast,
+                config: .init(
+                    backgroundColor: .green.opacity(0.85),
+                    sysImg: "checkmark.circle.fill"
+                )
+            )
         }
     }
 }

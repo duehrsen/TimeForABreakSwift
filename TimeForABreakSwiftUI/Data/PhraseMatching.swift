@@ -137,6 +137,54 @@ enum PhraseMatching {
         normalizedTokens(text).joined(separator: " ")
     }
 
+    /// Normalized string with common stop words removed. This lets us
+    /// tolerate small differences like an extra "the" in the transcript:
+    /// e.g. "looked into the distance" vs "looked into distance".
+    private static func normalizedStringDroppingStops(_ text: String) -> String {
+        normalizedTokens(text)
+            .filter { !stopWords.contains($0) }
+            .joined(separator: " ")
+    }
+
+    /// Singular form of a word (best effort for common plurals).
+    /// e.g. "pushups" -> "pushup", "squats" -> "squat", "glasses" -> "glass"
+    private static func singularForm(of word: String) -> String? {
+        let w = word.lowercased()
+        guard w.count > 1 else { return nil }
+        if w.hasSuffix("sses") { return String(w.dropLast(2)) }      // glasses -> glass
+        if w.hasSuffix("ies") { return String(w.dropLast(3)) + "y" } // berries -> berry
+        if w.hasSuffix("ses") || w.hasSuffix("xes") || w.hasSuffix("zes") { return String(w.dropLast(2)) }
+        if w.hasSuffix("s") && !w.hasSuffix("ss") { return String(w.dropLast(1)) } // pushups -> pushup
+        return nil
+    }
+
+    /// Plural form of a word (adds "s" if not already plural).
+    private static func pluralForm(of word: String) -> String? {
+        let w = word.lowercased()
+        if w.hasSuffix("s") { return nil }
+        return w + "s"
+    }
+
+    /// Returns phrase plus singular/plural variants of the last token.
+    /// Enables "I did one pushup" to match phrase "pushups".
+    private static func phraseVariants(_ phrase: String) -> [String] {
+        let tokens = tokenize(phrase)
+        guard !tokens.isEmpty else { return [phrase] }
+        var variants: Set<String> = [normalizedString(phrase)]
+        let last = tokens.last!
+        if let singular = singularForm(of: last) {
+            var tok = tokens
+            tok[tok.count - 1] = singular
+            variants.insert(tok.joined(separator: " "))
+        }
+        if let plural = pluralForm(of: last) {
+            var tok = tokens
+            tok[tok.count - 1] = plural
+            variants.insert(tok.joined(separator: " "))
+        }
+        return Array(variants)
+    }
+
     // MARK: - Quantity Extraction
 
     /// Extracts a numeric quantity from spoken text.
@@ -169,6 +217,7 @@ enum PhraseMatching {
     /// (e.g. "watered plants" matches before "water").
     static func findMatchingAction(spokenText: String, actions: [BreakAction]) -> BreakAction? {
         let normalizedSpoken = normalizedString(spokenText)
+        let normalizedSpokenNoStops = normalizedStringDroppingStops(spokenText)
 
         // Build a list of (phrase, action) pairs, sorted longest first
         var candidates: [(phrase: String, action: BreakAction)] = []
@@ -186,7 +235,13 @@ enum PhraseMatching {
 
         for candidate in candidates {
             let normalizedPhrase = normalizedString(candidate.phrase)
-            if normalizedSpoken.contains(normalizedPhrase) {
+            let normalizedPhraseNoStops = normalizedStringDroppingStops(candidate.phrase)
+            let phraseVariantSet = Set(phraseVariants(normalizedPhrase) + phraseVariants(normalizedPhraseNoStops))
+
+            let hasMatch = phraseVariantSet.contains { variant in
+                normalizedSpoken.contains(variant) || normalizedSpokenNoStops.contains(variant)
+            }
+            if hasMatch {
                 return candidate.action
             }
         }
@@ -198,6 +253,7 @@ enum PhraseMatching {
     /// (after verb normalization). Used to offer the user a list of possible matches.
     static func findMatchingActions(spokenText: String, actions: [BreakAction]) -> [BreakAction] {
         let normalizedSpoken = normalizedString(spokenText)
+        let normalizedSpokenNoStops = normalizedStringDroppingStops(spokenText)
 
         var candidates: [(phrase: String, action: BreakAction)] = []
 
@@ -215,10 +271,14 @@ enum PhraseMatching {
         var matched: [BreakAction] = []
         for candidate in candidates {
             let normalizedPhrase = normalizedString(candidate.phrase)
-            if normalizedSpoken.contains(normalizedPhrase) {
-                if !matched.contains(where: { $0.id == candidate.action.id }) {
-                    matched.append(candidate.action)
-                }
+            let normalizedPhraseNoStops = normalizedStringDroppingStops(candidate.phrase)
+            let phraseVariantSet = Set(phraseVariants(normalizedPhrase) + phraseVariants(normalizedPhraseNoStops))
+
+            let hasMatch = phraseVariantSet.contains { variant in
+                normalizedSpoken.contains(variant) || normalizedSpokenNoStops.contains(variant)
+            }
+            if hasMatch && !matched.contains(where: { $0.id == candidate.action.id }) {
+                matched.append(candidate.action)
             }
         }
 

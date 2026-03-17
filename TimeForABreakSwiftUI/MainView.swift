@@ -24,19 +24,35 @@ struct MainView: View {
     @State private var showDaySetupSheet: Bool = false
     @State private var showDaySummarySheet: Bool = false
     
-    let numTabs = 4
+    let numTabs = 3
     
     private func handleSwipe(translation : CGFloat) {
     }
 
     private func nextActionPreview() -> String {
         let cal = Calendar.current
-        let uncompleted = selectActions.actions.filter {
-            (cal.isDateInToday($0.date ?? .distantPast) || $0.pinned) && !$0.completed
+        let today = cal.startOfDay(for: Date())
+
+        let suggestedTitles: Set<String>
+        if let titles = optionsModel.options.dailySuggestedTitles,
+           !titles.isEmpty {
+            suggestedTitles = Set(titles)
+        } else {
+            suggestedTitles = Set(DataProvider.defaultDailySuggestedActionTitles())
         }
-        if let next = uncompleted.first {
-            return "Next: \(next.title)"
+
+        let uncompletedTodayOrPinned = selectActions.actions.filter {
+            (cal.isDate($0.date ?? .distantPast, inSameDayAs: today) || $0.pinned) && !$0.completed
         }
+
+        if let suggestedNext = uncompletedTodayOrPinned.first(where: { suggestedTitles.contains($0.title) }) {
+            return "Next: \(suggestedNext.title)"
+        }
+
+        if let anyNext = uncompletedTodayOrPinned.first {
+            return "Next: \(anyNext.title)"
+        }
+
         return "Focus time"
     }
 
@@ -66,22 +82,17 @@ struct MainView: View {
                     Label("Timer", systemImage: "hourglass.circle")
                 }
                 .tag(0)
-            ActionListView()
-                .tabItem {
-                    Label("Actions", systemImage:"list.bullet.circle.fill")
-                }
-                .tag(1)
             SummaryView()
                 .tabItem {
                     Label("Summary", systemImage: "clock.badge.checkmark.fill")
                 }
-                .tag(2)
+                .tag(1)
             
             OptionsView()
                 .tabItem {
                     Label("Options", systemImage: "gearshape.fill")
                 }
-                .tag(3)
+                .tag(2)
                 .highPriorityGesture(DragGesture().onEnded({ self.handleSwipe(translation: $0.translation.width) }))
         }
         .onChange(of: scenePhase) { newPhase in
@@ -143,6 +154,12 @@ struct MainView: View {
                 selectActions.actions = DataMigration.migrateCategories(in: loadedActions)
             } catch {
                 selectActions.emptyData()
+            }
+            do {
+                let loadedCompletions = try await selectActions.loadCompletions()
+                selectActions.completions = loadedCompletions
+            } catch {
+                selectActions.completions = []
             }
             allActions.addActivityFromApi()
             do {

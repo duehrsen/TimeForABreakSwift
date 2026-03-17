@@ -94,6 +94,72 @@ class SelectedActionsViewModel: ObservableObject {
         
         return countedActions
     }
+
+    // MARK: - Aggregated stats using completions
+
+    struct ActionDailyStats: Identifiable {
+        let id: UUID
+        let action: BreakAction
+        let count: Int
+        let totalQuantity: Int?
+    }
+
+    /// Aggregated completion stats for a given calendar day, grouped by action.
+    func dailyStats(for date: Date) -> [ActionDailyStats] {
+        let dayStart = cal.startOfDay(for: date)
+
+        let dayCompletions = completions.filter { completion in
+            cal.isDate(completion.date, inSameDayAs: dayStart)
+        }
+
+        var grouped: [UUID: [ActionCompletion]] = [:]
+        for completion in dayCompletions {
+            grouped[completion.actionId, default: []].append(completion)
+        }
+
+        var stats: [ActionDailyStats] = []
+
+        for (actionId, completionsForAction) in grouped {
+            guard let action = actions.first(where: { $0.id == actionId }) else {
+                continue
+            }
+
+            let count = completionsForAction.count
+            let quantityValues = completionsForAction.compactMap { $0.quantity }
+            let totalQuantity = quantityValues.isEmpty ? nil : quantityValues.reduce(0, +)
+
+            stats.append(
+                ActionDailyStats(
+                    id: actionId,
+                    action: action,
+                    count: count,
+                    totalQuantity: totalQuantity
+                )
+            )
+        }
+
+        // Sort by most completed first, then title
+        return stats.sorted {
+            if $0.count == $1.count {
+                return $0.action.title < $1.action.title
+            }
+            return $0.count > $1.count
+        }
+    }
+
+    /// Convenience helper for today's stats for a single action, used by row views.
+    func todaysStats(for action: BreakAction) -> (count: Int, totalQuantity: Int?) {
+        let today = cal.startOfDay(for: Date())
+        let dayCompletions = completions.filter { completion in
+            completion.actionId == action.id && cal.isDate(completion.date, inSameDayAs: today)
+        }
+
+        let count = dayCompletions.count
+        let quantityValues = dayCompletions.compactMap { $0.quantity }
+        let totalQuantity = quantityValues.isEmpty ? nil : quantityValues.reduce(0, +)
+
+        return (count, totalQuantity)
+    }
     
     func save(actions: [BreakAction]) async throws {
         try await persistence.save(data: actions)
@@ -134,12 +200,15 @@ class SelectedActionsViewModel: ObservableObject {
     }
     
     func update(id: UUID, newtitle: String, duration: Int, completed: Bool = false, date: Date = Date()) {
-        let newItem = BreakAction(id: id, title: newtitle, description: "", categoryId: "chores", duration: duration, completed: completed, date: Date())
-        if let thisInd = actions.firstIndex(where: {$0.id == id} )
-        {
-            actions.replaceSubrange(thisInd...thisInd, with: repeatElement(newItem, count: 1))
-            objectWillChange.send()
-        }
+        guard let thisInd = actions.firstIndex(where: { $0.id == id }) else { return }
+        let existing = actions[thisInd]
+        var updated = existing
+        updated.title = newtitle
+        updated.duration = duration
+        updated.completed = completed
+        updated.date = date
+        actions.replaceSubrange(thisInd...thisInd, with: [updated])
+        objectWillChange.send()
         saveToDisk()
     }
     
@@ -165,6 +234,46 @@ class SelectedActionsViewModel: ObservableObject {
         let newAction = BreakAction(title: action, description: action, categoryId: "chores", duration: duration, date: date)
         actions.insert(newAction, at: 0)
         saveToDisk()
+    }
+
+    /// Ensures there is a \"today\" instance of the given template action
+    /// in the selected actions list, creating one if necessary.
+    /// Used by voice logging so that any master action can be logged.
+    func ensureTodayInstance(from template: BreakAction) -> BreakAction {
+        let today = cal.startOfDay(for: Date())
+
+        if let existing = actions.first(where: { candidate in
+            candidate.title == template.title &&
+            (candidate.pinned || (candidate.date.map { cal.isDate($0, inSameDayAs: today) } ?? false))
+        }) {
+            return existing
+        }
+
+        let newAction = BreakAction(
+            id: UUID(),
+            title: template.title,
+            description: template.description,
+            spokenPrompt: template.spokenPrompt,
+            categoryId: template.categoryId,
+            duration: template.duration,
+            isQuantifiable: template.isQuantifiable,
+            unit: template.unit,
+            defaultQuantity: template.defaultQuantity,
+            triggerPhrases: template.triggerPhrases,
+            suggestedPhrases: template.suggestedPhrases,
+            timesPerDay: template.timesPerDay,
+            preferredTimeRange: template.preferredTimeRange,
+            isBuiltIn: template.isBuiltIn,
+            pinned: template.pinned,
+            completed: false,
+            date: Date(),
+            linkurl: template.linkurl,
+            frequency: 1
+        )
+
+        actions.insert(newAction, at: 0)
+        saveToDisk()
+        return newAction
     }
 
     // MARK: - Action Completions

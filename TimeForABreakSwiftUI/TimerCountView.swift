@@ -41,7 +41,7 @@ struct TimerCountView: View {
     }
 
     private enum ActionRingLimits {
-        static let minSegments = 6
+        static let minSegments = 5
         static let maxSegments = 10
     }
 

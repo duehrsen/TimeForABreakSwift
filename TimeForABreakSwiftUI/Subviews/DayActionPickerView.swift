@@ -14,44 +14,23 @@ struct DayActionPickerView: View {
     /// Called after today's actions have been set.
     let onComplete: () -> Void
 
-    @State private var selectionCounts: [UUID: Int] = [:]
+    @State private var selectedIds: Set<UUID> = []
 
     private func bindingForAction(_ action: BreakAction) -> Binding<Bool> {
         Binding(
-            get: {
-                (selectionCounts[action.id] ?? 0) > 0
-            },
+            get: { selectedIds.contains(action.id) },
             set: { newValue in
                 if newValue {
-                    if selectionCounts[action.id] == nil || selectionCounts[action.id] == 0 {
-                        selectionCounts[action.id] = 1
-                    }
+                    selectedIds.insert(action.id)
                 } else {
-                    selectionCounts[action.id] = nil
+                    selectedIds.remove(action.id)
                 }
             }
         )
     }
 
-    private func countBinding(for action: BreakAction) -> Binding<Int> {
-        Binding(
-            get: {
-                max(selectionCounts[action.id] ?? 1, 1)
-            },
-            set: { newValue in
-                selectionCounts[action.id] = max(newValue, 1)
-            }
-        )
-    }
-
     private func applySelection() {
-        var templates: [BreakAction] = []
-        for action in allActions.actions {
-            guard let count = selectionCounts[action.id], count > 0 else { continue }
-            for _ in 0..<count {
-                templates.append(action)
-            }
-        }
+        let templates = allActions.actions.filter { selectedIds.contains($0.id) }
         guard !templates.isEmpty else {
             dismiss()
             return
@@ -77,18 +56,6 @@ struct DayActionPickerView: View {
                                 }
                             }
                         }
-
-                        if (selectionCounts[action.id] ?? 0) > 0 {
-                            Stepper(
-                                value: countBinding(for: action),
-                                in: 1...10
-                            ) {
-                                Text("×\(selectionCounts[action.id] ?? 1)")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            }
-                            .frame(width: 100)
-                        }
                     }
                 }
             }
@@ -105,7 +72,7 @@ struct DayActionPickerView: View {
                 Button("Done") {
                     applySelection()
                 }
-                .disabled(selectionCounts.values.allSatisfy { $0 <= 0 })
+                .disabled(selectedIds.isEmpty)
             }
         }
     }

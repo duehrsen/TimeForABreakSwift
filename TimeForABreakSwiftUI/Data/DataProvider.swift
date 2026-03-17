@@ -22,6 +22,9 @@ enum DataProvider {
     }
 
     // MARK: - Preset Actions
+    //
+    // Built-in action titles follow a verb-first convention so they are
+    // easy to speak, recognize via voice, and scan in lists (e.g. "Relax eyes").
 
     static func presetActions() -> [BreakAction] {
         var actions: [BreakAction] = []
@@ -40,18 +43,6 @@ enum DataProvider {
             suggestedPhrases: ["squats", "squat", "did squats", "some squats", "deep knee bends", "knee bends"],
             isBuiltIn: true))
         actions.append(BreakAction(
-            title: "Do jumping jacks", description: "Get your heart rate up with jumping jacks",
-            spokenPrompt: "Time to do some jumping jacks!", categoryId: "exercise", duration: 4,
-            isQuantifiable: true, unit: "reps", defaultQuantity: 20,
-            suggestedPhrases: ["jumping jacks", "jumping jack", "star jumps", "did jumping jacks", "some jumping jacks"],
-            isBuiltIn: true))
-        actions.append(BreakAction(
-            title: "Do lunges", description: "Work your legs with some lunges",
-            spokenPrompt: "Time to do some lunges!", categoryId: "exercise", duration: 4,
-            isQuantifiable: true, unit: "reps", defaultQuantity: 10,
-            suggestedPhrases: ["lunges", "lunge", "did lunges", "walking lunges"],
-            isBuiltIn: true))
-        actions.append(BreakAction(
             title: "Do planks", description: "Strengthen your core with a plank hold",
             spokenPrompt: "Time to hold a plank!", categoryId: "exercise", duration: 4,
             isQuantifiable: true, unit: "seconds", defaultQuantity: 30,
@@ -60,36 +51,13 @@ enum DataProvider {
 
         // Ergonomics
         actions.append(BreakAction(
-            title: "Stretch shoulders", description: "Roll and stretch your shoulders to release tension",
-            spokenPrompt: "Time to stretch your shoulders!", categoryId: "ergonomics", duration: 2,
-            suggestedPhrases: ["shoulders", "shoulder", "stretched shoulders", "shoulder stretch", "stretched my shoulders", "did shoulders", "shoulder rolls"],
-            isBuiltIn: true))
-        actions.append(BreakAction(
-            title: "Stretch neck", description: "Gently stretch your neck in all directions",
-            spokenPrompt: "Time to stretch your neck!", categoryId: "ergonomics", duration: 2,
-            suggestedPhrases: ["neck", "stretched neck", "neck stretch", "neck rolls", "stretched my neck"],
-            isBuiltIn: true))
-        actions.append(BreakAction(
-            title: "Stretch back", description: "Stretch your back to relieve stiffness",
-            spokenPrompt: "Time to stretch your back!", categoryId: "ergonomics", duration: 2,
-            suggestedPhrases: ["back", "stretched back", "back stretch", "stretched my back", "lower back"],
-            isBuiltIn: true))
-        actions.append(BreakAction(
-            title: "Stretch wrists", description: "Stretch your wrists and fingers",
-            spokenPrompt: "Time to stretch your wrists!", categoryId: "ergonomics", duration: 2,
-            suggestedPhrases: ["wrists", "wrist", "stretched wrists", "wrist stretch", "hands", "stretched hands"],
-            isBuiltIn: true))
-        actions.append(BreakAction(
-            title: "Eye relaxation", description: "Follow the 20-20-20 rule: look at something 20 feet away for 20 seconds",
+            title: "Relax eyes", description: "Follow the 20-20-20 rule: look at something 20 feet away for 20 seconds",
             spokenPrompt: "Time to relax your eyes!", categoryId: "ergonomics", duration: 2,
             isQuantifiable: true, unit: "seconds", defaultQuantity: 20,
             suggestedPhrases: ["eyes", "eye", "eye relaxation", "rested eyes", "relaxed eyes", "eye break", "looked away", "20 20 20", "twenty twenty"],
             isBuiltIn: true))
-        actions.append(BreakAction(
-            title: "Check posture", description: "Sit up straight and adjust your chair and monitor",
-            spokenPrompt: "Time to check your posture!", categoryId: "ergonomics", duration: 1,
-            suggestedPhrases: ["posture", "checked posture", "fixed posture", "sat up straight", "straightened up"],
-            isBuiltIn: true))
+        // Removed individual stretch actions to simplify the list;
+        // users can instead use \"Stand and stretch\" as a general stretch.
 
         // Hydration
         actions.append(BreakAction(
@@ -127,9 +95,9 @@ enum DataProvider {
             suggestedPhrases: ["plants", "watered plants", "water plants", "watered the plants", "plant watering"],
             timesPerDay: 1, isBuiltIn: true))
         actions.append(BreakAction(
-            title: "Quick tidy up", description: "Tidy up a small area of your home",
+            title: "Tidy up a space", description: "Tidy up a small area of your home",
             spokenPrompt: "Time to tidy up a small area!", categoryId: "chores", duration: 4,
-            suggestedPhrases: ["tidied", "tidy up", "tidied up", "cleaned up", "straightened up", "organized", "put things away"],
+            suggestedPhrases: ["tidied", "tidy up", "tidied up", "cleaned up", "straightened up", "organized", "put things away", "quick tidy up"],
             isBuiltIn: true))
         actions.append(BreakAction(
             title: "Check mail", description: "Retrieve the mail from the mailbox",
@@ -150,7 +118,7 @@ enum DataProvider {
             suggestedPhrases: ["went outside", "stepped outside", "fresh air", "got fresh air", "outside", "balcony", "porch"],
             isBuiltIn: true))
         actions.append(BreakAction(
-            title: "Deep breathing", description: "Take slow, deep breaths to relax",
+            title: "Breathe slowly and deeply", description: "Take slow, deep breaths to relax",
             spokenPrompt: "Time to take some deep breaths!", categoryId: "mental", duration: 2,
             isQuantifiable: true, unit: "breaths", defaultQuantity: 5,
             suggestedPhrases: ["breathing", "deep breaths", "breathed", "took deep breaths", "breathing exercise", "breath work", "relaxed breathing"],
@@ -174,10 +142,10 @@ enum DataProvider {
     static func defaultDailySuggestedActionTitles() -> [String] {
         [
             "Drink water",
-            "Stretch shoulders",
-            "Eye relaxation",
+            // Simplified: keep general stretch instead of specific shoulders
+            "Relax eyes",
             "Stand and stretch",
-            "Deep breathing",
+            "Breathe slowly and deeply",
             "Take a short walk"
         ]
     }

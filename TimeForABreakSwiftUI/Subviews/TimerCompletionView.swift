@@ -13,6 +13,7 @@ struct TimerCompletionView: View {
     @EnvironmentObject var selectActions: SelectedActionsViewModel
     @EnvironmentObject var optionsModel: OptionsModel
     @EnvironmentObject var timerModel: TimerModel
+    @EnvironmentObject var allActions: ActionViewModel
 
     @State private var player: AVAudioPlayer?
     @State private var speechService = SpeechService()
@@ -26,6 +27,19 @@ struct TimerCompletionView: View {
         selectActions.actions.filter {
             (cal.isDateInToday($0.date ?? .distantPast) || $0.pinned) && $0.completed == false
         }
+    }
+
+    private var suggestedTitles: Set<String> {
+        if let titles = optionsModel.options.dailySuggestedTitles,
+           !titles.isEmpty {
+            return Set(titles)
+        } else {
+            return Set(DataProvider.defaultDailySuggestedActionTitles())
+        }
+    }
+
+    private var suggestedUncompletedActions: [BreakAction] {
+        uncompletedActions.filter { suggestedTitles.contains($0.title) }
     }
 
     fileprivate func playSuccessSound() {
@@ -42,7 +56,8 @@ struct TimerCompletionView: View {
 
     fileprivate func speakAction() {
         guard isFinishedWork else { return }
-        if let action = uncompletedActions.randomElement(), !action.spokenPrompt.isEmpty {
+        let source = suggestedUncompletedActions.isEmpty ? uncompletedActions : suggestedUncompletedActions
+        if let action = source.randomElement(), !action.spokenPrompt.isEmpty {
             speechService.speak(action.spokenPrompt)
         }
     }
@@ -50,28 +65,6 @@ struct TimerCompletionView: View {
     var body: some View {
         GeometryReader { geometry in
             VStack(spacing: 30) {
-                // Mute/Unmute button
-                Button(action: {
-                    optionsModel.options.isMuted.toggle()
-                    optionsModel.saveToDisk()
-                    if optionsModel.options.isMuted {
-                        speechService.stop()
-                        player?.stop()
-                    }
-                }) {
-                    HStack(spacing: 10) {
-                        Image(systemName: optionsModel.options.isMuted ? "speaker.slash.fill" : "speaker.wave.2.fill")
-                            .font(.title2)
-                        Text(optionsModel.options.isMuted ? "Unmute" : "Mute")
-                            .font(.title3)
-                    }
-                    .padding(.horizontal, 24)
-                    .padding(.vertical, 12)
-                    .background(optionsModel.options.isMuted ? Color.red.opacity(0.2) : Color.blue.opacity(0.2))
-                    .clipShape(Capsule())
-                }
-                .padding(.top, 16)
-
                 Spacer()
                 Text(isFinishedWork ? "Time for a break!" : "Hope you are recharged!")
                     .font(.title2)
@@ -98,7 +91,7 @@ struct TimerCompletionView: View {
                     .frame(width: geometry.size.width - 20, alignment: .center)
 
                     VoiceInputView(
-                        actions: selectActions.actions,
+                        actions: allActions.actions,
                         speechService: speechService
                     ) { result in
                         handleVoiceMatch(result)
@@ -125,7 +118,8 @@ struct TimerCompletionView: View {
     }
 
     private func handleVoiceMatch(_ result: PhraseMatching.MatchResult) {
-        let action = result.action
+        let template = result.action
+        let action = selectActions.ensureTodayInstance(from: template)
 
         // Record the completion
         selectActions.addCompletion(actionId: action.id, quantity: result.quantity, source: .voice)

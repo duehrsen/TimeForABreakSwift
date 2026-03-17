@@ -9,6 +9,7 @@ struct TimerVoiceLogSheetView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var selectActions: SelectedActionsViewModel
     @EnvironmentObject var optionsModel: OptionsModel
+    @EnvironmentObject var allActions: ActionViewModel
 
     @State private var speechService = SpeechService()
     @State private var toastMessage: String = ""
@@ -28,7 +29,7 @@ struct TimerVoiceLogSheetView: View {
                     .padding(.horizontal)
 
                 VoiceInputView(
-                    actions: selectActions.actions,
+                    actions: allActions.actions,
                     speechService: speechService
                 ) { result in
                     handleVoiceMatch(result)
@@ -49,7 +50,8 @@ struct TimerVoiceLogSheetView: View {
     }
 
     private func handleVoiceMatch(_ result: PhraseMatching.MatchResult) {
-        let action = result.action
+        let template = result.action
+        let action = selectActions.ensureTodayInstance(from: template)
 
         selectActions.addCompletion(actionId: action.id, quantity: result.quantity, source: .voice)
         selectActions.update(id: action.id, newtitle: action.title, duration: action.duration, completed: true)

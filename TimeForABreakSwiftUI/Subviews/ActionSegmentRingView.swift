@@ -113,8 +113,23 @@ struct ActionSegmentRingView: View {
         return CGSize(width: dx, height: dy)
     }
 
+    private var showAccomplishmentRing: Bool {
+        segmentCount > 0 && completedCount >= segmentCount
+    }
+
+    private var accomplishmentRingRadius: CGFloat {
+        ringRadius + thickness / 2 + 3
+    }
+
     var body: some View {
         ZStack {
+            // Gold accomplishment ring when all segments complete
+            if showAccomplishmentRing {
+                Circle()
+                    .stroke(Color(red: 0.85, green: 0.65, blue: 0.13), style: StrokeStyle(lineWidth: 3, lineCap: .round))
+                    .frame(width: accomplishmentRingRadius * 2, height: accomplishmentRingRadius * 2)
+            }
+
             ForEach(0..<segmentCount, id: \.self) { index in
                 let baseThickness = thickness * 0.55
 

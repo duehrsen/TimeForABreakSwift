@@ -28,12 +28,40 @@ struct ActionCompletionRowView: View {
             }
             Text(action.title)
                 .font(.body)
-                .badge(action.duration < 30 ? action.duration.formatted() + " min" : "a while")
+                .badge(badgeText)
         }
     }
     
     private func toggleCompletion() {
         isComplete.toggle()
         vm.update(id: action.id, newtitle: action.title, duration: action.duration, completed: isComplete)
+
+        // When marking complete, record a completion entry so repeat usage and
+        // quantities can be aggregated in Summary and badges.
+        if isComplete {
+            let quantity: Int?
+            if action.isQuantifiable {
+                // Use explicit default quantity when provided, otherwise fall back to 1
+                quantity = action.defaultQuantity ?? 1
+            } else {
+                quantity = nil
+            }
+            vm.addCompletion(actionId: action.id, quantity: quantity, source: .manual)
+        }
+    }
+
+    private var badgeText: String {
+        let stats = vm.todaysStats(for: action)
+
+        if let total = stats.totalQuantity, action.isQuantifiable, let unit = action.unit {
+            return "\(total) \(unit)"
+        }
+
+        if stats.count > 0 {
+            return "×\(stats.count)"
+        }
+
+        // Fallback: keep the old duration-based hint
+        return action.duration < 30 ? "\(action.duration) min" : "a while"
     }
 }

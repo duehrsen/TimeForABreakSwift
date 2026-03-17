@@ -64,8 +64,43 @@ class ActionViewModel: ObservableObject {
         saveToDisk()
     }
     
-    func update(id: UUID, newtitle: String, duration: Int, completed: Bool = false) {
-        let newItem = BreakAction(id: id, title: newtitle, description: "", categoryId: "regular", duration: duration, completed: completed)
+    func update(
+        id: UUID,
+        newtitle: String,
+        duration: Int,
+        completed: Bool = false,
+        isQuantifiable: Bool? = nil,
+        unit: String? = nil,
+        defaultQuantity: Int? = nil
+    ) {
+        var base = actions.first(where: { $0.id == id }) ?? BreakAction(
+            id: id,
+            title: newtitle,
+            description: "",
+            categoryId: "regular",
+            duration: duration,
+            completed: completed
+        )
+
+        base.title = newtitle
+        base.duration = duration
+        base.completed = completed
+
+        if let isQuantifiable = isQuantifiable {
+            base.isQuantifiable = isQuantifiable
+        }
+        if let unit = unit {
+            base.unit = unit
+        } else if isQuantifiable == false {
+            base.unit = nil
+        }
+        if let defaultQuantity = defaultQuantity {
+            base.defaultQuantity = defaultQuantity
+        } else if isQuantifiable == false {
+            base.defaultQuantity = nil
+        }
+
+        let newItem = base
         if let thisInd = actions.firstIndex(where: {$0.id == id} )
         {
             actions.replaceSubrange(thisInd...thisInd, with: repeatElement(newItem, count: 1))
@@ -95,8 +130,22 @@ class ActionViewModel: ObservableObject {
         saveToDisk()
     }
     
-    func add(action: String = "", duration: Int = 5) {
-        let newAction = BreakAction(title: action, description: action, categoryId: "regular", duration: duration)
+    func add(
+        action: String = "",
+        duration: Int = 5,
+        isQuantifiable: Bool = false,
+        unit: String? = nil,
+        defaultQuantity: Int? = nil
+    ) {
+        let newAction = BreakAction(
+            title: action,
+            description: action,
+            categoryId: "regular",
+            duration: duration,
+            isQuantifiable: isQuantifiable,
+            unit: unit,
+            defaultQuantity: defaultQuantity
+        )
         actions.insert(newAction, at: 0)
         saveToDisk()
     }

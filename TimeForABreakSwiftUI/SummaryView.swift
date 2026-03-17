@@ -18,21 +18,23 @@ struct SummaryView: View {
             VStack{
                 List {
                     Section("Completed Today") {
-                    }
-                    ForEach(selectActions.countedHistoryActions(actions: selectActions.actions
-                        .filter{cal.isDateInToday($0.date ?? .distantPast) && $0.completed}), id: \.id) {
-                        action in
-                        HStack(spacing: 6) {
-                            Text(action.title)
-                                .font(.caption)
-                                .badge("\(action.frequency)x")
+                        ForEach(selectActions.dailyStats(for: Date())) { stats in
+                            HStack(spacing: 6) {
+                                Text(stats.action.title)
+                                    .font(.caption)
+                                    .badge(badgeText(for: stats))
+                            }
                         }
                     }
                     Section("Completed Yesterday") {
-                    }
-                    ForEach(selectActions.countedHistoryActions(actions: selectActions.actions.filter{cal.isDateInYesterday($0.date ?? .distantPast) && $0.completed}), id: \.id) {
-                        item in
-                        SimpleActionRowView(action: item)
+                        let yesterday = cal.date(byAdding: .day, value: -1, to: Date()) ?? Date()
+                        ForEach(selectActions.dailyStats(for: yesterday)) { stats in
+                            HStack(spacing: 6) {
+                                Text(stats.action.title)
+                                    .font(.caption)
+                                    .badge(badgeText(for: stats))
+                            }
+                        }
                     }
                 }.listStyle(.insetGrouped)
             }
@@ -43,5 +45,11 @@ struct SummaryView: View {
         }
         
     }
-    
+
+    private func badgeText(for stats: SelectedActionsViewModel.ActionDailyStats) -> String {
+        if let total = stats.totalQuantity, stats.action.isQuantifiable, let unit = stats.action.unit {
+            return "\(total) \(unit)"
+        }
+        return "×\(stats.count)"
+    }
 }

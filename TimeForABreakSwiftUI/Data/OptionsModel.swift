@@ -19,8 +19,8 @@ struct OptionSet: Codable {
     /// If nil or empty, `DataProvider.defaultDailySuggestedActionTitles()` is used.
     var dailySuggestedTitles: [String]? = nil
 
-    /// Number of action ring segments (daily goal). 6...10. Applies from the next day.
-    var dailyActionGoal: Int = 8
+    /// Number of action ring segments (daily goal). 5...10. Applies from the next day.
+    var dailyActionGoal: Int = 5
 
     init(
         breaktimeMin: Int,
@@ -28,14 +28,14 @@ struct OptionSet: Codable {
         doesPlaySounds: Bool,
         isMuted: Bool = false,
         dailySuggestedTitles: [String]? = nil,
-        dailyActionGoal: Int = 8
+        dailyActionGoal: Int = 5
     ) {
         self.breaktimeMin = breaktimeMin
         self.worktimeMin = worktimeMin
         self.doesPlaySounds = doesPlaySounds
         self.isMuted = isMuted
         self.dailySuggestedTitles = dailySuggestedTitles
-        self.dailyActionGoal = min(10, max(6, dailyActionGoal))
+        self.dailyActionGoal = min(10, max(5, dailyActionGoal))
     }
 
     init(from decoder: Decoder) throws {
@@ -50,8 +50,8 @@ struct OptionSet: Codable {
             isMuted = !doesPlaySounds
         }
         dailySuggestedTitles = try container.decodeIfPresent([String].self, forKey: .dailySuggestedTitles)
-        let raw = try container.decodeIfPresent(Int.self, forKey: .dailyActionGoal) ?? 8
-        dailyActionGoal = min(10, max(6, raw))
+        let raw = try container.decodeIfPresent(Int.self, forKey: .dailyActionGoal) ?? 5
+        dailyActionGoal = min(10, max(5, raw))
     }
 }
 
@@ -109,7 +109,7 @@ class OptionsModel: ObservableObject {
         if storedCount > 0, let d = storedDay, calendar.isDate(d, inSameDayAs: today) {
             return storedCount
         }
-        let count = min(10, max(6, options.dailyActionGoal))
+        let count = min(10, max(5, options.dailyActionGoal))
         defaults.set(today, forKey: Self.actionRingEffectiveDayKey)
         defaults.set(count, forKey: Self.actionRingSegmentCountKey)
         return count

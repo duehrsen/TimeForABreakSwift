@@ -34,18 +34,10 @@ struct TimeForABreakWidgetsLiveActivity: Widget {
                         .tint(context.state.isWorkTime ? .blue : .orange)
                 }
                 DynamicIslandExpandedRegion(.bottom) {
-                    HStack {
-                        Text(context.attributes.actionPreview)
-                            .font(.caption)
-                            .lineLimit(1)
-                            .foregroundColor(.secondary)
-                        Spacer()
-                        Link(destination: URL(string: "timeforabreak://voice")!) {
-                            Image(systemName: "mic.fill")
-                                .font(.title3)
-                                .foregroundColor(.blue)
-                        }
-                    }
+                    Text(context.attributes.actionPreview)
+                        .font(.caption)
+                        .lineLimit(1)
+                        .foregroundColor(.secondary)
                 }
             } compactLeading: {
                 Label(
@@ -96,20 +88,10 @@ struct TimeForABreakWidgetsLiveActivity: Widget {
             ProgressView(value: context.state.progress)
                 .tint(accentColor)
 
-            HStack {
-                Text(context.attributes.actionPreview)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                    .lineLimit(1)
-
-                Spacer()
-
-                Link(destination: URL(string: "timeforabreak://voice")!) {
-                    Image(systemName: "mic.fill")
-                        .font(.title3)
-                        .foregroundColor(accentColor)
-                }
-            }
+            Text(context.attributes.actionPreview)
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .lineLimit(1)
         }
         .padding(16)
         .activityBackgroundTint(isWork ? Color.blue.opacity(0.1) : Color.orange.opacity(0.1))
