@@ -19,28 +19,25 @@ struct OptionsView: View {
                     OptionsInputSubView()
                 }
 
-                Section("Daily suggested actions") {
-                    NavigationLink {
-                        SuggestedActionsOptionsView()
-                    } label: {
-                        HStack {
-                            Text("Edit suggested set")
-                            Spacer()
-                            Text("\(optionsModel.options.dailySuggestedTitles?.count ?? DataProvider.defaultDailySuggestedActionTitles().count) actions")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                    }
-                }
-
-                Section("Break actions") {
+                Section("Manage break actions") {
                     NavigationLink {
                         ActionListView()
                     } label: {
                         HStack {
-                            Text("Manage actions")
+                            Text("Full list")
                             Spacer()
                             Text("\(allActions.actions.count) total")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    NavigationLink {
+                        SuggestedActionsOptionsView()
+                    } label: {
+                        HStack {
+                            Text("Suggestion set")
+                            Spacer()
+                            Text("\(optionsModel.options.dailySuggestedTitles?.count ?? DataProvider.defaultDailySuggestedActionTitles().count) actions")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
