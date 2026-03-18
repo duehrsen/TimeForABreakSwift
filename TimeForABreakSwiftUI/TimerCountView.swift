@@ -7,6 +7,22 @@
 
 import SwiftUI
 
+struct PrimaryPillButtonStyle: ButtonStyle {
+    let background: Color
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.caption)
+            .foregroundColor(.white)
+            .padding(.vertical, 10)
+            .frame(maxWidth: .infinity)
+            .background(background.opacity(configuration.isPressed ? 0.7 : 1.0))
+            .clipShape(Capsule())
+            .shadow(radius: 5)
+            .animation(.easeInOut(duration: 0.15), value: configuration.isPressed)
+    }
+}
+
 struct TimerCountView: View {
     @EnvironmentObject var timerModel: TimerModel
     @EnvironmentObject var selectActions: SelectedActionsViewModel
@@ -173,77 +189,52 @@ struct TimerCountView: View {
                 }
             }
 
-            VStack {
-                HStack(spacing: Layout.buttonHorizontalSpacing) {
-                Button(action: {
-                    timerModel.reset()
-                }) {
-                    HStack(spacing: 15) {
-                        Image(systemName: "arrow.clockwise")
-                            .foregroundColor(.white)
-                        Text("Restart")
-                            .foregroundColor(.white)
-                            .font(.caption)
+            VStack(spacing: 12) {
+                HStack(spacing: 12) {
+                    Button(action: {
+                        timerModel.reset()
+                    }) {
+                        HStack(spacing: 8) {
+                            Image(systemName: "arrow.clockwise")
+                            Text("Restart")
+                        }
                     }
-                    .padding()
-                    .background(Color.blue)
-                    .clipShape(Capsule())
-                    .shadow(radius: 5)
+                    .buttonStyle(PrimaryPillButtonStyle(background: .blue))
+
+                    Button(action: {
+                        timerModel.switchMode()
+                    }) {
+                        HStack(spacing: 8) {
+                            Image(systemName: timerModel.isWorkTime ? "cup.and.saucer.fill" : "brain")
+                            Text("Switch")
+                        }
+                    }
+                    .buttonStyle(PrimaryPillButtonStyle(background: .orange))
                 }
 
-                Button(action: {
-                    timerModel.switchMode()
-                }) {
-                    HStack(spacing: 15) {
-                        Image(systemName: timerModel.isWorkTime ? "cup.and.saucer.fill" : "brain")
-                            .foregroundColor(.white)
-                        Text("Switch")
-                            .foregroundColor(.white)
-                            .font(.caption)
+                HStack(spacing: 12) {
+                    Button(action: {
+                        showingVoiceSheet.toggle()
+                    }) {
+                        HStack(spacing: 8) {
+                            Image(systemName: "mic.fill")
+                            Text("Log by voice")
+                        }
                     }
-                    .padding()
-                    .background(Color.orange)
-                    .clipShape(Capsule())
-                    .shadow(radius: 5)
+                    .buttonStyle(PrimaryPillButtonStyle(background: .blue))
+
+                    Button(action: {
+                        showingListSheet.toggle()
+                    }) {
+                        HStack(spacing: 8) {
+                            Image(systemName: "checklist")
+                            Text("Log from list")
+                        }
+                    }
+                    .buttonStyle(PrimaryPillButtonStyle(background: .green))
                 }
             }
-        }
-
-            HStack(spacing: 16) {
-                Button(action: {
-                    showingVoiceSheet.toggle()
-                }) {
-                    HStack(spacing: 10) {
-                        Image(systemName: "mic.fill")
-                            .foregroundColor(.white)
-                        Text("Log by voice")
-                            .foregroundColor(.white)
-                            .font(.caption)
-                    }
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 8)
-                    .background(Color.blue)
-                    .clipShape(Capsule())
-                    .shadow(radius: 5)
-                }
-
-                Button(action: {
-                    showingListSheet.toggle()
-                }) {
-                    HStack(spacing: 10) {
-                        Image(systemName: "checklist")
-                            .foregroundColor(.white)
-                        Text("Log from list")
-                            .foregroundColor(.white)
-                            .font(.caption)
-                    }
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 8)
-                    .background(Color.green)
-                    .clipShape(Capsule())
-                    .shadow(radius: 5)
-                }
-            }
+            .padding(.horizontal, 24)
         }
         .sheet(isPresented: $showingListSheet, content: {
             SelectedActionsSheetView()

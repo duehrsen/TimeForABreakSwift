@@ -14,6 +14,8 @@ struct DaySetupSheetView: View {
 
     let onComplete: () -> Void
 
+    @State private var showNoSuggestionsAlert: Bool = false
+
     private var hasYesterdayActions: Bool {
         !selectActions.yesterdayActions().isEmpty
     }
@@ -46,7 +48,10 @@ struct DaySetupSheetView: View {
 
     private func useSuggestedSet() {
         let templates = buildSuggestedTemplates()
-        guard !templates.isEmpty else { return }
+        guard !templates.isEmpty else {
+            showNoSuggestionsAlert = true
+            return
+        }
         selectActions.setTodaysActions(from: templates)
         onComplete()
         dismiss()
@@ -127,6 +132,11 @@ struct DaySetupSheetView: View {
             }
             .navigationTitle("Plan your day")
             .navigationBarTitleDisplayMode(.inline)
+            .alert("No suggested actions yet", isPresented: $showNoSuggestionsAlert) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text("Add some break actions in Options, then configure your suggestion set.")
+            }
         }
     }
 }

@@ -35,7 +35,7 @@ ViewModels use JSON encoding/decoding to save data to the app's documents direct
 
 ### External Dependencies
 
-- **Alamofire**: Used in `ActionViewModel.addActivityFromApi()` to fetch random activities from the BoredAPI
+- None beyond the standard Apple frameworks (SwiftUI, ActivityKit, AVFoundation, Speech, UserNotifications).
 
 ### View Structure
 

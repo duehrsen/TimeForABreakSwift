@@ -161,7 +161,6 @@ struct MainView: View {
             } catch {
                 selectActions.completions = []
             }
-            allActions.addActivityFromApi()
             do {
                 let loadedOptions = try await optionsModel.load()
                 optionsModel.options = loadedOptions

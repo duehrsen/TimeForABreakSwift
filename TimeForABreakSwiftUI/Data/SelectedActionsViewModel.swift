@@ -7,7 +7,6 @@
 
 import Combine
 import SwiftUI
-import Alamofire
 
 /// Manages the user's selected break actions for today and historical completions.
 /// Responsible for building today's list, persisting it, and tracking completion history.

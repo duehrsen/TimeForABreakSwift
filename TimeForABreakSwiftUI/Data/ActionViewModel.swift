@@ -7,10 +7,9 @@
 
 import Combine
 import SwiftUI
-import Alamofire
 
 /// Backing store for the master catalog of all available break actions.
-/// Handles CRUD, persistence, and fetching default/remote actions.
+/// Handles CRUD, persistence, and persistence to disk.
 class ActionViewModel: ObservableObject {
 
     private let persistence = PersistenceManager<[BreakAction]>(fileName: "breakActions", defaultValue: [])
@@ -148,21 +147,5 @@ class ActionViewModel: ObservableObject {
         )
         actions.insert(newAction, at: 0)
         saveToDisk()
-    }
-    
-    func addActivityFromApi() {
-        
-        var activityString : String = ""
-        
-        AF.request("https://www.boredapi.com/api/activity?participants=1&type=relaxation").responseDecodable(of: BoredResponse.self) { response in
-            guard let randomActivity = response.value else { return }
-            activityString = randomActivity.activity
-            if (activityString.count > 2)
-            {
-                let newAction = BreakAction(title: activityString, description: "", categoryId: "mental", duration: 60)
-                self.actions.insert(newAction, at: 0)
-            }
-        }
-    
     }
 }
