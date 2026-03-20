@@ -20,15 +20,11 @@ struct MainView: View {
     
     @State private var switchedToBackground : Bool = false
     @State private var selectedTab = 0
-    @State private var minDragForSwipe : CGFloat = 60
     @State private var showDaySetupSheet: Bool = false
     @State private var showDaySummarySheet: Bool = false
+    @State private var showWelcomeSheet: Bool = false
+    @State private var showNotificationPrePrompt: Bool = false
     
-    let numTabs = 3
-    
-    private func handleSwipe(translation : CGFloat) {
-    }
-
     private func nextActionPreview() -> String {
         let cal = Calendar.current
         let today = cal.startOfDay(for: Date())
@@ -74,6 +70,22 @@ struct MainView: View {
             showDaySetupSheet = true
         }
     }
+
+    /// Avoid stacking the notification alert on the welcome sheet (that dismisses the sheet). Call after welcome completes.
+    private func maybeShowNotificationPrePromptIfNeeded() {
+        guard UserDefaults.standard.bool(forKey: "hasSeenWelcome") else { return }
+        let hasShownPrePrompt = UserDefaults.standard.bool(forKey: "hasShownNotificationPrePrompt")
+        guard !hasShownPrePrompt else { return }
+
+        switch notificationManager.authorizationStatus {
+        case .some(.notDetermined):
+            showNotificationPrePrompt = true
+        case .none:
+            notificationManager.reloadAuthorizationStatus()
+        default:
+            break
+        }
+    }
     
     var body: some View {
         TabView(selection: $selectedTab ) {
@@ -93,7 +105,6 @@ struct MainView: View {
                     Label("Options", systemImage: "gearshape.fill")
                 }
                 .tag(2)
-                .highPriorityGesture(DragGesture().onEnded({ self.handleSwipe(translation: $0.translation.width) }))
         }
         .onChange(of: scenePhase) { newPhase in
             switch newPhase {
@@ -108,7 +119,7 @@ struct MainView: View {
                             title: timerModel.isWorkTime ? "Time for a break!" : "Break time's over",
                             body: timerModel.isWorkTime ? "You worked for \(timerModel.workTimeTotalSeconds/60) min" : "\(timerModel.breakTimeTotalSeconds/60) min break over.",
                             secondsUntilDone: timerModel.currentTimeRemaining,
-                            doesPlaySounds: !optionsModel.options.isMuted) { error in
+                            doesPlaySounds: optionsModel.options.completionFeedback == .sound) { error in
                             if error == nil {
                                 DispatchQueue.main.async {
                                     notificationManager.reloadLocNotifications()
@@ -164,12 +175,18 @@ struct MainView: View {
             do {
                 let loadedOptions = try await optionsModel.load()
                 optionsModel.options = loadedOptions
-                optionsModel.updateOptionsModel(breakMin: loadedOptions.breaktimeMin, workMin: loadedOptions.worktimeMin, doesPlaySounds: loadedOptions.doesPlaySounds, isMuted: loadedOptions.isMuted)
                 timerModel.updateFromOptions(optionSet: loadedOptions)
             } catch {
                 optionsModel.setDefault()
             }
-            evaluateDaySetupIfNeeded()
+            let hasSeenWelcome = UserDefaults.standard.bool(forKey: "hasSeenWelcome")
+            if hasSeenWelcome {
+                evaluateDaySetupIfNeeded()
+            } else {
+                // Present on the next turn so startup state updates (e.g. notification status) don’t fight this sheet.
+                await Task.yield()
+                showWelcomeSheet = true
+            }
         }
         // Fetch pinned actions daily
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification), perform: { _ in
@@ -189,12 +206,18 @@ struct MainView: View {
             }
         })
         .onChange(of: notificationManager.authorizationStatus) { newStatus in
+            // Don’t present the alert over welcome / day setup / summary — competing modals dismiss the alert.
+            guard UserDefaults.standard.bool(forKey: "hasSeenWelcome") else { return }
+            guard !showWelcomeSheet && !showDaySetupSheet && !showDaySummarySheet else { return }
             switch newStatus {
             case .notDetermined:
-                notificationManager.requestAuth()
+                let hasShownPrePrompt = UserDefaults.standard.bool(forKey: "hasShownNotificationPrePrompt")
+                if !hasShownPrePrompt {
+                    showNotificationPrePrompt = true
+                }
             case .authorized:
                 notificationManager.reloadLocNotifications()
-                
+
             default:
                 break
             }
@@ -228,7 +251,14 @@ struct MainView: View {
             guard url.scheme == "timeforabreak", url.host == "voice" else { return }
             selectedTab = 0
         }
-        .sheet(isPresented: $showDaySetupSheet) {
+        .sheet(isPresented: $showDaySetupSheet, onDismiss: {
+            // If user completed setup, day summary is about to show (or is showing)—prompt after summary instead.
+            Task { @MainActor in
+                try? await Task.sleep(nanoseconds: 450_000_000)
+                guard !showDaySummarySheet else { return }
+                maybeShowNotificationPrePromptIfNeeded()
+            }
+        }) {
             DaySetupSheetView(
                 onComplete: { markDaySetupDone() }
             )
@@ -236,12 +266,17 @@ struct MainView: View {
             .environmentObject(allActions)
             .environmentObject(optionsModel)
         }
-        .sheet(isPresented: $showDaySummarySheet) {
+        .sheet(isPresented: $showDaySummarySheet, onDismiss: {
+            maybeShowNotificationPrePromptIfNeeded()
+        }) {
             DayPlanSummaryView()
                 .environmentObject(selectActions)
-                .onDisappear {
-                    showDaySummarySheet = false
-                }
+        }
+        .sheet(isPresented: $showWelcomeSheet, onDismiss: {
+            UserDefaults.standard.set(true, forKey: "hasSeenWelcome")
+            evaluateDaySetupIfNeeded()
+        }) {
+            WelcomeSheetView()
         }
         .environmentObject(optionsModel)
         .environmentObject(timerModel)
@@ -249,6 +284,17 @@ struct MainView: View {
         .environmentObject(allActions)
         .environmentObject(notificationManager)
         .edgesIgnoringSafeArea(.bottom)
+        .alert("Allow break reminders?", isPresented: $showNotificationPrePrompt) {
+            Button("Not now", role: .cancel) {
+                UserDefaults.standard.set(true, forKey: "hasShownNotificationPrePrompt")
+            }
+            Button("Allow reminders") {
+                UserDefaults.standard.set(true, forKey: "hasShownNotificationPrePrompt")
+                notificationManager.requestAuth()
+            }
+        } message: {
+            Text("Time For A Break can notify you when work or breaks end.")
+        }
 
     }
 }

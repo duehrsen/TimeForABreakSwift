@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4E0279DF2F6A71F400F94B84 /* WelcomeSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E0279DE2F6A71F400F94B84 /* WelcomeSheetView.swift */; };
 		4E0A660B27FBF67B00A8F0E6 /* ActionCompletionRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E0A660A27FBF67B00A8F0E6 /* ActionCompletionRowView.swift */; };
 		4E0A660D27FBFCBB00A8F0E6 /* ActionEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E0A660C27FBFCBB00A8F0E6 /* ActionEditView.swift */; };
 		4E0B71CF2F67A57B0080519A /* DaySetupSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E0B71CE2F67A57B0080519A /* DaySetupSheetView.swift */; };
@@ -95,6 +96,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4E0279DE2F6A71F400F94B84 /* WelcomeSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeSheetView.swift; sourceTree = "<group>"; };
 		4E0A660A27FBF67B00A8F0E6 /* ActionCompletionRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionCompletionRowView.swift; sourceTree = "<group>"; };
 		4E0A660C27FBFCBB00A8F0E6 /* ActionEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionEditView.swift; sourceTree = "<group>"; };
 		4E0B71CE2F67A57B0080519A /* DaySetupSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaySetupSheetView.swift; sourceTree = "<group>"; };
@@ -216,6 +218,7 @@
 		4E8A329928041E260078AAF0 /* Subviews */ = {
 			isa = PBXGroup;
 			children = (
+				4E0279DE2F6A71F400F94B84 /* WelcomeSheetView.swift */,
 				4E0B71D22F67AE990080519A /* TimerVoiceLogSheetView.swift */,
 				4EB2213528069665004BD397 /* TimerCompletionView.swift */,
 				4E8A32912803E7180078AAF0 /* AvailableActionsSheetView.swift */,
@@ -542,6 +545,7 @@
 				4E8A32922803E7180078AAF0 /* AvailableActionsSheetView.swift in Sources */,
 				4E8A32AD280423820078AAF0 /* ThickDivider.swift in Sources */,
 				4E0B71CF2F67A57B0080519A /* DaySetupSheetView.swift in Sources */,
+				4E0279DF2F6A71F400F94B84 /* WelcomeSheetView.swift in Sources */,
 				4EB3AB10280AB894008FF804 /* TimeRemainingSubView.swift in Sources */,
 				4EE2468F27EFE0C20099CE24 /* StandardButton.swift in Sources */,
 				4EE9FB7F2802A3C500D0F02D /* SimpleActionRowView.swift in Sources */,

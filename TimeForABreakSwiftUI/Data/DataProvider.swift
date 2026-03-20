@@ -142,11 +142,11 @@ enum DataProvider {
     static func defaultDailySuggestedActionTitles() -> [String] {
         [
             "Drink water",
-            // Simplified: keep general stretch instead of specific shoulders
             "Relax eyes",
             "Stand and stretch",
             "Breathe slowly and deeply",
-            "Take a short walk"
+            "Take a short walk",
+            "Tidy up a space"
         ]
     }
 

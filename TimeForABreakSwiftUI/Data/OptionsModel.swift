@@ -8,12 +8,29 @@
 import Combine
 import SwiftUI
 
+/// Feedback when the timer segment completes (in-app). Mutually exclusive with sound vs haptic.
+enum TimerCompletionFeedback: String, Codable, CaseIterable {
+    case none
+    case sound
+    case haptic
+
+    var pickerLabel: String {
+        switch self {
+        case .none: return "Off"
+        case .sound: return "Sound"
+        case .haptic: return "Vibration"
+        }
+    }
+}
+
 /// Serializable user preference set controlling timer durations and audio behavior.
-struct OptionSet: Codable {
+struct OptionSet: Codable, Equatable {
     var breaktimeMin: Int
     var worktimeMin: Int
-    var doesPlaySounds: Bool
-    var isMuted: Bool = false
+    /// When the work/break segment ends in-app: off, sound, or haptic.
+    var completionFeedback: TimerCompletionFeedback = .haptic
+    /// Spoken suggestions after a work segment (separate from completion sound/haptic).
+    var speakBreakSuggestions: Bool = true
 
     /// Optional titles for the daily suggested actions set.
     /// If nil or empty, `DataProvider.defaultDailySuggestedActionTitles()` is used.
@@ -25,33 +42,88 @@ struct OptionSet: Codable {
     init(
         breaktimeMin: Int,
         worktimeMin: Int,
-        doesPlaySounds: Bool,
-        isMuted: Bool = false,
+        completionFeedback: TimerCompletionFeedback = .haptic,
+        speakBreakSuggestions: Bool = true,
         dailySuggestedTitles: [String]? = nil,
         dailyActionGoal: Int = 5
     ) {
         self.breaktimeMin = breaktimeMin
         self.worktimeMin = worktimeMin
-        self.doesPlaySounds = doesPlaySounds
-        self.isMuted = isMuted
+        self.completionFeedback = completionFeedback
+        self.speakBreakSuggestions = speakBreakSuggestions
         self.dailySuggestedTitles = dailySuggestedTitles
         self.dailyActionGoal = min(10, max(5, dailyActionGoal))
+    }
+
+    /// Test / legacy convenience: `doesPlaySounds` maps to sound feedback only.
+    init(
+        breaktimeMin: Int,
+        worktimeMin: Int,
+        doesPlaySounds: Bool,
+        dailySuggestedTitles: [String]? = nil,
+        dailyActionGoal: Int = 5
+    ) {
+        self.init(
+            breaktimeMin: breaktimeMin,
+            worktimeMin: worktimeMin,
+            completionFeedback: doesPlaySounds ? .sound : .none,
+            speakBreakSuggestions: true,
+            dailySuggestedTitles: dailySuggestedTitles,
+            dailyActionGoal: dailyActionGoal
+        )
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case breaktimeMin
+        case worktimeMin
+        case doesPlaySounds
+        case isMuted
+        case completionFeedback
+        case speakBreakSuggestions
+        case dailySuggestedTitles
+        case dailyActionGoal
     }
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         breaktimeMin = try container.decode(Int.self, forKey: .breaktimeMin)
         worktimeMin = try container.decode(Int.self, forKey: .worktimeMin)
-        doesPlaySounds = try container.decodeIfPresent(Bool.self, forKey: .doesPlaySounds) ?? false
+
+        let doesPlaySounds = try container.decodeIfPresent(Bool.self, forKey: .doesPlaySounds) ?? false
+        let legacyMuted: Bool
         if let saved = try container.decodeIfPresent(Bool.self, forKey: .isMuted) {
-            isMuted = saved
+            legacyMuted = saved
         } else {
-            // Migrate: derive from existing doesPlaySounds preference
-            isMuted = !doesPlaySounds
+            legacyMuted = !doesPlaySounds
         }
+
+        if let cf = try container.decodeIfPresent(TimerCompletionFeedback.self, forKey: .completionFeedback) {
+            completionFeedback = cf
+        } else {
+            completionFeedback = legacyMuted ? .none : .sound
+        }
+
+        if let sp = try container.decodeIfPresent(Bool.self, forKey: .speakBreakSuggestions) {
+            speakBreakSuggestions = sp
+        } else {
+            speakBreakSuggestions = !legacyMuted
+        }
+
         dailySuggestedTitles = try container.decodeIfPresent([String].self, forKey: .dailySuggestedTitles)
         let raw = try container.decodeIfPresent(Int.self, forKey: .dailyActionGoal) ?? 5
         dailyActionGoal = min(10, max(5, raw))
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(breaktimeMin, forKey: .breaktimeMin)
+        try container.encode(worktimeMin, forKey: .worktimeMin)
+        try container.encode(completionFeedback, forKey: .completionFeedback)
+        try container.encode(speakBreakSuggestions, forKey: .speakBreakSuggestions)
+        try container.encode(completionFeedback == .sound, forKey: .doesPlaySounds)
+        try container.encode(!speakBreakSuggestions, forKey: .isMuted)
+        try container.encodeIfPresent(dailySuggestedTitles, forKey: .dailySuggestedTitles)
+        try container.encode(dailyActionGoal, forKey: .dailyActionGoal)
     }
 }
 
@@ -62,8 +134,8 @@ class OptionsModel: ObservableObject {
     static let defaultOptions = OptionSet(
         breaktimeMin: 5,
         worktimeMin: 20,
-        doesPlaySounds: false,
-        isMuted: false,
+        completionFeedback: .haptic,
+        speakBreakSuggestions: true,
         dailySuggestedTitles: DataProvider.defaultDailySuggestedActionTitles()
     )
 
@@ -74,13 +146,6 @@ class OptionsModel: ObservableObject {
     func setDefault() {
         options = OptionsModel.defaultOptions
         saveToDisk()
-    }
-
-    func updateOptionsModel(breakMin: Int, workMin: Int, doesPlaySounds: Bool, isMuted: Bool) {
-        options.breaktimeMin = breakMin
-        options.worktimeMin = workMin
-        options.doesPlaySounds = doesPlaySounds
-        options.isMuted = isMuted
     }
 
     func save(options: OptionSet) async throws {

@@ -41,7 +41,7 @@ final class PersistenceManagerTests: XCTestCase {
         let options = try await sut.load()
         XCTAssertEqual(options.breaktimeMin, 5)
         XCTAssertEqual(options.worktimeMin, 20)
-        XCTAssertFalse(options.doesPlaySounds)
+        XCTAssertEqual(options.completionFeedback, .none)
     }
 
     // MARK: - Save and Load Round Trip
@@ -85,6 +85,36 @@ final class PersistenceManagerTests: XCTestCase {
 
         XCTAssertEqual(loaded.breaktimeMin, 10)
         XCTAssertEqual(loaded.worktimeMin, 30)
-        XCTAssertTrue(loaded.doesPlaySounds)
+        XCTAssertEqual(loaded.completionFeedback, .sound)
+    }
+
+    func testOptionSetCompletionFeedbackAndVoiceRoundTrip() async throws {
+        let defaultOptions = OptionSet(breaktimeMin: 5, worktimeMin: 20, doesPlaySounds: false)
+        let sut = PersistenceManager<OptionSet>(fileName: testFileName, defaultValue: defaultOptions)
+        var custom = OptionSet(breaktimeMin: 7, worktimeMin: 22, completionFeedback: .haptic, speakBreakSuggestions: false)
+
+        try await sut.save(data: custom)
+        let loaded = try await sut.load()
+
+        XCTAssertEqual(loaded.completionFeedback, .haptic)
+        XCTAssertFalse(loaded.speakBreakSuggestions)
+    }
+
+    func testOptionSetMigratesLegacyMutedWithoutNewKeys() throws {
+        let json = """
+        {"breaktimeMin":5,"worktimeMin":20,"doesPlaySounds":false,"isMuted":true}
+        """.data(using: .utf8)!
+        let decoded = try JSONDecoder().decode(OptionSet.self, from: json)
+        XCTAssertEqual(decoded.completionFeedback, .none)
+        XCTAssertFalse(decoded.speakBreakSuggestions)
+    }
+
+    func testOptionSetMigratesLegacyUnmutedWithoutCompletionKey() throws {
+        let json = """
+        {"breaktimeMin":5,"worktimeMin":20,"doesPlaySounds":true,"isMuted":false}
+        """.data(using: .utf8)!
+        let decoded = try JSONDecoder().decode(OptionSet.self, from: json)
+        XCTAssertEqual(decoded.completionFeedback, .sound)
+        XCTAssertTrue(decoded.speakBreakSuggestions)
     }
 }

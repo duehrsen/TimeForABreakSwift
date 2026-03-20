@@ -38,6 +38,7 @@ struct TimerCountView: View {
     @State private var segmentRingInitialized: Bool = false
     @State private var animatingSegmentIndex: Int? = nil
     @State private var segmentAnimationPhase: SegmentAnimationPhase = .preHighlight
+    @State private var hasLoggedAnyAction: Bool = UserDefaults.standard.bool(forKey: "hasLoggedAnyAction")
 
     var defaultAction: BreakAction = BreakAction(title: "Get up!", description: "Leave your chair", categoryId: "mental", duration: 1)
 
@@ -188,6 +189,7 @@ struct TimerCountView: View {
                     }
                 }
             }
+            .accessibilityLabel(timerModel.started ? "Pause timer" : "Start timer")
 
             VStack(spacing: 12) {
                 HStack(spacing: 12) {
@@ -235,6 +237,14 @@ struct TimerCountView: View {
                 }
             }
             .padding(.horizontal, 24)
+            
+            if !hasLoggedAnyAction {
+                Text("Tip: When your timer ends, log your break with \"Log by voice\" or \"Log from list\".")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 24)
+            }
         }
         .sheet(isPresented: $showingListSheet, content: {
             SelectedActionsSheetView()
@@ -259,6 +269,11 @@ struct TimerCountView: View {
             if !segmentRingInitialized && segmentCount > 0 {
                 previousCompletedCount = completedCount
                 segmentRingInitialized = true
+            }
+        }
+        .onChange(of: selectActions.completions.count) { _ in
+            if UserDefaults.standard.bool(forKey: "hasLoggedAnyAction") {
+                hasLoggedAnyAction = true
             }
         }
         .onChange(of: completionStateSignature) { _ in

@@ -57,11 +57,11 @@ struct TimerVoiceLogSheetView: View {
         selectActions.update(id: action.id, newtitle: action.title, duration: action.duration, completed: true)
 
         var feedback = "Got it! \(action.title)"
-        if let quantity = result.quantity, let unit = action.unit {
+        if let quantity = result.quantity, let unit = action.displayUnit(forQuantity: quantity) {
             feedback = "Got it! \(quantity) \(unit) logged."
         }
 
-        if !optionsModel.options.isMuted {
+        if optionsModel.options.speakBreakSuggestions {
             speechService.speak(feedback)
         }
 

@@ -9,9 +9,29 @@ import SwiftUI
 
 struct OptionsView: View {
     @EnvironmentObject var timerModel: TimerModel
-    @EnvironmentObject var optionsModel : OptionsModel
+    @EnvironmentObject var optionsModel: OptionsModel
     @EnvironmentObject var allActions: ActionViewModel
     @State private var showSaveToast = false
+    @State private var toastDebounceTask: Task<Void, Never>?
+
+    private func scheduleSettingsToast() {
+        toastDebounceTask?.cancel()
+        toastDebounceTask = Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 400_000_000)
+            guard !Task.isCancelled else { return }
+            showSaveToast = true
+        }
+    }
+
+    private func persistSettings(updateTimerDurations: Bool) {
+        guard optionsModel.options.worktimeMin > 0, optionsModel.options.breaktimeMin > 0 else { return }
+        optionsModel.saveToDisk()
+        if updateTimerDurations {
+            timerModel.updateFromOptions(optionSet: optionsModel.options)
+        }
+        scheduleSettingsToast()
+    }
+
     var body: some View {
         NavigationStack {
             List {
@@ -43,45 +63,26 @@ struct OptionsView: View {
                         }
                     }
                 }
-
-                Section {
-                    Button(action: {
-                        if optionsModel.options.worktimeMin > 0 && optionsModel.options.breaktimeMin > 0 {
-                            let newOptions = OptionSet(
-                                breaktimeMin: optionsModel.options.breaktimeMin,
-                                worktimeMin: optionsModel.options.worktimeMin,
-                                doesPlaySounds: optionsModel.options.doesPlaySounds,
-                                isMuted: optionsModel.options.isMuted,
-                                dailySuggestedTitles: optionsModel.options.dailySuggestedTitles,
-                                dailyActionGoal: optionsModel.options.dailyActionGoal
-                            )
-                            Task {
-                                try? await optionsModel.save(options: newOptions)
-                            }
-                            timerModel.updateFromOptions(optionSet: newOptions)
-                            showSaveToast = true
-                        }
-                    }) {
-                        HStack(spacing: 15){
-                            Spacer()
-                            Text("Save")
-                                .foregroundColor(.white)
-                            Spacer()
-                        }
-                        .padding()
-                        .background(Color.green)
-                        .clipShape(Capsule())
-                        .shadow(radius: 5)
-                    }
-                }
             }
             .listStyle(.insetGrouped)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 toolbars(title: "Options")
             }
+            .onChange(of: optionsModel.options.worktimeMin) { _ in
+                persistSettings(updateTimerDurations: true)
+            }
+            .onChange(of: optionsModel.options.breaktimeMin) { _ in
+                persistSettings(updateTimerDurations: true)
+            }
+            .onChange(of: optionsModel.options.completionFeedback) { _ in
+                persistSettings(updateTimerDurations: false)
+            }
+            .onChange(of: optionsModel.options.speakBreakSuggestions) { _ in
+                persistSettings(updateTimerDurations: false)
+            }
             .toast(
-                message: "Options saved",
+                message: "Settings updated",
                 isShowing: $showSaveToast,
                 config: .init(
                     backgroundColor: .green.opacity(0.85),
@@ -98,6 +99,8 @@ struct SuggestedActionsOptionsView: View {
     @EnvironmentObject var optionsModel: OptionsModel
 
     @State private var selectedTitles: Set<String> = []
+    @State private var showToast = false
+    @State private var toastDebounceTask: Task<Void, Never>?
 
     private var allTitles: [String] {
         Array(Set(allActions.actions.map { $0.title }))
@@ -113,10 +116,19 @@ struct SuggestedActionsOptionsView: View {
         }
     }
 
-    private func saveSelection() {
+    private func scheduleSuggestionToast() {
+        toastDebounceTask?.cancel()
+        toastDebounceTask = Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 400_000_000)
+            guard !Task.isCancelled else { return }
+            showToast = true
+        }
+    }
+
+    private func persistSelection() {
         optionsModel.options.dailySuggestedTitles = Array(selectedTitles)
         optionsModel.saveToDisk()
-        dismiss()
+        scheduleSuggestionToast()
     }
 
     var body: some View {
@@ -125,10 +137,12 @@ struct SuggestedActionsOptionsView: View {
                 ForEach(allTitles, id: \.self) { title in
                     Button {
                         if selectedTitles.contains(title) {
+                            guard selectedTitles.count > 1 else { return }
                             selectedTitles.remove(title)
                         } else {
                             selectedTitles.insert(title)
                         }
+                        persistSelection()
                     } label: {
                         HStack {
                             Text(title)
@@ -151,16 +165,17 @@ struct SuggestedActionsOptionsView: View {
                     dismiss()
                 }
             }
-            ToolbarItem(placement: .confirmationAction) {
-                Button("Save") {
-                    saveSelection()
-                }
-                .disabled(selectedTitles.isEmpty)
-            }
         }
         .onAppear {
             loadSelection()
         }
+        .toast(
+            message: "Suggestion set updated",
+            isShowing: $showToast,
+            config: .init(
+                backgroundColor: .green.opacity(0.85),
+                sysImg: "checkmark.circle.fill"
+            )
+        )
     }
 }
-

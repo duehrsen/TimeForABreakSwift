@@ -11,14 +11,10 @@ struct DaySetupSheetView: View {
     @EnvironmentObject var selectActions: SelectedActionsViewModel
     @EnvironmentObject var allActions: ActionViewModel
     @EnvironmentObject var optionsModel: OptionsModel
-
+    
     let onComplete: () -> Void
-
+    
     @State private var showNoSuggestionsAlert: Bool = false
-
-    private var hasYesterdayActions: Bool {
-        !selectActions.yesterdayActions().isEmpty
-    }
 
     private var suggestedTitles: [String] {
         if let saved = optionsModel.options.dailySuggestedTitles,
@@ -36,14 +32,6 @@ struct DaySetupSheetView: View {
             }
         }
         return templates
-    }
-
-    private func useSameAsYesterday() {
-        let templates = selectActions.yesterdayActions()
-        guard !templates.isEmpty else { return }
-        selectActions.setTodaysActions(from: templates)
-        onComplete()
-        dismiss()
     }
 
     private func useSuggestedSet() {
@@ -66,32 +54,12 @@ struct DaySetupSheetView: View {
                     .padding(.top, 16)
 
                 VStack(spacing: 16) {
-                    Button(action: useSameAsYesterday) {
-                        HStack {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("Same as yesterday")
-                                    .font(.headline)
-                                Text("Reuse the actions you completed yesterday.")
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                            }
-                            Spacer()
-                            Image(systemName: "clock.arrow.circlepath")
-                                .foregroundColor(.blue)
-                        }
-                        .padding()
-                        .background(Color(.secondarySystemBackground))
-                        .cornerRadius(12)
-                    }
-                    .disabled(!hasYesterdayActions)
-                    .opacity(hasYesterdayActions ? 1.0 : 0.4)
-
                     Button(action: useSuggestedSet) {
                         HStack {
                             VStack(alignment: .leading, spacing: 4) {
-                                Text("Use suggested set")
+                                Text("Use my default break plan")
                                     .font(.headline)
-                                Text("Start with your configured daily suggestions.")
+                                Text("Start from your saved suggestion set. You can change this in Options.")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
                             }
@@ -104,6 +72,12 @@ struct DaySetupSheetView: View {
                         .cornerRadius(12)
                     }
 
+                    Text("You can edit this in Options → Manage break actions → Suggestion set.")
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal, 4)
+
                     NavigationLink {
                         DayActionPickerView(onComplete: {
                             onComplete()
@@ -113,7 +87,7 @@ struct DaySetupSheetView: View {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("Choose my actions…")
                                     .font(.headline)
-                                Text("Pick which actions you want today and how many of each.")
+                                Text("Pick which break actions you want to focus on today.")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
                             }

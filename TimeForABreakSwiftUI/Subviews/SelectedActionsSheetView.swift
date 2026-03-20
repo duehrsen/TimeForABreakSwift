@@ -49,14 +49,31 @@ struct SelectedActionsSheetView: View {
     var body: some View {
         VStack {
             List {
-                Section(isFromCompletedSheet ? "Check off any you've done!" : "Your actions for today") {
+                let actions = sortedTodayActions
+                if actions.isEmpty {
+                    Section {
+                        VStack(spacing: 12) {
+                            Text("No actions planned yet.")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                            Text("Plan your day from the \"Plan your day\" screen or Options → Manage break actions.")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                                .multilineTextAlignment(.center)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.vertical, 24)
+                    }
+                } else {
+                    Section(isFromCompletedSheet ? "Check off any you've done!" : "Your actions for today") {
+                        ForEach(actions, id: \.id) { item in
+                            ActionCompletionRowView(action: item, editable: true)
+                        }
+                        .onDelete(perform: selectActions.deleteAction)
+                    }
                 }
-                ForEach(sortedTodayActions, id: \.id) {
-                    item in
-                    ActionCompletionRowView(action: item, editable: true)
-                }
-                .onDelete(perform: selectActions.deleteAction)
-            }.listStyle(.plain)
+            }
+            .listStyle(.plain)
         }
     }
 }

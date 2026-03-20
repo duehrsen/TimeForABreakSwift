@@ -34,7 +34,7 @@ struct SummaryView: View {
                                 .foregroundColor(.secondary)
                                 .multilineTextAlignment(.center)
                                 .padding(.horizontal, 24)
-                            Text("👍")
+                            Text("🍃")
                                 .font(.system(size: 64))
                         }
                         .frame(maxWidth: .infinity)
@@ -77,7 +77,7 @@ struct SummaryView: View {
     }
 
     private func badgeText(for stats: SelectedActionsViewModel.ActionDailyStats) -> String {
-        if let total = stats.totalQuantity, stats.action.isQuantifiable, let unit = stats.action.unit {
+        if let total = stats.totalQuantity, stats.action.isQuantifiable, let unit = stats.action.displayUnit(forQuantity: total) {
             return "\(total) \(unit)"
         }
         return "×\(stats.count)"

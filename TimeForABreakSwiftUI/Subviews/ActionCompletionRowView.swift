@@ -53,7 +53,7 @@ struct ActionCompletionRowView: View {
     private var badgeText: String {
         let stats = vm.todaysStats(for: action)
 
-        if let total = stats.totalQuantity, action.isQuantifiable, let unit = action.unit {
+        if let total = stats.totalQuantity, action.isQuantifiable, let unit = action.displayUnit(forQuantity: total) {
             return "\(total) \(unit)"
         }
 

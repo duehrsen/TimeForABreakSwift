@@ -7,6 +7,7 @@
 
 import SwiftUI
 import AVFoundation
+import UIKit
 
 struct TimerCompletionView: View {
 
@@ -54,11 +55,32 @@ struct TimerCompletionView: View {
         }
     }
 
+    fileprivate func playCompletionHaptic() {
+        guard !UIAccessibility.isReduceMotionEnabled else { return }
+        let generator = UINotificationFeedbackGenerator()
+        generator.prepare()
+        generator.notificationOccurred(isFinishedWork ? .success : .warning)
+    }
+
     fileprivate func speakAction() {
         guard isFinishedWork else { return }
         let source = suggestedUncompletedActions.isEmpty ? uncompletedActions : suggestedUncompletedActions
         if let action = source.randomElement(), !action.spokenPrompt.isEmpty {
             speechService.speak(action.spokenPrompt)
+        }
+    }
+
+    fileprivate func applyCompletionFeedback() {
+        switch optionsModel.options.completionFeedback {
+        case .sound:
+            playSuccessSound()
+        case .haptic:
+            playCompletionHaptic()
+        case .none:
+            break
+        }
+        if optionsModel.options.speakBreakSuggestions {
+            speakAction()
         }
     }
 
@@ -105,10 +127,7 @@ struct TimerCompletionView: View {
             .frame(maxWidth: .infinity)
         }
         .onAppear {
-            if !optionsModel.options.isMuted {
-                playSuccessSound()
-                speakAction()
-            }
+            applyCompletionFeedback()
         }
         .onDisappear {
             speechService.stop()
@@ -129,12 +148,11 @@ struct TimerCompletionView: View {
 
         // Build feedback message
         var feedback = "Got it! \(action.title)"
-        if let quantity = result.quantity, let unit = action.unit {
+        if let quantity = result.quantity, let unit = action.displayUnit(forQuantity: quantity) {
             feedback = "Got it! \(quantity) \(unit) logged."
         }
 
-        // Speak feedback if not muted
-        if !optionsModel.options.isMuted {
+        if optionsModel.options.speakBreakSuggestions {
             speechService.speak(feedback)
         }
 

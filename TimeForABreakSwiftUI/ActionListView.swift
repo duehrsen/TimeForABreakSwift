@@ -70,57 +70,73 @@ struct ActionListView: View {
     var body: some View {
         VStack {
             List {
-                ForEach(allActionsVM.actions, id: \.id) { action in
-                    NavigationLink(destination: ActionEditView(action: action)) {
-                        actionInfo(for: action)
+                if allActionsVM.actions.isEmpty {
+                    Section {
+                        VStack(spacing: 12) {
+                            Text("No break actions yet.")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                            Text("Tap \"Create New Action\" below to add your first break action.")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                                .multilineTextAlignment(.center)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.vertical, 24)
                     }
-                    .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
-                        Button (action: {
-                            selectActions.add(action: action.title, duration: action.duration)
-                            showAddToast = true
-                        }, label: {
-                            Label("Add to Selected Actions", systemImage: "plus.square.fill")
+                } else {
+                    ForEach(allActionsVM.actions, id: \.id) { action in
+                        NavigationLink(destination: ActionEditView(action: action)) {
+                            actionInfo(for: action)
+                        }
+                        .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
+                            Button (action: {
+                                selectActions.add(action: action.title, duration: action.duration)
+                                showAddToast = true
+                            }, label: {
+                                Label("Add to Selected Actions", systemImage: "plus.square.fill")
+                            })
+                            .tint(Color.blue)
                         })
-                        .tint(Color.blue)
-                    })
-                    .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
-                        if !action.pinned{
-                            Button (action: {
-                                if allActionsVM.pinToggle(action: action, toggleOn: true) {               showPinToast = true
-                                }
-                            }, label: {
-                                Label("Pin to top of list", systemImage: "pin.fill")
-                            })
-                            .tint(Color.yellow)
-                        }
-                    })
-                    .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
-                        Button (role: .destructive, action: {
-                            allActionsVM.deleteById(id: action.id)
-                            showDelToast = true
-                        }, label: {
-                                Label("Remove from Available Actions", systemImage: "trash.fill")
-                            })
-                    })
-                    .swipeActions(edge: .trailing, allowsFullSwipe: false, content: {
-                        if action.pinned {
-                            Button (action: {
-                                if allActionsVM.pinToggle(action: action, toggleOn: false) {               showUnpinToast = true
+                        .swipeActions(edge: .leading, allowsFullSwipe: true, content: {
+                            if !action.pinned{
+                                Button (action: {
+                                    if allActionsVM.pinToggle(action: action, toggleOn: true) {               showPinToast = true
+                                    }
+                                }, label: {
+                                    Label("Pin to top of list", systemImage: "pin.fill")
+                                })
+                                .tint(Color.yellow)
                             }
+                        })
+                        .swipeActions(edge: .trailing, allowsFullSwipe: true, content: {
+                            Button (role: .destructive, action: {
+                                allActionsVM.deleteById(id: action.id)
+                                showDelToast = true
                             }, label: {
-                                Label("Unpin from top of list", systemImage: "pin.slash")
-                            })
-                            .tint(Color.yellow)
-                        }
+                                    Label("Remove from Available Actions", systemImage: "trash.fill")
+                                })
+                        })
+                        .swipeActions(edge: .trailing, allowsFullSwipe: false, content: {
+                            if action.pinned {
+                                Button (action: {
+                                    if allActionsVM.pinToggle(action: action, toggleOn: false) {               showUnpinToast = true
+                                }
+                                }, label: {
+                                    Label("Unpin from top of list", systemImage: "pin.slash")
+                                })
+                                .tint(Color.yellow)
+                            }
 
-                    })
-                }
-                .onAppear() {
-                    if !didLoadData
-                    {
-                        if allActionsVM.actions.count < 1 {
-                            allActionsVM.getData()
-                            didLoadData = true
+                        })
+                    }
+                    .onAppear() {
+                        if !didLoadData
+                        {
+                            if allActionsVM.actions.count < 1 {
+                                allActionsVM.getData()
+                                didLoadData = true
+                            }
                         }
                     }
                 }

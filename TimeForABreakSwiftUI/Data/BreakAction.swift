@@ -157,3 +157,12 @@ struct BreakAction: Codable, Identifiable {
         self.frequency = frequency
     }
 }
+
+extension BreakAction {
+    /// Unit label for display with a quantity (e.g. 1 + stored "glasses" → "glass").
+    func displayUnit(forQuantity quantity: Int) -> String? {
+        guard let u = unit, !u.isEmpty else { return nil }
+        if quantity == 1, u.lowercased() == "glasses" { return "glass" }
+        return u
+    }
+}

@@ -1,5 +1,5 @@
 //
-//  ActionEditView.swift
+//  ActionNewView.swift
 //  TimeForABreakSwiftUI
 //
 //  Created by Chris Duehrsen on 2022-04-04.
@@ -8,14 +8,34 @@
 import SwiftUI
 
 struct ActionNewView: View {
-    @EnvironmentObject private var vm : ActionViewModel
+    @EnvironmentObject private var vm: ActionViewModel
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @State private var actionTitle: String = "Breathe"
     @State private var actionDuration = 5
     @State private var isQuantifiable = false
     @State private var quantityUnit: String = ""
     @State private var defaultQuantity: Int = 1
-    
+
+    @State private var didSave = false
+    @State private var showAddedToast = false
+
+    private var trimmedTitle: String {
+        actionTitle.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    private func saveIfNeeded() {
+        guard !didSave, !trimmedTitle.isEmpty else { return }
+        vm.add(
+            action: trimmedTitle,
+            duration: actionDuration,
+            isQuantifiable: isQuantifiable,
+            unit: quantityUnit.isEmpty ? nil : quantityUnit,
+            defaultQuantity: isQuantifiable ? defaultQuantity : nil
+        )
+        didSave = true
+        showAddedToast = true
+    }
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
@@ -53,37 +73,41 @@ struct ActionNewView: View {
                         .padding(.leading)
                     }
                 }
-
-                HStack {
-                    Spacer()
-                    Button(action: {
-                        vm.add(
-                            action: actionTitle,
-                            duration: actionDuration,
-                            isQuantifiable: isQuantifiable,
-                            unit: quantityUnit.isEmpty ? nil : quantityUnit,
-                            defaultQuantity: isQuantifiable ? defaultQuantity : nil
-                        )
-                        presentationMode.wrappedValue.dismiss()
-                    }) {
-                        HStack(spacing: 15){
-                            Text("Save")
-                                .foregroundColor(.white)
-                        }
-                        .padding()
-                        .frame(maxWidth: 260)
-                        .background(Color.green)
-                        .clipShape(Capsule())
-                        .shadow(radius: 5)
-
-                    }
-                    Spacer()
-                }
             }
             .padding(24)
         }
         .navigationBarTitle("New Action")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .confirmationAction) {
+                Button("Done") {
+                    if trimmedTitle.isEmpty {
+                        presentationMode.wrappedValue.dismiss()
+                        return
+                    }
+                    let alreadySaved = didSave
+                    saveIfNeeded()
+                    if !alreadySaved, didSave {
+                        Task { @MainActor in
+                            try? await Task.sleep(nanoseconds: 900_000_000)
+                            presentationMode.wrappedValue.dismiss()
+                        }
+                    } else {
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                }
+            }
+        }
+        .onDisappear {
+            saveIfNeeded()
+        }
+        .toast(
+            message: "Action added",
+            isShowing: $showAddedToast,
+            config: .init(
+                backgroundColor: .green.opacity(0.85),
+                sysImg: "checkmark.circle.fill"
+            )
+        )
     }
-    
 }

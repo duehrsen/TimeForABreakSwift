@@ -20,6 +20,7 @@ struct VoiceInputView: View {
     @State private var showNoMatch = false
     @State private var showConfirmation = false
     @State private var lastUnmatchedText = ""
+    @State private var showVoicePrePrompt = false
 
     var body: some View {
         VStack(spacing: 16) {
@@ -50,6 +51,15 @@ struct VoiceInputView: View {
                 lastUnmatchedText = voiceService.transcribedText
                 showNoMatch = true
             }
+        }
+        .alert("Use your voice to log breaks", isPresented: $showVoicePrePrompt) {
+            Button("Not now", role: .cancel) { }
+            Button("Continue") {
+                UserDefaults.standard.set(true, forKey: "hasShownVoicePrePrompt")
+                voiceService.requestAuthorization()
+            }
+        } message: {
+            Text("We'll use the microphone and speech recognition only to understand what break you did. You can always use the list instead.")
         }
     }
 
@@ -166,7 +176,7 @@ struct VoiceInputView: View {
                         Text(result.action.title)
                             .font(.subheadline)
                         Spacer()
-                        if let quantity = result.quantity, let unit = result.action.unit {
+                        if let quantity = result.quantity, let unit = result.action.displayUnit(forQuantity: quantity) {
                             Text("\(quantity) \(unit)")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
@@ -197,7 +207,7 @@ struct VoiceInputView: View {
                 Text(result.action.title)
                     .font(.subheadline)
                     .bold()
-                if let quantity = result.quantity, let unit = result.action.unit {
+                if let quantity = result.quantity, let unit = result.action.displayUnit(forQuantity: quantity) {
                     Text("\(quantity) \(unit) logged")
                         .font(.caption)
                         .foregroundColor(.secondary)
@@ -254,7 +264,12 @@ struct VoiceInputView: View {
     private func handleMicTap() {
         switch voiceService.authorizationState {
         case .notDetermined:
-            voiceService.requestAuthorization()
+            let hasShown = UserDefaults.standard.bool(forKey: "hasShownVoicePrePrompt")
+            if hasShown {
+                voiceService.requestAuthorization()
+            } else {
+                showVoicePrePrompt = true
+            }
         case .authorized:
             if voiceService.listeningState == .listening {
                 voiceService.stopListening()

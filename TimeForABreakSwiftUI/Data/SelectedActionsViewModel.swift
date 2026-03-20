@@ -289,5 +289,6 @@ class SelectedActionsViewModel: ObservableObject {
         let completion = ActionCompletion(actionId: actionId, date: Date(), quantity: quantity, source: source)
         completions.append(completion)
         saveCompletions()
+        UserDefaults.standard.set(true, forKey: "hasLoggedAnyAction")
     }
 }

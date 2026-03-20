@@ -22,8 +22,17 @@ struct OptionsInputSubView: View {
         Stepper("\(optionsModel.options.breaktimeMin) min", value: $optionsModel.options.breaktimeMin, in: 1...40, step: 1)
             .frame(width: 250)
 
-        Toggle("Mute all audio", isOn: $optionsModel.options.isMuted)
+        Text("When timer ends")
+            .font(.title2)
+        Picker("When timer ends", selection: $optionsModel.options.completionFeedback) {
+            ForEach(TimerCompletionFeedback.allCases, id: \.self) { mode in
+                Text(mode.pickerLabel).tag(mode)
+            }
+        }
+        .pickerStyle(.segmented)
+        .frame(maxWidth: 280)
+
+        Toggle("Speak break suggestions", isOn: $optionsModel.options.speakBreakSuggestions)
             .frame(width: 250)
     }
 }
-
