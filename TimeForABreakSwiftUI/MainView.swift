@@ -241,7 +241,10 @@ struct MainView: View {
         }
         .onChange(of: timerModel.isComplete) { isComplete in
             if isComplete {
-                liveActivityManager.endActivity()
+                liveActivityManager.showTimerFinishedThenEnd(
+                    isWorkTime: timerModel.isWorkTime,
+                    totalSeconds: timerModel.totalSecondsForCurrentMode
+                )
             }
         }
         .onChange(of: timerModel.isWorkTime) { _ in

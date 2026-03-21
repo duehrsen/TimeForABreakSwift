@@ -188,8 +188,16 @@ class SelectedActionsViewModel: ObservableObject {
         actions = []
     }
     
-    func deleteAction(index: IndexSet) {
-        actions.remove(atOffsets: index)
+    /// Removes today’s rows shown in `displayedInOrder` at `offsets` (List / ForEach order),
+    /// and drops **all** `ActionCompletion` entries for those actions’ IDs so Summary and badges stay consistent.
+    func deleteDisplayedTodayActions(at offsets: IndexSet, displayedInOrder ordered: [BreakAction]) {
+        let idsToRemove = Set(offsets.map { ordered[$0].id })
+        guard !idsToRemove.isEmpty else { return }
+
+        completions.removeAll { idsToRemove.contains($0.actionId) }
+        actions.removeAll { idsToRemove.contains($0.id) }
+
+        saveCompletions()
         saveToDisk()
     }
     

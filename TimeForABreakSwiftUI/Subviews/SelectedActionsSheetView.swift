@@ -69,7 +69,9 @@ struct SelectedActionsSheetView: View {
                         ForEach(actions, id: \.id) { item in
                             ActionCompletionRowView(action: item, editable: true)
                         }
-                        .onDelete(perform: selectActions.deleteAction)
+                        .onDelete { offsets in
+                            selectActions.deleteDisplayedTodayActions(at: offsets, displayedInOrder: actions)
+                        }
                     }
                 }
             }

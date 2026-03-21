@@ -22,6 +22,6 @@ struct TimeRemainingSubView: View {
                 .font(.system(size: 18))
                 .monospacedDigit()
         }
-        .frame(width: Self.toolbarTimerWidth, alignment: .trailing)
+        .frame(width: Self.toolbarTimerWidth, alignment: .center)
     }
 }

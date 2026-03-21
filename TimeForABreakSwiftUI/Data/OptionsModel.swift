@@ -30,7 +30,7 @@ struct OptionSet: Codable, Equatable {
     /// When the work/break segment ends in-app: off, sound, or haptic.
     var completionFeedback: TimerCompletionFeedback = .haptic
     /// Spoken suggestions after a work segment (separate from completion sound/haptic).
-    var speakBreakSuggestions: Bool = true
+    var speakBreakSuggestions: Bool = false
 
     /// Optional titles for the daily suggested actions set.
     /// If nil or empty, `DataProvider.defaultDailySuggestedActionTitles()` is used.
@@ -43,7 +43,7 @@ struct OptionSet: Codable, Equatable {
         breaktimeMin: Int,
         worktimeMin: Int,
         completionFeedback: TimerCompletionFeedback = .haptic,
-        speakBreakSuggestions: Bool = true,
+        speakBreakSuggestions: Bool = false,
         dailySuggestedTitles: [String]? = nil,
         dailyActionGoal: Int = 5
     ) {
@@ -67,7 +67,7 @@ struct OptionSet: Codable, Equatable {
             breaktimeMin: breaktimeMin,
             worktimeMin: worktimeMin,
             completionFeedback: doesPlaySounds ? .sound : .none,
-            speakBreakSuggestions: true,
+            speakBreakSuggestions: false,
             dailySuggestedTitles: dailySuggestedTitles,
             dailyActionGoal: dailyActionGoal
         )
@@ -135,7 +135,7 @@ class OptionsModel: ObservableObject {
         breaktimeMin: 5,
         worktimeMin: 20,
         completionFeedback: .haptic,
-        speakBreakSuggestions: true,
+        speakBreakSuggestions: false,
         dailySuggestedTitles: DataProvider.defaultDailySuggestedActionTitles()
     )
 

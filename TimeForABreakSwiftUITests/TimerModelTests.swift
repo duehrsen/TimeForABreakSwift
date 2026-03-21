@@ -154,6 +154,33 @@ final class TimerModelTests: XCTestCase {
         XCTAssertEqual(sut.progress, 1.0)
     }
 
+    // MARK: - skipForward
+
+    func testSkipForwardWhenPausedIsNoOp() {
+        sut.reset()
+        let before = sut.currentTimeRemaining
+        sut.skipForward(seconds: 60)
+        XCTAssertEqual(sut.currentTimeRemaining, before)
+    }
+
+    func testSkipForwardDecrementsWhileStarted() {
+        sut.reset()
+        sut.start()
+        sut.skipForward(seconds: 100)
+        XCTAssertEqual(sut.currentTimeRemaining, sut.workTimeTotalSeconds - 100)
+        XCTAssertFalse(sut.isComplete)
+        sut.pause()
+    }
+
+    func testSkipForwardToZeroCompletes() {
+        sut.updateFromOptions(optionSet: OptionSet(breaktimeMin: 1, worktimeMin: 1, doesPlaySounds: false))
+        sut.start()
+        sut.skipForward(seconds: 120)
+        XCTAssertFalse(sut.started)
+        XCTAssertTrue(sut.isComplete)
+        XCTAssertEqual(sut.currentTimeRemaining, 0)
+    }
+
     // MARK: - acknowledgeCompletion
 
     func testAcknowledgeCompletionClearsFlag() {

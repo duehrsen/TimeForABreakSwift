@@ -19,12 +19,22 @@ struct WelcomeSheetView: View {
                         .font(.title2)
                         .fontWeight(.semibold)
                         .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
                         .padding(.horizontal, 24)
 
                     VStack(alignment: .leading, spacing: 8) {
-                        Label("Set focused work and break timers", systemImage: "hourglass.circle")
-                        Label("Plan a few meaningful break actions for today", systemImage: "list.bullet")
-                        Label("Log what you do by voice or from a list", systemImage: "mic.fill")
+                        welcomeBullet(
+                            "Set focused work and break timers",
+                            systemImage: "hourglass.circle"
+                        )
+                        welcomeBullet(
+                            "Plan a few meaningful break actions for today",
+                            systemImage: "list.bullet"
+                        )
+                        welcomeBullet(
+                            "Log what you do by voice or from a list",
+                            systemImage: "mic.fill"
+                        )
                     }
                     .font(.subheadline)
                     .foregroundColor(.secondary)
@@ -48,10 +58,19 @@ struct WelcomeSheetView: View {
                 }
                 .padding(.bottom, 32)
             }
-            .navigationTitle("Welcome")
-            .navigationBarTitleDisplayMode(.inline)
+            .toolbar(.hidden, for: .navigationBar)
         }
         .presentationDragIndicator(.visible)
-        .presentationDetents([.medium, .large])
+        .presentationDetents([.large])
+    }
+
+    private func welcomeBullet(_ title: String, systemImage: String) -> some View {
+        Label {
+            Text(title)
+                .fixedSize(horizontal: false, vertical: true)
+                .multilineTextAlignment(.leading)
+        } icon: {
+            Image(systemName: systemImage)
+        }
     }
 }

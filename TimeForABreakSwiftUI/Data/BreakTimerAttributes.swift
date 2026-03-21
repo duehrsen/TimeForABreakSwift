@@ -30,5 +30,8 @@ struct BreakTimerAttributes: ActivityAttributes {
 
         /// Progress from 0.0 to 1.0
         var progress: Double
+
+        /// True briefly when the interval reached zero; Live Activity shows completion UI before ending.
+        var isTimerFinished: Bool
     }
 }

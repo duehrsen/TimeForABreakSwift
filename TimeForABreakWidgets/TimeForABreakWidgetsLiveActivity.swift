@@ -24,14 +24,29 @@ struct TimeForABreakWidgetsLiveActivity: Widget {
                     .foregroundColor(context.state.isWorkTime ? .blue : .orange)
                 }
                 DynamicIslandExpandedRegion(.trailing) {
-                    timerText(context: context)
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .monospacedDigit()
+                    Group {
+                        if context.state.isTimerFinished {
+                            Text("Done")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .foregroundColor(.green)
+                        } else {
+                            timerText(context: context)
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .monospacedDigit()
+                        }
+                    }
                 }
                 DynamicIslandExpandedRegion(.center) {
-                    ProgressView(value: context.state.progress)
-                        .tint(context.state.isWorkTime ? .blue : .orange)
+                    if context.state.isTimerFinished {
+                        Image(systemName: "checkmark.circle.fill")
+                            .font(.system(size: 36))
+                            .foregroundStyle(.green)
+                    } else {
+                        ProgressView(value: context.state.progress)
+                            .tint(context.state.isWorkTime ? .blue : .orange)
+                    }
                 }
                 DynamicIslandExpandedRegion(.bottom) {
                     Text(context.attributes.actionPreview)
@@ -47,14 +62,26 @@ struct TimeForABreakWidgetsLiveActivity: Widget {
                 .font(.caption2)
                 .foregroundColor(context.state.isWorkTime ? .blue : .orange)
             } compactTrailing: {
-                timerText(context: context)
-                    .font(.caption)
-                    .fontWeight(.bold)
-                    .monospacedDigit()
+                if context.state.isTimerFinished {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.caption)
+                        .foregroundStyle(.green)
+                } else {
+                    timerText(context: context)
+                        .font(.caption)
+                        .fontWeight(.bold)
+                        .monospacedDigit()
+                }
             } minimal: {
-                Image(systemName: context.state.isWorkTime ? "brain" : "cup.and.saucer.fill")
-                    .font(.caption2)
-                    .foregroundColor(context.state.isWorkTime ? .blue : .orange)
+                if context.state.isTimerFinished {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.caption2)
+                        .foregroundStyle(.green)
+                } else {
+                    Image(systemName: context.state.isWorkTime ? "brain" : "cup.and.saucer.fill")
+                        .font(.caption2)
+                        .foregroundColor(context.state.isWorkTime ? .blue : .orange)
+                }
             }
         }
     }
@@ -66,42 +93,66 @@ struct TimeForABreakWidgetsLiveActivity: Widget {
         let isWork = context.state.isWorkTime
         let accentColor: Color = isWork ? .blue : .orange
 
-        VStack(spacing: 8) {
-            HStack {
-                Label(
-                    isWork ? "WORK" : "BREAK",
-                    systemImage: isWork ? "brain" : "cup.and.saucer.fill"
-                )
-                .font(.caption)
-                .fontWeight(.bold)
-                .foregroundColor(accentColor)
-
-                Spacer()
-
-                timerText(context: context)
+        if context.state.isTimerFinished {
+            VStack(spacing: 12) {
+                Image(systemName: "checkmark.circle.fill")
+                    .font(.system(size: 56))
+                    .foregroundStyle(.green)
+                Text("Done")
                     .font(.title2)
-                    .fontWeight(.bold)
-                    .monospacedDigit()
-                    .foregroundColor(.primary)
+                    .fontWeight(.semibold)
+                Text(isWork ? "Work session complete" : "Break complete")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                Text(context.attributes.actionPreview)
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
+                    .lineLimit(2)
+                    .multilineTextAlignment(.center)
             }
+            .frame(maxWidth: .infinity)
+            .padding(16)
+            .activityBackgroundTint(isWork ? Color.blue.opacity(0.1) : Color.orange.opacity(0.1))
+        } else {
+            VStack(spacing: 8) {
+                HStack {
+                    Label(
+                        isWork ? "WORK" : "BREAK",
+                        systemImage: isWork ? "brain" : "cup.and.saucer.fill"
+                    )
+                    .font(.caption)
+                    .fontWeight(.bold)
+                    .foregroundColor(accentColor)
 
-            ProgressView(value: context.state.progress)
-                .tint(accentColor)
+                    Spacer()
 
-            Text(context.attributes.actionPreview)
-                .font(.caption)
-                .foregroundColor(.secondary)
-                .lineLimit(1)
+                    timerText(context: context)
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .monospacedDigit()
+                        .foregroundColor(.primary)
+                }
+
+                ProgressView(value: context.state.progress)
+                    .tint(accentColor)
+
+                Text(context.attributes.actionPreview)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .lineLimit(1)
+            }
+            .padding(16)
+            .activityBackgroundTint(isWork ? Color.blue.opacity(0.1) : Color.orange.opacity(0.1))
         }
-        .padding(16)
-        .activityBackgroundTint(isWork ? Color.blue.opacity(0.1) : Color.orange.opacity(0.1))
     }
 
     // MARK: - Timer Text Helper
 
     @ViewBuilder
     private func timerText(context: ActivityViewContext<BreakTimerAttributes>) -> some View {
-        if context.state.isRunning, let endDate = context.state.timerEndDate {
+        if context.state.isTimerFinished {
+            Text("00:00")
+        } else if context.state.isRunning, let endDate = context.state.timerEndDate {
             Text(timerInterval: Date()...endDate, countsDown: true)
         } else {
             let minutes = context.state.timeRemaining / 60
@@ -126,7 +177,8 @@ extension BreakTimerAttributes.ContentState {
             isRunning: true,
             timerEndDate: Date().addingTimeInterval(745),
             timeRemaining: 745,
-            progress: 0.62
+            progress: 0.62,
+            isTimerFinished: false
         )
     }
 
@@ -136,7 +188,19 @@ extension BreakTimerAttributes.ContentState {
             isRunning: true,
             timerEndDate: Date().addingTimeInterval(272),
             timeRemaining: 272,
-            progress: 0.91
+            progress: 0.91,
+            isTimerFinished: false
+        )
+    }
+
+    fileprivate static var workFinished: BreakTimerAttributes.ContentState {
+        BreakTimerAttributes.ContentState(
+            isWorkTime: true,
+            isRunning: false,
+            timerEndDate: nil,
+            timeRemaining: 0,
+            progress: 1.0,
+            isTimerFinished: true
         )
     }
 }
@@ -146,4 +210,5 @@ extension BreakTimerAttributes.ContentState {
 } contentStates: {
     BreakTimerAttributes.ContentState.workRunning
     BreakTimerAttributes.ContentState.breakRunning
+    BreakTimerAttributes.ContentState.workFinished
 }

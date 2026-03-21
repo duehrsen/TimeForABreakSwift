@@ -16,6 +16,14 @@ class LiveActivityManager: ObservableObject {
     @Published private(set) var isActivityActive: Bool = false
 
     private var currentActivity: Activity<BreakTimerAttributes>?
+    private var completionDismissTask: Task<Void, Never>?
+
+    private static let completionDisplaySeconds: UInt64 = 5
+
+    private func cancelCompletionDismissTask() {
+        completionDismissTask?.cancel()
+        completionDismissTask = nil
+    }
 
     // MARK: - Start
 
@@ -43,7 +51,8 @@ class LiveActivityManager: ObservableObject {
             isRunning: true,
             timerEndDate: endDate,
             timeRemaining: timeRemaining,
-            progress: Double(timeRemaining) / Double(totalSeconds)
+            progress: Double(timeRemaining) / Double(totalSeconds),
+            isTimerFinished: false
         )
 
         let content = ActivityContent(state: state, staleDate: endDate)
@@ -79,7 +88,8 @@ class LiveActivityManager: ObservableObject {
             isRunning: isRunning,
             timerEndDate: endDate,
             timeRemaining: timeRemaining,
-            progress: Double(timeRemaining) / Double(totalSeconds)
+            progress: Double(timeRemaining) / Double(totalSeconds),
+            isTimerFinished: false
         )
 
         let staleDate = endDate ?? Date().addingTimeInterval(3600)
@@ -90,9 +100,63 @@ class LiveActivityManager: ObservableObject {
         }
     }
 
+    // MARK: - Completion (checkmark, then dismiss)
+
+    /// Updates the Live Activity to a finished state (lock screen checkmark), then ends after a short delay.
+    func showTimerFinishedThenEnd(isWorkTime: Bool, totalSeconds: Int) {
+        cancelCompletionDismissTask()
+        guard let activity = currentActivity else { return }
+
+        let finishedState = BreakTimerAttributes.ContentState(
+            isWorkTime: isWorkTime,
+            isRunning: false,
+            timerEndDate: nil,
+            timeRemaining: 0,
+            progress: totalSeconds > 0 ? 1.0 : 0.0,
+            isTimerFinished: true
+        )
+        let staleDate = Date().addingTimeInterval(TimeInterval(Self.completionDisplaySeconds))
+        let updateContent = ActivityContent(state: finishedState, staleDate: staleDate)
+
+        Task {
+            await activity.update(updateContent)
+        }
+
+        let activityId = activity.id
+        let sleepNanoseconds = Self.completionDisplaySeconds * 1_000_000_000
+        completionDismissTask = Task { [weak self] in
+            guard let self else { return }
+            defer { self.completionDismissTask = nil }
+            do {
+                try await Task.sleep(nanoseconds: sleepNanoseconds)
+            } catch {
+                return
+            }
+            guard !Task.isCancelled else { return }
+            guard self.currentActivity?.id == activityId else { return }
+
+            let endState = BreakTimerAttributes.ContentState(
+                isWorkTime: isWorkTime,
+                isRunning: false,
+                timerEndDate: nil,
+                timeRemaining: 0,
+                progress: 0.0,
+                isTimerFinished: false
+            )
+            let endContent = ActivityContent(state: endState, staleDate: nil)
+            await activity.end(endContent, dismissalPolicy: .immediate)
+
+            if self.currentActivity?.id == activityId {
+                self.currentActivity = nil
+                self.isActivityActive = false
+            }
+        }
+    }
+
     // MARK: - End
 
     func endActivity() {
+        cancelCompletionDismissTask()
         guard let activity = currentActivity else { return }
 
         let finalState = BreakTimerAttributes.ContentState(
@@ -100,7 +164,8 @@ class LiveActivityManager: ObservableObject {
             isRunning: false,
             timerEndDate: nil,
             timeRemaining: 0,
-            progress: 0.0
+            progress: 0.0,
+            isTimerFinished: false
         )
 
         let content = ActivityContent(state: finalState, staleDate: nil)

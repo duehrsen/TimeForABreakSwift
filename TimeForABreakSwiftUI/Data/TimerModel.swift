@@ -95,6 +95,19 @@ class TimerModel: ObservableObject {
         isComplete = false
     }
 
+    /// Skips forward while the timer is running (hold-to-fast-forward). No-op if paused.
+    func skipForward(seconds: Int) {
+        guard started, seconds > 0 else { return }
+        currentTimeRemaining = max(0, currentTimeRemaining - seconds)
+        progress = CGFloat(currentTimeRemaining) / CGFloat(totalSecondsForCurrentMode)
+        if currentTimeRemaining <= 0 {
+            timerTask?.cancel()
+            timerTask = nil
+            started = false
+            isComplete = true
+        }
+    }
+
     // MARK: - Options
 
     func updateFromOptions(optionSet: OptionSet) {

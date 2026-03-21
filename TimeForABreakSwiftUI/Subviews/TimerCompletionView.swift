@@ -86,18 +86,20 @@ struct TimerCompletionView: View {
 
     var body: some View {
         GeometryReader { geometry in
-            VStack(spacing: 30) {
-                Spacer()
+            VStack(spacing: 20) {
                 Text(isFinishedWork ? "Time for a break!" : "Hope you are recharged!")
                     .font(.title2)
                     .lineLimit(4)
                     .minimumScaleFactor(0.5)
                     .foregroundColor(Color.blue)
-                    .frame(width: geometry.size.width - 20, alignment: .center)
+                    .multilineTextAlignment(.center)
+                    .frame(maxWidth: .infinity)
+                    .padding(.horizontal, 16)
+                    .padding(.top, 8)
                 Image(systemName: isFinishedWork ? "hands.sparkles.fill" : "bolt.fill")
                     .font(.system(size: 80))
                     .foregroundColor(Color.yellow)
-                    .frame(width: geometry.size.width - 20, alignment: .center)
+                    .frame(maxWidth: .infinity)
                     .onAppear {
                         timerModel.switchMode()
                     }
@@ -110,7 +112,8 @@ struct TimerCompletionView: View {
                         }
                     }
                     .listStyle(.plain)
-                    .frame(width: geometry.size.width - 20, alignment: .center)
+                    .frame(maxWidth: .infinity)
+                    .frame(maxHeight: min(geometry.size.height * 0.36, 260))
 
                     VoiceInputView(
                         actions: allActions.actions,
@@ -119,12 +122,14 @@ struct TimerCompletionView: View {
                         handleVoiceMatch(result)
                     }
                     .padding(.horizontal)
+                    .padding(.bottom, 12)
                 } else {
                     SelectedActionsSheetView(isFromCompletedSheet: true)
-                        .frame(width: geometry.size.width - 20, alignment: .center)
+                        .frame(maxWidth: .infinity)
+                        .padding(.horizontal, 10)
                 }
             }
-            .frame(maxWidth: .infinity)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         }
         .onAppear {
             applyCompletionFeedback()
@@ -132,7 +137,6 @@ struct TimerCompletionView: View {
         .onDisappear {
             speechService.stop()
         }
-        .edgesIgnoringSafeArea(.all)
         .toast(message: toastMessage, sysImg: "checkmark.circle.fill", isShowing: $showToast, duration: Toast.longDuration)
     }
 

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct PrimaryPillButtonStyle: ButtonStyle {
     let background: Color
@@ -39,6 +40,17 @@ struct TimerCountView: View {
     @State private var animatingSegmentIndex: Int? = nil
     @State private var segmentAnimationPhase: SegmentAnimationPhase = .preHighlight
     @State private var hasLoggedAnyAction: Bool = UserDefaults.standard.bool(forKey: "hasLoggedAnyAction")
+    @State private var fastForwardTask: Task<Void, Never>?
+    @State private var isFastForwarding: Bool = false
+
+    private enum FastForwardRamp {
+        static let longPressMinimum: Double = 0.4
+        static let tickNanoseconds: UInt64 = 100_000_000
+        static let minSkipPerTick = 1
+        static let maxSkipPerTick = 18
+        /// Seconds of hold at which ramp approaches `maxSkipPerTick` (linear in `held * rampPerSecond`).
+        static let rampPerSecond = 6.0
+    }
 
     var defaultAction: BreakAction = BreakAction(title: "Get up!", description: "Leave your chair", categoryId: "mental", duration: 1)
 
@@ -183,13 +195,57 @@ struct TimerCountView: View {
                         Text(timerModel.formattedTime)
                             .font(.system(size: timerTextSize))
                             .fontWeight(.bold)
-                        Label("", systemImage: timerModel.started ? "pause.fill" : "play.fill")
+                        Label(
+                            "",
+                            systemImage: (isFastForwarding && timerModel.started)
+                                ? "forward.fill"
+                                : (timerModel.started ? "pause.fill" : "play.fill")
+                        )
                             .foregroundColor(.blue)
                             .font(.system(size: playIconSize))
                     }
                 }
             }
+            .buttonStyle(.plain)
+            .contentShape(Circle())
+            .onLongPressGesture(
+                minimumDuration: FastForwardRamp.longPressMinimum,
+                maximumDistance: 50,
+                pressing: { isPressing in
+                    if isPressing {
+                        if !UIAccessibility.isReduceMotionEnabled {
+                            UIImpactFeedbackGenerator(style: .medium).impactOccurred(intensity: 0.45)
+                        }
+                        fastForwardTask?.cancel()
+                        isFastForwarding = true
+                        let began = Date()
+                        fastForwardTask = Task { @MainActor in
+                            defer { isFastForwarding = false }
+                            while !Task.isCancelled {
+                                try? await Task.sleep(nanoseconds: FastForwardRamp.tickNanoseconds)
+                                guard !Task.isCancelled else { break }
+                                guard timerModel.started, timerModel.currentTimeRemaining > 0 else { break }
+                                let held = Date().timeIntervalSince(began)
+                                let tickSkip = min(
+                                    FastForwardRamp.maxSkipPerTick,
+                                    max(FastForwardRamp.minSkipPerTick, FastForwardRamp.minSkipPerTick + Int(held * FastForwardRamp.rampPerSecond))
+                                )
+                                timerModel.skipForward(seconds: tickSkip)
+                                if !timerModel.started || timerModel.currentTimeRemaining <= 0 { break }
+                            }
+                        }
+                    } else {
+                        fastForwardTask?.cancel()
+                        fastForwardTask = nil
+                        isFastForwarding = false
+                    }
+                },
+                perform: {}
+            )
+            .accessibilityElement(children: .ignore)
             .accessibilityLabel(timerModel.started ? "Pause timer" : "Start timer")
+            .accessibilityHint("Tap to start or pause. Touch and hold to skip time forward.")
+            .accessibilityAddTraits(.isButton)
 
             VStack(spacing: 12) {
                 HStack(spacing: 12) {
