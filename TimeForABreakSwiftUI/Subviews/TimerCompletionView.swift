@@ -56,7 +56,6 @@ struct TimerCompletionView: View {
     }
 
     fileprivate func playCompletionHaptic() {
-        guard !UIAccessibility.isReduceMotionEnabled else { return }
         let generator = UINotificationFeedbackGenerator()
         generator.prepare()
         generator.notificationOccurred(isFinishedWork ? .success : .warning)
@@ -100,15 +99,13 @@ struct TimerCompletionView: View {
                     .font(.system(size: 80))
                     .foregroundColor(Color.yellow)
                     .frame(maxWidth: .infinity)
-                    .onAppear {
-                        timerModel.switchMode()
-                    }
+                    .accessibilityHidden(true)
                 if isFinishedWork {
                     List {
                         Section("Some actions left to do") {
-                        }
-                        ForEach(uncompletedActions, id: \.id) { item in
-                            SimpleActionRowView(action: item)
+                            ForEach(uncompletedActions, id: \.id) { item in
+                                SimpleActionRowView(action: item)
+                            }
                         }
                     }
                     .listStyle(.plain)
@@ -132,6 +129,7 @@ struct TimerCompletionView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         }
         .onAppear {
+            timerModel.switchMode()
             applyCompletionFeedback()
         }
         .onDisappear {

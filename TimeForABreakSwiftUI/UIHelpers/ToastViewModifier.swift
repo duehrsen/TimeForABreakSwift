@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import UIKit
 
 struct Toast: ViewModifier {
     
@@ -42,6 +43,7 @@ struct Toast: ViewModifier {
                     isShowing = false
                 }
                 .onAppear {
+                    UIAccessibility.post(notification: .announcement, argument: message)
                     DispatchQueue.main.asyncAfter(deadline: .now() + config.duration) {
                         isShowing = false
                     }
@@ -65,7 +67,7 @@ struct Toast: ViewModifier {
         let sysImg : String
         
         init(textColor: Color = .white,
-             font: Font = .system(size: 24),
+             font: Font = .body,
              backgroundColor: Color = .black.opacity(0.588),
              duration: TimeInterval = Toast.shortDuration,
              transition: AnyTransition = .opacity,

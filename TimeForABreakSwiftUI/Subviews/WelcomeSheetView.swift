@@ -32,7 +32,7 @@ struct WelcomeSheetView: View {
                             systemImage: "list.bullet"
                         )
                         welcomeBullet(
-                            "Log what you do by voice or from a list",
+                            "Log what you do with Speak or Pick",
                             systemImage: "mic.fill"
                         )
                     }

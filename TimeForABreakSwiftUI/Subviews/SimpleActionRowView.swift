@@ -16,6 +16,7 @@ struct SimpleActionRowView: View {
         HStack(spacing: 6) {
             Text(action.title)
                 .font(.caption)
+                .accessibilityLabel("Suggested break, \(action.title)")
         }
     }
 }

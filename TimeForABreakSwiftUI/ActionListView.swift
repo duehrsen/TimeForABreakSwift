@@ -48,13 +48,14 @@ struct ActionListView: View {
                     .font(.caption)
                 Spacer()
                 if action.pinned {
-                    Label("", systemImage: "pin.fill")
-                                        .font(.caption)
+                    Image(systemName: "pin.fill")
+                        .font(.caption)
+                        .accessibilityLabel("Pinned to top of list")
                 } else if action.categoryId == "external" {
-                    Label("", systemImage: "network")
-                                        .font(.caption)
+                    Image(systemName: "network")
+                        .font(.caption)
+                        .accessibilityLabel("External or web action")
                 }
-                
             }
         }
     }

@@ -36,6 +36,7 @@ struct SummaryView: View {
                                 .padding(.horizontal, 24)
                             Text("🍃")
                                 .font(.system(size: 64))
+                                .accessibilityHidden(true)
                         }
                         .frame(maxWidth: .infinity)
                         Spacer()

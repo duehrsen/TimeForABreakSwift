@@ -67,7 +67,6 @@ struct TimerCountView: View {
         static let segmentRingThickness: CGFloat = 13
         static let buttonHorizontalSpacing: CGFloat = 10
         static let loggingButtonsSpacing: CGFloat = 16
-        static let timerTextSize: CGFloat = 60
         static let playIconSize: CGFloat = 40
     }
 
@@ -107,6 +106,24 @@ struct TimerCountView: View {
 
     private var nextActionLine: String {
         NextActionPreview.line(options: optionsModel.options, actions: selectActions.actions, calendar: cal)
+    }
+
+    /// VoiceOver: mode, run state, and time remaining (updates each second with the timer).
+    private var timerAccessibilityValue: String {
+        let phase = timerModel.isWorkTime ? "Work session" : "Break"
+        let run = timerModel.started ? "Running" : "Paused"
+        let t = timerModel.currentTimeRemaining
+        let m = t / 60
+        let s = t % 60
+        let timePart: String
+        if m > 0, s > 0 {
+            timePart = "\(m) minutes, \(s) seconds remaining"
+        } else if m > 0 {
+            timePart = "\(m) minute\(m == 1 ? "" : "s") remaining"
+        } else {
+            timePart = "\(s) second\(s == 1 ? "" : "s") remaining"
+        }
+        return "\(phase). \(run). \(timePart)."
     }
 
     private var ringRadius: CGFloat {
@@ -160,7 +177,6 @@ struct TimerCountView: View {
     var body: some View {
 
         let diameter = Layout.timerDiameter
-        let timerTextSize = Layout.timerTextSize
         let playIconSize = Layout.playIconSize
         let bglineWidth = Layout.timerBackgroundLineWidth
         let tplineWidth = Layout.timerProgressLineWidth
@@ -199,8 +215,10 @@ struct TimerCountView: View {
                             .opacity(0.8)
                             .foregroundColor(timerModel.isWorkTime ? Color.pink : Color.blue)
                         Text(timerModel.formattedTime)
-                            .font(.system(size: timerTextSize))
-                            .fontWeight(.bold)
+                            .font(.largeTitle.weight(.bold))
+                            .monospacedDigit()
+                            .minimumScaleFactor(0.4)
+                            .lineLimit(1)
                         Label(
                             "",
                             systemImage: (isFastForwarding && timerModel.started)
@@ -250,6 +268,7 @@ struct TimerCountView: View {
             )
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(timerModel.started ? "Pause timer" : "Start timer")
+            .accessibilityValue(timerAccessibilityValue)
             .accessibilityHint("Tap to start or pause. Touch and hold to skip time forward.")
             .accessibilityAddTraits(.isButton)
 
@@ -274,6 +293,7 @@ struct TimerCountView: View {
                         }
                     }
                     .buttonStyle(PrimaryPillButtonStyle(background: .blue))
+                    .accessibilityHint("Reset the timer to the full length of the current work or break.")
 
                     Button(action: {
                         timerModel.switchMode()
@@ -285,6 +305,7 @@ struct TimerCountView: View {
                         }
                     }
                     .buttonStyle(PrimaryPillButtonStyle(background: .orange))
+                    .accessibilityHint("Switch between work time and break time.")
                 }
 
                 HStack(spacing: 12) {

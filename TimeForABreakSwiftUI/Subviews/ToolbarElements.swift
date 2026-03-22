@@ -14,6 +14,6 @@ func toolbars(title: String, skipOptions: Bool = false) -> some ToolbarContent {
     }
     ToolbarItem(placement: .principal) {
         Text(title)
-            .font(.system(size: 18, weight: .semibold))
+            .font(.headline)
     }
 }

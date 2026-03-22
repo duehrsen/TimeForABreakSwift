@@ -26,9 +26,14 @@ struct ActionCompletionRowView: View {
                     .foregroundColor(action.completed ? Color.green : Color.brown)
                     .padding(.trailing)
             }
+            .disabled(!editable)
+            .accessibilityLabel("Completion, \(action.title)")
+            .accessibilityValue("\(action.completed ? "Completed" : "Not completed"). \(badgeText).")
+            .accessibilityHint(editable ? "Double tap to toggle completion." : "Completion cannot be changed here.")
             Text(action.title)
                 .font(.body)
                 .badge(badgeText)
+                .accessibilityHidden(true)
         }
     }
     
