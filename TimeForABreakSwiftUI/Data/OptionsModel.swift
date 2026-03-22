@@ -39,13 +39,21 @@ struct OptionSet: Codable, Equatable {
     /// Number of action ring segments (daily goal). 5...10. Applies from the next day.
     var dailyActionGoal: Int = 5
 
+    /// When false, do not start or keep a Live Activity on the lock screen / Dynamic Island.
+    var liveActivityEnabled: Bool = true
+
+    /// When false, hide the next-action text line on the Live Activity (voice/TTS unchanged).
+    var liveActivityShowsNextAction: Bool = true
+
     init(
         breaktimeMin: Int,
         worktimeMin: Int,
         completionFeedback: TimerCompletionFeedback = .haptic,
         speakBreakSuggestions: Bool = false,
         dailySuggestedTitles: [String]? = nil,
-        dailyActionGoal: Int = 5
+        dailyActionGoal: Int = 5,
+        liveActivityEnabled: Bool = true,
+        liveActivityShowsNextAction: Bool = true
     ) {
         self.breaktimeMin = breaktimeMin
         self.worktimeMin = worktimeMin
@@ -53,6 +61,8 @@ struct OptionSet: Codable, Equatable {
         self.speakBreakSuggestions = speakBreakSuggestions
         self.dailySuggestedTitles = dailySuggestedTitles
         self.dailyActionGoal = min(10, max(5, dailyActionGoal))
+        self.liveActivityEnabled = liveActivityEnabled
+        self.liveActivityShowsNextAction = liveActivityShowsNextAction
     }
 
     /// Test / legacy convenience: `doesPlaySounds` maps to sound feedback only.
@@ -82,6 +92,8 @@ struct OptionSet: Codable, Equatable {
         case speakBreakSuggestions
         case dailySuggestedTitles
         case dailyActionGoal
+        case liveActivityEnabled
+        case liveActivityShowsNextAction
     }
 
     init(from decoder: Decoder) throws {
@@ -112,6 +124,9 @@ struct OptionSet: Codable, Equatable {
         dailySuggestedTitles = try container.decodeIfPresent([String].self, forKey: .dailySuggestedTitles)
         let raw = try container.decodeIfPresent(Int.self, forKey: .dailyActionGoal) ?? 5
         dailyActionGoal = min(10, max(5, raw))
+
+        liveActivityEnabled = try container.decodeIfPresent(Bool.self, forKey: .liveActivityEnabled) ?? true
+        liveActivityShowsNextAction = try container.decodeIfPresent(Bool.self, forKey: .liveActivityShowsNextAction) ?? true
     }
 
     func encode(to encoder: Encoder) throws {
@@ -124,6 +139,8 @@ struct OptionSet: Codable, Equatable {
         try container.encode(!speakBreakSuggestions, forKey: .isMuted)
         try container.encodeIfPresent(dailySuggestedTitles, forKey: .dailySuggestedTitles)
         try container.encode(dailyActionGoal, forKey: .dailyActionGoal)
+        try container.encode(liveActivityEnabled, forKey: .liveActivityEnabled)
+        try container.encode(liveActivityShowsNextAction, forKey: .liveActivityShowsNextAction)
     }
 }
 

@@ -49,10 +49,12 @@ struct TimeForABreakWidgetsLiveActivity: Widget {
                     }
                 }
                 DynamicIslandExpandedRegion(.bottom) {
-                    Text(context.attributes.actionPreview)
-                        .font(.caption)
-                        .lineLimit(1)
-                        .foregroundColor(.secondary)
+                    if !context.state.actionPreview.isEmpty {
+                        Text(context.state.actionPreview)
+                            .font(.caption)
+                            .lineLimit(1)
+                            .foregroundColor(.secondary)
+                    }
                 }
             } compactLeading: {
                 Label(
@@ -104,11 +106,13 @@ struct TimeForABreakWidgetsLiveActivity: Widget {
                 Text(isWork ? "Work session complete" : "Break complete")
                     .font(.caption)
                     .foregroundColor(.secondary)
-                Text(context.attributes.actionPreview)
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
-                    .lineLimit(2)
-                    .multilineTextAlignment(.center)
+                if !context.state.actionPreview.isEmpty {
+                    Text(context.state.actionPreview)
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                        .lineLimit(2)
+                        .multilineTextAlignment(.center)
+                }
             }
             .frame(maxWidth: .infinity)
             .padding(16)
@@ -136,10 +140,12 @@ struct TimeForABreakWidgetsLiveActivity: Widget {
                 ProgressView(value: context.state.progress)
                     .tint(accentColor)
 
-                Text(context.attributes.actionPreview)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                    .lineLimit(1)
+                if !context.state.actionPreview.isEmpty {
+                    Text(context.state.actionPreview)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .lineLimit(1)
+                }
             }
             .padding(16)
             .activityBackgroundTint(isWork ? Color.blue.opacity(0.1) : Color.orange.opacity(0.1))
@@ -166,7 +172,7 @@ struct TimeForABreakWidgetsLiveActivity: Widget {
 
 extension BreakTimerAttributes {
     fileprivate static var preview: BreakTimerAttributes {
-        BreakTimerAttributes(actionPreview: "Next: Drink water", totalSeconds: 1200)
+        BreakTimerAttributes(totalSeconds: 1200)
     }
 }
 
@@ -178,7 +184,8 @@ extension BreakTimerAttributes.ContentState {
             timerEndDate: Date().addingTimeInterval(745),
             timeRemaining: 745,
             progress: 0.62,
-            isTimerFinished: false
+            isTimerFinished: false,
+            actionPreview: "Next: Drink water"
         )
     }
 
@@ -189,7 +196,8 @@ extension BreakTimerAttributes.ContentState {
             timerEndDate: Date().addingTimeInterval(272),
             timeRemaining: 272,
             progress: 0.91,
-            isTimerFinished: false
+            isTimerFinished: false,
+            actionPreview: "Next: Stretch"
         )
     }
 
@@ -200,7 +208,8 @@ extension BreakTimerAttributes.ContentState {
             timerEndDate: nil,
             timeRemaining: 0,
             progress: 1.0,
-            isTimerFinished: true
+            isTimerFinished: true,
+            actionPreview: "Next: Drink water"
         )
     }
 }

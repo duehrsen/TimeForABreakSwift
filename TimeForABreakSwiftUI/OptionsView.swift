@@ -7,92 +7,6 @@
 
 import SwiftUI
 
-struct OptionsView: View {
-    @EnvironmentObject var timerModel: TimerModel
-    @EnvironmentObject var optionsModel: OptionsModel
-    @EnvironmentObject var allActions: ActionViewModel
-    @State private var showSaveToast = false
-    @State private var toastDebounceTask: Task<Void, Never>?
-
-    private func scheduleSettingsToast() {
-        toastDebounceTask?.cancel()
-        toastDebounceTask = Task { @MainActor in
-            try? await Task.sleep(nanoseconds: 400_000_000)
-            guard !Task.isCancelled else { return }
-            showSaveToast = true
-        }
-    }
-
-    private func persistSettings(updateTimerDurations: Bool) {
-        guard optionsModel.options.worktimeMin > 0, optionsModel.options.breaktimeMin > 0 else { return }
-        optionsModel.saveToDisk()
-        if updateTimerDurations {
-            timerModel.updateFromOptions(optionSet: optionsModel.options)
-        }
-        scheduleSettingsToast()
-    }
-
-    var body: some View {
-        NavigationStack {
-            List {
-                Section("Timer") {
-                    OptionsInputSubView()
-                }
-
-                Section("Manage break actions") {
-                    NavigationLink {
-                        ActionListView()
-                    } label: {
-                        HStack {
-                            Text("Full list")
-                            Spacer()
-                            Text("\(allActions.actions.count) total")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                    }
-                    NavigationLink {
-                        SuggestedActionsOptionsView()
-                    } label: {
-                        HStack {
-                            Text("Suggestion set")
-                            Spacer()
-                            Text("\(optionsModel.options.dailySuggestedTitles?.count ?? DataProvider.defaultDailySuggestedActionTitles().count) actions")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                    }
-                }
-            }
-            .listStyle(.insetGrouped)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                toolbars(title: "Options")
-            }
-            .onChange(of: optionsModel.options.worktimeMin) { _ in
-                persistSettings(updateTimerDurations: true)
-            }
-            .onChange(of: optionsModel.options.breaktimeMin) { _ in
-                persistSettings(updateTimerDurations: true)
-            }
-            .onChange(of: optionsModel.options.completionFeedback) { _ in
-                persistSettings(updateTimerDurations: false)
-            }
-            .onChange(of: optionsModel.options.speakBreakSuggestions) { _ in
-                persistSettings(updateTimerDurations: false)
-            }
-            .toast(
-                message: "Settings updated",
-                isShowing: $showSaveToast,
-                config: .init(
-                    backgroundColor: .green.opacity(0.85),
-                    sysImg: "checkmark.circle.fill"
-                )
-            )
-        }
-    }
-}
-
 struct SuggestedActionsOptionsView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var allActions: ActionViewModel
@@ -157,7 +71,7 @@ struct SuggestedActionsOptionsView: View {
                 }
             }
         }
-        .navigationTitle("Suggested actions")
+        .navigationTitle("Default day’s actions")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {

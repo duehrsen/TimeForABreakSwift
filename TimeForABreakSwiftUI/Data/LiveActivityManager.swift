@@ -39,10 +39,7 @@ class LiveActivityManager: ObservableObject {
             return
         }
 
-        let attributes = BreakTimerAttributes(
-            actionPreview: actionPreview,
-            totalSeconds: totalSeconds
-        )
+        let attributes = BreakTimerAttributes(totalSeconds: totalSeconds)
 
         let endDate = Date().addingTimeInterval(TimeInterval(timeRemaining))
 
@@ -52,7 +49,8 @@ class LiveActivityManager: ObservableObject {
             timerEndDate: endDate,
             timeRemaining: timeRemaining,
             progress: Double(timeRemaining) / Double(totalSeconds),
-            isTimerFinished: false
+            isTimerFinished: false,
+            actionPreview: actionPreview
         )
 
         let content = ActivityContent(state: state, staleDate: endDate)
@@ -75,7 +73,8 @@ class LiveActivityManager: ObservableObject {
         isWorkTime: Bool,
         isRunning: Bool,
         timeRemaining: Int,
-        totalSeconds: Int
+        totalSeconds: Int,
+        actionPreview: String
     ) {
         guard let activity = currentActivity else { return }
 
@@ -89,7 +88,8 @@ class LiveActivityManager: ObservableObject {
             timerEndDate: endDate,
             timeRemaining: timeRemaining,
             progress: Double(timeRemaining) / Double(totalSeconds),
-            isTimerFinished: false
+            isTimerFinished: false,
+            actionPreview: actionPreview
         )
 
         let staleDate = endDate ?? Date().addingTimeInterval(3600)
@@ -103,7 +103,7 @@ class LiveActivityManager: ObservableObject {
     // MARK: - Completion (checkmark, then dismiss)
 
     /// Updates the Live Activity to a finished state (lock screen checkmark), then ends after a short delay.
-    func showTimerFinishedThenEnd(isWorkTime: Bool, totalSeconds: Int) {
+    func showTimerFinishedThenEnd(isWorkTime: Bool, totalSeconds: Int, actionPreview: String) {
         cancelCompletionDismissTask()
         guard let activity = currentActivity else { return }
 
@@ -113,7 +113,8 @@ class LiveActivityManager: ObservableObject {
             timerEndDate: nil,
             timeRemaining: 0,
             progress: totalSeconds > 0 ? 1.0 : 0.0,
-            isTimerFinished: true
+            isTimerFinished: true,
+            actionPreview: actionPreview
         )
         let staleDate = Date().addingTimeInterval(TimeInterval(Self.completionDisplaySeconds))
         let updateContent = ActivityContent(state: finishedState, staleDate: staleDate)
@@ -141,7 +142,8 @@ class LiveActivityManager: ObservableObject {
                 timerEndDate: nil,
                 timeRemaining: 0,
                 progress: 0.0,
-                isTimerFinished: false
+                isTimerFinished: false,
+                actionPreview: ""
             )
             let endContent = ActivityContent(state: endState, staleDate: nil)
             await activity.end(endContent, dismissalPolicy: .immediate)
@@ -165,7 +167,8 @@ class LiveActivityManager: ObservableObject {
             timerEndDate: nil,
             timeRemaining: 0,
             progress: 0.0,
-            isTimerFinished: false
+            isTimerFinished: false,
+            actionPreview: ""
         )
 
         let content = ActivityContent(state: finalState, staleDate: nil)

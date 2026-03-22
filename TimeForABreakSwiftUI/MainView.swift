@@ -8,23 +8,28 @@
 import SwiftUI
 
 struct MainView: View {
-    
+
     @Environment(\.scenePhase) var scenePhase
-    
+
     @StateObject var timerModel = TimerModel()
     @StateObject var selectActions = SelectedActionsViewModel()
     @StateObject var allActions = ActionViewModel()
     @StateObject private var notificationManager = NotificationManager()
     @StateObject var optionsModel = OptionsModel()
     @StateObject private var liveActivityManager = LiveActivityManager()
-    
-    @State private var switchedToBackground : Bool = false
-    @State private var selectedTab = 0
+
+    @State private var switchedToBackground: Bool = false
     @State private var showDaySetupSheet: Bool = false
     @State private var showDaySummarySheet: Bool = false
     @State private var showWelcomeSheet: Bool = false
     @State private var showNotificationPrePrompt: Bool = false
-    
+
+    @State private var showCompanionSheet: Bool = false
+    @State private var companionDetent: PresentationDetent = .companionCollapsed
+    @State private var companionVoiceLog: Bool = false
+    @State private var companionListLog: Bool = false
+    @State private var showManualDayPlan: Bool = false
+
     private func nextActionPreview() -> String {
         let cal = Calendar.current
         let today = cal.startOfDay(for: Date())
@@ -50,6 +55,38 @@ struct MainView: View {
         }
 
         return "Focus time"
+    }
+
+    /// Line shown on Live Activity / Dynamic Island when enabled in options.
+    private func resolvedLiveActivityPreview() -> String {
+        guard optionsModel.options.liveActivityEnabled,
+              optionsModel.options.liveActivityShowsNextAction else { return "" }
+        return nextActionPreview()
+    }
+
+    /// Reconciles Live Activity with `options` (e.g. lock screen / next-action toggles).
+    private func applyLiveActivityForCurrentOptions() {
+        if !optionsModel.options.liveActivityEnabled {
+            liveActivityManager.endActivity()
+            return
+        }
+        guard liveActivityManager.isActivityActive || timerModel.started else { return }
+        if liveActivityManager.isActivityActive {
+            liveActivityManager.updateActivity(
+                isWorkTime: timerModel.isWorkTime,
+                isRunning: timerModel.started,
+                timeRemaining: timerModel.currentTimeRemaining,
+                totalSeconds: timerModel.totalSecondsForCurrentMode,
+                actionPreview: resolvedLiveActivityPreview()
+            )
+        } else if timerModel.started {
+            liveActivityManager.startActivity(
+                isWorkTime: timerModel.isWorkTime,
+                timeRemaining: timerModel.currentTimeRemaining,
+                totalSeconds: timerModel.totalSecondsForCurrentMode,
+                actionPreview: resolvedLiveActivityPreview()
+            )
+        }
     }
 
     private func markDaySetupDone() {
@@ -86,67 +123,66 @@ struct MainView: View {
             break
         }
     }
-    
+
     var body: some View {
-        TabView(selection: $selectedTab ) {
-            TimerCountView()
-                .tabItem {
-                    Label("Timer", systemImage: "hourglass.circle")
-                }
-                .tag(0)
-            SummaryView()
-                .tabItem {
-                    Label("Summary", systemImage: "clock.badge.checkmark.fill")
-                }
-                .tag(1)
-            
-            OptionsView()
-                .tabItem {
-                    Label("Options", systemImage: "gearshape.fill")
-                }
-                .tag(2)
+        ZStack {
+            GeometryReader { geo in
+                TimerCountView()
+                    .padding(.bottom, geo.size.height * CompanionSheetLayout.collapsedHeightFraction)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+        .sheet(isPresented: $showCompanionSheet) {
+            TimerCompanionSheet(
+                detent: $companionDetent,
+                showVoiceLog: $companionVoiceLog,
+                showListLog: $companionListLog,
+                showManualDayPlan: $showManualDayPlan
+            )
+            .environmentObject(timerModel)
+            .environmentObject(optionsModel)
+            .environmentObject(selectActions)
+            .environmentObject(allActions)
         }
         .onChange(of: scenePhase) { newPhase in
             switch newPhase {
-                case .background, .inactive:
+            case .background, .inactive:
                 if !switchedToBackground {
                     switchedToBackground = true
                     timerModel.movingToBackground()
                     notificationManager.cancelAllNotifications()
-                    if timerModel.started
-                    {
+                    if timerModel.started {
                         notificationManager.createLocalNotification(
                             title: timerModel.isWorkTime ? "Time for a break!" : "Break time's over",
-                            body: timerModel.isWorkTime ? "You worked for \(timerModel.workTimeTotalSeconds/60) min" : "\(timerModel.breakTimeTotalSeconds/60) min break over.",
+                            body: timerModel.isWorkTime ? "You worked for \(timerModel.workTimeTotalSeconds / 60) min" : "\(timerModel.breakTimeTotalSeconds / 60) min break over.",
                             secondsUntilDone: timerModel.currentTimeRemaining,
-                            doesPlaySounds: optionsModel.options.completionFeedback == .sound) { error in
+                            doesPlaySounds: optionsModel.options.completionFeedback == .sound
+                        ) { error in
                             if error == nil {
                                 DispatchQueue.main.async {
                                     notificationManager.reloadLocNotifications()
                                 }
                             }
                         }
-                        
                     }
                 }
 
-
-                
-                case .active:
-                    switchedToBackground = false
-                    timerModel.movingToActive()
-                    notificationManager.cancelAllNotifications()
-                    if timerModel.started {
-                        liveActivityManager.updateActivity(
-                            isWorkTime: timerModel.isWorkTime,
-                            isRunning: true,
-                            timeRemaining: timerModel.currentTimeRemaining,
-                            totalSeconds: timerModel.totalSecondsForCurrentMode
-                        )
-                    }
-                @unknown default:
-                    break
+            case .active:
+                switchedToBackground = false
+                timerModel.movingToActive()
+                notificationManager.cancelAllNotifications()
+                if timerModel.started, optionsModel.options.liveActivityEnabled {
+                    liveActivityManager.updateActivity(
+                        isWorkTime: timerModel.isWorkTime,
+                        isRunning: true,
+                        timeRemaining: timerModel.currentTimeRemaining,
+                        totalSeconds: timerModel.totalSecondsForCurrentMode,
+                        actionPreview: resolvedLiveActivityPreview()
+                    )
                 }
+            @unknown default:
+                break
+            }
         }
         .task {
             notificationManager.reloadAuthorizationStatus()
@@ -182,31 +218,28 @@ struct MainView: View {
             let hasSeenWelcome = UserDefaults.standard.bool(forKey: "hasSeenWelcome")
             if hasSeenWelcome {
                 evaluateDaySetupIfNeeded()
+                showCompanionSheet = true
             } else {
-                // Present on the next turn so startup state updates (e.g. notification status) don’t fight this sheet.
                 await Task.yield()
                 showWelcomeSheet = true
             }
         }
-        // Fetch pinned actions daily
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification), perform: { _ in
             allActions.actions.forEach { a in
                 let isContained = selectActions.actions.contains { element in
-                    if (element.title == a.title) {
+                    if element.title == a.title {
                         return true
                     }
                     return false
                 }
-                
-                if (a.pinned && !isContained) {
+
+                if a.pinned && !isContained {
                     let newAction = BreakAction(title: a.title, description: a.description, categoryId: a.categoryId, duration: a.duration, pinned: true, completed: false, date: Date.now, linkurl: a.linkurl, frequency: a.frequency)
                     selectActions.actions.insert(newAction, at: 0)
                 }
-                                
             }
         })
         .onChange(of: notificationManager.authorizationStatus) { newStatus in
-            // Don’t present the alert over welcome / day setup / summary — competing modals dismiss the alert.
             guard UserDefaults.standard.bool(forKey: "hasSeenWelcome") else { return }
             guard !showWelcomeSheet && !showDaySetupSheet && !showDaySummarySheet else { return }
             switch newStatus {
@@ -224,18 +257,20 @@ struct MainView: View {
         }
         .onChange(of: timerModel.started) { isStarted in
             if isStarted {
+                guard optionsModel.options.liveActivityEnabled else { return }
                 liveActivityManager.startActivity(
                     isWorkTime: timerModel.isWorkTime,
                     timeRemaining: timerModel.currentTimeRemaining,
                     totalSeconds: timerModel.totalSecondsForCurrentMode,
-                    actionPreview: nextActionPreview()
+                    actionPreview: resolvedLiveActivityPreview()
                 )
-            } else if !timerModel.isComplete {
+            } else if !timerModel.isComplete, optionsModel.options.liveActivityEnabled {
                 liveActivityManager.updateActivity(
                     isWorkTime: timerModel.isWorkTime,
                     isRunning: false,
                     timeRemaining: timerModel.currentTimeRemaining,
-                    totalSeconds: timerModel.totalSecondsForCurrentMode
+                    totalSeconds: timerModel.totalSecondsForCurrentMode,
+                    actionPreview: resolvedLiveActivityPreview()
                 )
             }
         }
@@ -243,19 +278,22 @@ struct MainView: View {
             if isComplete {
                 liveActivityManager.showTimerFinishedThenEnd(
                     isWorkTime: timerModel.isWorkTime,
-                    totalSeconds: timerModel.totalSecondsForCurrentMode
+                    totalSeconds: timerModel.totalSecondsForCurrentMode,
+                    actionPreview: resolvedLiveActivityPreview()
                 )
             }
+        }
+        .onChange(of: optionsModel.options) { _ in
+            applyLiveActivityForCurrentOptions()
         }
         .onChange(of: timerModel.isWorkTime) { _ in
             liveActivityManager.endActivity()
         }
         .onOpenURL { url in
             guard url.scheme == "timeforabreak", url.host == "voice" else { return }
-            selectedTab = 0
+            companionVoiceLog = true
         }
         .sheet(isPresented: $showDaySetupSheet, onDismiss: {
-            // If user completed setup, day summary is about to show (or is showing)—prompt after summary instead.
             Task { @MainActor in
                 try? await Task.sleep(nanoseconds: 450_000_000)
                 guard !showDaySummarySheet else { return }
@@ -278,6 +316,7 @@ struct MainView: View {
         .sheet(isPresented: $showWelcomeSheet, onDismiss: {
             UserDefaults.standard.set(true, forKey: "hasSeenWelcome")
             evaluateDaySetupIfNeeded()
+            showCompanionSheet = true
         }) {
             WelcomeSheetView()
         }
@@ -298,6 +337,5 @@ struct MainView: View {
         } message: {
             Text("Time For A Break can notify you when work or breaks end.")
         }
-
     }
 }

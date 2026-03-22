@@ -100,9 +100,6 @@ struct TimerCompletionView: View {
                     .font(.system(size: 80))
                     .foregroundColor(Color.yellow)
                     .frame(maxWidth: .infinity)
-                    .onAppear {
-                        timerModel.switchMode()
-                    }
                 if isFinishedWork {
                     List {
                         Section("Some actions left to do") {

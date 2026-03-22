@@ -13,9 +13,10 @@ struct PrimaryPillButtonStyle: ButtonStyle {
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .font(.caption)
+            .font(.body.weight(.semibold))
+            .imageScale(.medium)
             .foregroundColor(.white)
-            .padding(.vertical, 10)
+            .padding(.vertical, 15)
             .frame(maxWidth: .infinity)
             .background(background.opacity(configuration.isPressed ? 0.7 : 1.0))
             .clipShape(Capsule())
@@ -31,15 +32,16 @@ struct TimerCountView: View {
     @Environment(\.colorScheme) var colorScheme
 
     @State private var didAppear: Bool = false
-    @State private var showingListSheet: Bool = false
-    @State private var showingVoiceSheet: Bool = false
     @State private var showingCompleteSheet: Bool = false
+    /// Segment that just ended (work vs break) when the completion sheet was shown; stable while the sheet is up.
+    @State private var completionSegmentWasWork: Bool = true
+    /// Ensures `switchMode()` runs at most once per completion sheet (SwiftUI can invoke `onDismiss` more than once).
+    @State private var shouldSwitchModeOnCompletionDismiss: Bool = false
 
     @State private var previousCompletedCount: Int = 0
     @State private var segmentRingInitialized: Bool = false
     @State private var animatingSegmentIndex: Int? = nil
     @State private var segmentAnimationPhase: SegmentAnimationPhase = .preHighlight
-    @State private var hasLoggedAnyAction: Bool = UserDefaults.standard.bool(forKey: "hasLoggedAnyAction")
     @State private var fastForwardTask: Task<Void, Never>?
     @State private var isFastForwarding: Bool = false
 
@@ -60,7 +62,7 @@ struct TimerCountView: View {
         static let timerDiameter: CGFloat = 225
         static let timerBackgroundLineWidth: CGFloat = 12
         static let timerProgressLineWidth: CGFloat = 4
-        static let timerVerticalSpacing: CGFloat = 25
+        static let timerVerticalSpacing: CGFloat = 18
         static let segmentRingGap: CGFloat = 20
         static let segmentRingThickness: CGFloat = 13
         static let buttonHorizontalSpacing: CGFloat = 10
@@ -103,8 +105,7 @@ struct TimerCountView: View {
         todayActions.prefix(segmentCount).map { "\($0.id)-\($0.completed)" }.joined(separator: "|")
     }
 
-    private var ringRadius: CGFloat {
-        let diameter = Layout.timerDiameter
+    private func ringRadius(for diameter: CGFloat) -> CGFloat {
         let bglineWidth = Layout.timerBackgroundLineWidth
         let gap = Layout.segmentRingGap
         let ringThickness = Layout.segmentRingThickness
@@ -152,16 +153,19 @@ struct TimerCountView: View {
     }
 
     var body: some View {
+        GeometryReader { geo in
+            let shortPhone = geo.size.height <= 844
+            let layoutScale: CGFloat = shortPhone ? 0.9 : 1.0
+            let diameter = Layout.timerDiameter * layoutScale
+            let timerTextSize = Layout.timerTextSize * layoutScale
+            let playIconSize = Layout.playIconSize * layoutScale
+            let bglineWidth = Layout.timerBackgroundLineWidth
+            let tplineWidth = Layout.timerProgressLineWidth
+            let ringThickness = Layout.segmentRingThickness
+            let ringR = ringRadius(for: diameter)
+            let ringSize: CGFloat = segmentCount > 0 ? (ringR + ringThickness) * 2 : 0
 
-        let diameter = Layout.timerDiameter
-        let timerTextSize = Layout.timerTextSize
-        let playIconSize = Layout.playIconSize
-        let bglineWidth = Layout.timerBackgroundLineWidth
-        let tplineWidth = Layout.timerProgressLineWidth
-        let ringThickness = Layout.segmentRingThickness
-        let ringSize: CGFloat = segmentCount > 0 ? (ringRadius + ringThickness) * 2 : 0
-
-        VStack(spacing: Layout.timerVerticalSpacing) {
+            VStack(spacing: Layout.timerVerticalSpacing) {
             Button {
                 timerModel.toggle()
             } label: {
@@ -172,7 +176,7 @@ struct TimerCountView: View {
                             completedCount: completedCount,
                             animatingIndex: animatingSegmentIndex,
                             phase: segmentAnimationPhase,
-                            ringRadius: ringRadius,
+                            ringRadius: ringR,
                             thickness: ringThickness
                         )
                         .frame(width: ringSize, height: ringSize)
@@ -194,7 +198,7 @@ struct TimerCountView: View {
                             .foregroundColor(timerModel.isWorkTime ? Color.pink : Color.blue)
                         Text(timerModel.formattedTime)
                             .font(.system(size: timerTextSize))
-                            .fontWeight(.bold)
+                            .fontWeight(.heavy)
                         Label(
                             "",
                             systemImage: (isFastForwarding && timerModel.started)
@@ -247,72 +251,43 @@ struct TimerCountView: View {
             .accessibilityHint("Tap to start or pause. Touch and hold to skip time forward.")
             .accessibilityAddTraits(.isButton)
 
-            VStack(spacing: 12) {
-                HStack(spacing: 12) {
-                    Button(action: {
-                        timerModel.reset()
-                    }) {
-                        HStack(spacing: 8) {
-                            Image(systemName: "arrow.clockwise")
-                            Text("Restart")
-                        }
+            HStack(spacing: 12) {
+                Button(action: {
+                    timerModel.reset()
+                }) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "arrow.clockwise")
+                        Text("Restart")
                     }
-                    .buttonStyle(PrimaryPillButtonStyle(background: .blue))
-
-                    Button(action: {
-                        timerModel.switchMode()
-                    }) {
-                        HStack(spacing: 8) {
-                            Image(systemName: timerModel.isWorkTime ? "cup.and.saucer.fill" : "brain")
-                            Text("Switch")
-                        }
-                    }
-                    .buttonStyle(PrimaryPillButtonStyle(background: .orange))
                 }
+                .buttonStyle(PrimaryPillButtonStyle(background: .blue))
 
-                HStack(spacing: 12) {
-                    Button(action: {
-                        showingVoiceSheet.toggle()
-                    }) {
-                        HStack(spacing: 8) {
-                            Image(systemName: "mic.fill")
-                            Text("Log by voice")
-                        }
+                Button(action: {
+                    timerModel.switchMode()
+                }) {
+                    HStack(spacing: 8) {
+                        Image(systemName: timerModel.isWorkTime ? "cup.and.saucer.fill" : "brain")
+                        Text("Switch")
                     }
-                    .buttonStyle(PrimaryPillButtonStyle(background: .blue))
-
-                    Button(action: {
-                        showingListSheet.toggle()
-                    }) {
-                        HStack(spacing: 8) {
-                            Image(systemName: "checklist")
-                            Text("Log from list")
-                        }
-                    }
-                    .buttonStyle(PrimaryPillButtonStyle(background: .green))
                 }
+                .buttonStyle(PrimaryPillButtonStyle(background: .orange))
             }
             .padding(.horizontal, 24)
-            
-            if !hasLoggedAnyAction {
-                Text("Tip: When your timer ends, log your break with \"Log by voice\" or \"Log from list\".")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 24)
             }
+            .padding(.top, 10)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         }
-        .sheet(isPresented: $showingListSheet, content: {
-            SelectedActionsSheetView()
-        })
-        .sheet(isPresented: $showingVoiceSheet, content: {
-            TimerVoiceLogSheetView()
-        })
-        .sheet(isPresented: $showingCompleteSheet, content: {
-            TimerCompletionView(isFinishedWork: !timerModel.isWorkTime)
+        .sheet(isPresented: $showingCompleteSheet, onDismiss: {
+            guard shouldSwitchModeOnCompletionDismiss else { return }
+            shouldSwitchModeOnCompletionDismiss = false
+            timerModel.switchMode()
+        }, content: {
+            TimerCompletionView(isFinishedWork: completionSegmentWasWork)
         })
         .onChange(of: timerModel.isComplete) { isComplete in
             if isComplete {
+                completionSegmentWasWork = timerModel.isWorkTime
+                shouldSwitchModeOnCompletionDismiss = true
                 showingCompleteSheet = true
                 timerModel.acknowledgeCompletion()
             }
@@ -325,11 +300,6 @@ struct TimerCountView: View {
             if !segmentRingInitialized && segmentCount > 0 {
                 previousCompletedCount = completedCount
                 segmentRingInitialized = true
-            }
-        }
-        .onChange(of: selectActions.completions.count) { _ in
-            if UserDefaults.standard.bool(forKey: "hasLoggedAnyAction") {
-                hasLoggedAnyAction = true
             }
         }
         .onChange(of: completionStateSignature) { _ in

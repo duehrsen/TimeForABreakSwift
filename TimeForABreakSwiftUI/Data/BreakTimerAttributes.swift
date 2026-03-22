@@ -8,9 +8,6 @@ import Foundation
 
 struct BreakTimerAttributes: ActivityAttributes {
 
-    /// Display name of the next break action, e.g. "Next: Drink water"
-    var actionPreview: String
-
     /// Total seconds for the full timer interval (used to calculate progress)
     var totalSeconds: Int
 
@@ -33,5 +30,8 @@ struct BreakTimerAttributes: ActivityAttributes {
 
         /// True briefly when the interval reached zero; Live Activity shows completion UI before ending.
         var isTimerFinished: Bool
+
+        /// Next-action line on Dynamic Island / lock screen; empty when disabled in settings.
+        var actionPreview: String
     }
 }
