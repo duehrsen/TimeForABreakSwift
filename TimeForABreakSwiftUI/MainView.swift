@@ -26,30 +26,7 @@ struct MainView: View {
     @State private var showNotificationPrePrompt: Bool = false
     
     private func nextActionPreview() -> String {
-        let cal = Calendar.current
-        let today = cal.startOfDay(for: Date())
-
-        let suggestedTitles: Set<String>
-        if let titles = optionsModel.options.dailySuggestedTitles,
-           !titles.isEmpty {
-            suggestedTitles = Set(titles)
-        } else {
-            suggestedTitles = Set(DataProvider.defaultDailySuggestedActionTitles())
-        }
-
-        let uncompletedTodayOrPinned = selectActions.actions.filter {
-            (cal.isDate($0.date ?? .distantPast, inSameDayAs: today) || $0.pinned) && !$0.completed
-        }
-
-        if let suggestedNext = uncompletedTodayOrPinned.first(where: { suggestedTitles.contains($0.title) }) {
-            return "Next: \(suggestedNext.title)"
-        }
-
-        if let anyNext = uncompletedTodayOrPinned.first {
-            return "Next: \(anyNext.title)"
-        }
-
-        return "Focus time"
+        NextActionPreview.line(options: optionsModel.options, actions: selectActions.actions)
     }
 
     private func markDaySetupDone() {

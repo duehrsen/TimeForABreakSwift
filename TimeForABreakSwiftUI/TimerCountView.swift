@@ -13,9 +13,11 @@ struct PrimaryPillButtonStyle: ButtonStyle {
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .font(.caption)
+            .font(.subheadline.weight(.semibold))
+            .imageScale(.small)
             .foregroundColor(.white)
-            .padding(.vertical, 10)
+            .padding(.vertical, 11)
+            .padding(.horizontal, 8)
             .frame(maxWidth: .infinity)
             .background(background.opacity(configuration.isPressed ? 0.7 : 1.0))
             .clipShape(Capsule())
@@ -60,7 +62,7 @@ struct TimerCountView: View {
         static let timerDiameter: CGFloat = 225
         static let timerBackgroundLineWidth: CGFloat = 12
         static let timerProgressLineWidth: CGFloat = 4
-        static let timerVerticalSpacing: CGFloat = 25
+        static let timerVerticalSpacing: CGFloat = 20
         static let segmentRingGap: CGFloat = 20
         static let segmentRingThickness: CGFloat = 13
         static let buttonHorizontalSpacing: CGFloat = 10
@@ -101,6 +103,10 @@ struct TimerCountView: View {
     /// Signature that changes when any of today’s actions’ completion state changes (for onChange).
     private var completionStateSignature: String {
         todayActions.prefix(segmentCount).map { "\($0.id)-\($0.completed)" }.joined(separator: "|")
+    }
+
+    private var nextActionLine: String {
+        NextActionPreview.line(options: optionsModel.options, actions: selectActions.actions, calendar: cal)
     }
 
     private var ringRadius: CGFloat {
@@ -247,14 +253,24 @@ struct TimerCountView: View {
             .accessibilityHint("Tap to start or pause. Touch and hold to skip time forward.")
             .accessibilityAddTraits(.isButton)
 
+            Text(nextActionLine)
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .lineLimit(2)
+                .minimumScaleFactor(0.85)
+                .padding(.horizontal, 24)
+                .accessibilityLabel("Next suggested break, \(nextActionLine)")
+
             VStack(spacing: 12) {
                 HStack(spacing: 12) {
                     Button(action: {
                         timerModel.reset()
                     }) {
-                        HStack(spacing: 8) {
+                        HStack(alignment: .center, spacing: 6) {
                             Image(systemName: "arrow.clockwise")
                             Text("Restart")
+                                .multilineTextAlignment(.center)
                         }
                     }
                     .buttonStyle(PrimaryPillButtonStyle(background: .blue))
@@ -262,9 +278,10 @@ struct TimerCountView: View {
                     Button(action: {
                         timerModel.switchMode()
                     }) {
-                        HStack(spacing: 8) {
+                        HStack(alignment: .center, spacing: 6) {
                             Image(systemName: timerModel.isWorkTime ? "cup.and.saucer.fill" : "brain")
                             Text("Switch")
+                                .multilineTextAlignment(.center)
                         }
                     }
                     .buttonStyle(PrimaryPillButtonStyle(background: .orange))
@@ -274,28 +291,32 @@ struct TimerCountView: View {
                     Button(action: {
                         showingVoiceSheet.toggle()
                     }) {
-                        HStack(spacing: 8) {
+                        HStack(alignment: .center, spacing: 6) {
                             Image(systemName: "mic.fill")
-                            Text("Log by voice")
+                            Text("Speak")
+                                .multilineTextAlignment(.center)
                         }
                     }
                     .buttonStyle(PrimaryPillButtonStyle(background: .blue))
+                    .accessibilityLabel("Log your break by speaking")
 
                     Button(action: {
                         showingListSheet.toggle()
                     }) {
-                        HStack(spacing: 8) {
+                        HStack(alignment: .center, spacing: 6) {
                             Image(systemName: "checklist")
-                            Text("Log from list")
+                            Text("Pick")
+                                .multilineTextAlignment(.center)
                         }
                     }
                     .buttonStyle(PrimaryPillButtonStyle(background: .green))
+                    .accessibilityLabel("Log your break by choosing from your list")
                 }
             }
             .padding(.horizontal, 24)
             
             if !hasLoggedAnyAction {
-                Text("Tip: When your timer ends, log your break with \"Log by voice\" or \"Log from list\".")
+                Text("Tip: When your timer ends, log your break with Speak or Pick.")
                     .font(.caption)
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
