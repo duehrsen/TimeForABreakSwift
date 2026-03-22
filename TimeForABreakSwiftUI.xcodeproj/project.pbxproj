@@ -51,7 +51,6 @@
 		4EB2213628069665004BD397 /* TimerCompletionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB2213528069665004BD397 /* TimerCompletionView.swift */; };
 		4EB3AB09280A42BB008FF804 /* hornorganmusichockey.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 4EB3AB08280A42BB008FF804 /* hornorganmusichockey.m4a */; };
 		4EB3AB0C280A866A008FF804 /* OptionsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB3AB0B280A866A008FF804 /* OptionsModel.swift */; };
-		4EB3AB0E280AA6A5008FF804 /* OptionsInputSubView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB3AB0D280AA6A5008FF804 /* OptionsInputSubView.swift */; };
 		4EB3AB10280AB894008FF804 /* TimeRemainingSubView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB3AB0F280AB894008FF804 /* TimeRemainingSubView.swift */; };
 		4EB3AB14280ACC2C008FF804 /* ToolbarElements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB3AB13280ACC2C008FF804 /* ToolbarElements.swift */; };
 		4EBD8DD227FA115900234307 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EBD8DD127FA115900234307 /* MainView.swift */; };
@@ -141,7 +140,6 @@
 		4EB2213528069665004BD397 /* TimerCompletionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerCompletionView.swift; sourceTree = "<group>"; };
 		4EB3AB08280A42BB008FF804 /* hornorganmusichockey.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = hornorganmusichockey.m4a; sourceTree = "<group>"; };
 		4EB3AB0B280A866A008FF804 /* OptionsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsModel.swift; sourceTree = "<group>"; };
-		4EB3AB0D280AA6A5008FF804 /* OptionsInputSubView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsInputSubView.swift; sourceTree = "<group>"; };
 		4EB3AB0F280AB894008FF804 /* TimeRemainingSubView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeRemainingSubView.swift; sourceTree = "<group>"; };
 		4EB3AB13280ACC2C008FF804 /* ToolbarElements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarElements.swift; sourceTree = "<group>"; };
 		4EBD8DD127FA115900234307 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
@@ -228,7 +226,6 @@
 				4E0A660C27FBFCBB00A8F0E6 /* ActionEditView.swift */,
 				4E58B486280C076C0025D27F /* ActionNewView.swift */,
 				4E0A660A27FBF67B00A8F0E6 /* ActionCompletionRowView.swift */,
-				4EB3AB0D280AA6A5008FF804 /* OptionsInputSubView.swift */,
 				4EB3AB0F280AB894008FF804 /* TimeRemainingSubView.swift */,
 				4EB3AB13280ACC2C008FF804 /* ToolbarElements.swift */,
 				4E40487F2F5CDA1A00F47C6C /* VoiceInputView.swift */,
@@ -513,7 +510,6 @@
 				4E0B71D12F67A57B0080519A /* DayActionPickerView.swift in Sources */,
 				4EA7BD0E27F2B96A00B9C348 /* DataProvider.swift in Sources */,
 				4E4048722F5C0A4400F47C6C /* CodableClosedRange.swift in Sources */,
-				4EB3AB0E280AA6A5008FF804 /* OptionsInputSubView.swift in Sources */,
 				4E8A32902803C3CA0078AAF0 /* SelectedActionsSheetView.swift in Sources */,
 				4E8A32A8280423600078AAF0 /* FlatWideButtonStyle.swift in Sources */,
 				4EA7BD0B27F2B88500B9C348 /* ActionListView.swift in Sources */,

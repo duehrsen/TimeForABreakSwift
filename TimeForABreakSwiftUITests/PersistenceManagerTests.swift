@@ -107,6 +107,7 @@ final class PersistenceManagerTests: XCTestCase {
         let decoded = try JSONDecoder().decode(OptionSet.self, from: json)
         XCTAssertEqual(decoded.completionFeedback, .none)
         XCTAssertFalse(decoded.speakBreakSuggestions)
+        XCTAssertTrue(decoded.liveActivityEnabled)
     }
 
     func testOptionSetMigratesLegacyUnmutedWithoutCompletionKey() throws {
@@ -116,5 +117,23 @@ final class PersistenceManagerTests: XCTestCase {
         let decoded = try JSONDecoder().decode(OptionSet.self, from: json)
         XCTAssertEqual(decoded.completionFeedback, .sound)
         XCTAssertTrue(decoded.speakBreakSuggestions)
+        XCTAssertTrue(decoded.liveActivityEnabled)
+    }
+
+    func testOptionSetLiveActivityEnabledRoundTrip() async throws {
+        let defaultOptions = OptionSet(breaktimeMin: 5, worktimeMin: 20, doesPlaySounds: false)
+        let sut = PersistenceManager<OptionSet>(fileName: testFileName, defaultValue: defaultOptions)
+        var custom = OptionSet(
+            breaktimeMin: 5,
+            worktimeMin: 20,
+            completionFeedback: .haptic,
+            speakBreakSuggestions: false,
+            liveActivityEnabled: false
+        )
+
+        try await sut.save(data: custom)
+        let loaded = try await sut.load()
+
+        XCTAssertFalse(loaded.liveActivityEnabled)
     }
 }

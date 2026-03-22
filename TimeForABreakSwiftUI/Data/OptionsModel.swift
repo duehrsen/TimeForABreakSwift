@@ -32,6 +32,9 @@ struct OptionSet: Codable, Equatable {
     /// Spoken suggestions after a work segment (separate from completion sound/haptic).
     var speakBreakSuggestions: Bool = false
 
+    /// Show timer on Lock Screen / Dynamic Island via Live Activities.
+    var liveActivityEnabled: Bool = true
+
     /// Optional titles for the daily suggested actions set.
     /// If nil or empty, `DataProvider.defaultDailySuggestedActionTitles()` is used.
     var dailySuggestedTitles: [String]? = nil
@@ -44,6 +47,7 @@ struct OptionSet: Codable, Equatable {
         worktimeMin: Int,
         completionFeedback: TimerCompletionFeedback = .haptic,
         speakBreakSuggestions: Bool = false,
+        liveActivityEnabled: Bool = true,
         dailySuggestedTitles: [String]? = nil,
         dailyActionGoal: Int = 5
     ) {
@@ -51,6 +55,7 @@ struct OptionSet: Codable, Equatable {
         self.worktimeMin = worktimeMin
         self.completionFeedback = completionFeedback
         self.speakBreakSuggestions = speakBreakSuggestions
+        self.liveActivityEnabled = liveActivityEnabled
         self.dailySuggestedTitles = dailySuggestedTitles
         self.dailyActionGoal = min(10, max(5, dailyActionGoal))
     }
@@ -80,6 +85,7 @@ struct OptionSet: Codable, Equatable {
         case isMuted
         case completionFeedback
         case speakBreakSuggestions
+        case liveActivityEnabled
         case dailySuggestedTitles
         case dailyActionGoal
     }
@@ -109,6 +115,8 @@ struct OptionSet: Codable, Equatable {
             speakBreakSuggestions = !legacyMuted
         }
 
+        liveActivityEnabled = try container.decodeIfPresent(Bool.self, forKey: .liveActivityEnabled) ?? true
+
         dailySuggestedTitles = try container.decodeIfPresent([String].self, forKey: .dailySuggestedTitles)
         let raw = try container.decodeIfPresent(Int.self, forKey: .dailyActionGoal) ?? 5
         dailyActionGoal = min(10, max(5, raw))
@@ -120,6 +128,7 @@ struct OptionSet: Codable, Equatable {
         try container.encode(worktimeMin, forKey: .worktimeMin)
         try container.encode(completionFeedback, forKey: .completionFeedback)
         try container.encode(speakBreakSuggestions, forKey: .speakBreakSuggestions)
+        try container.encode(liveActivityEnabled, forKey: .liveActivityEnabled)
         try container.encode(completionFeedback == .sound, forKey: .doesPlaySounds)
         try container.encode(!speakBreakSuggestions, forKey: .isMuted)
         try container.encodeIfPresent(dailySuggestedTitles, forKey: .dailySuggestedTitles)
@@ -136,6 +145,7 @@ class OptionsModel: ObservableObject {
         worktimeMin: 20,
         completionFeedback: .haptic,
         speakBreakSuggestions: false,
+        liveActivityEnabled: true,
         dailySuggestedTitles: DataProvider.defaultDailySuggestedActionTitles()
     )
 

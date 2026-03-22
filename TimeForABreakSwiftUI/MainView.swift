@@ -136,7 +136,7 @@ struct MainView: View {
                     switchedToBackground = false
                     timerModel.movingToActive()
                     notificationManager.cancelAllNotifications()
-                    if timerModel.started {
+                    if timerModel.started, optionsModel.options.liveActivityEnabled {
                         liveActivityManager.updateActivity(
                             isWorkTime: timerModel.isWorkTime,
                             isRunning: true,
@@ -223,6 +223,12 @@ struct MainView: View {
             }
         }
         .onChange(of: timerModel.started) { isStarted in
+            if !optionsModel.options.liveActivityEnabled {
+                if isStarted {
+                    liveActivityManager.endActivity()
+                }
+                return
+            }
             if isStarted {
                 liveActivityManager.startActivity(
                     isWorkTime: timerModel.isWorkTime,
@@ -240,7 +246,7 @@ struct MainView: View {
             }
         }
         .onChange(of: timerModel.isComplete) { isComplete in
-            if isComplete {
+            if isComplete, optionsModel.options.liveActivityEnabled {
                 liveActivityManager.showTimerFinishedThenEnd(
                     isWorkTime: timerModel.isWorkTime,
                     totalSeconds: timerModel.totalSecondsForCurrentMode
@@ -249,6 +255,18 @@ struct MainView: View {
         }
         .onChange(of: timerModel.isWorkTime) { _ in
             liveActivityManager.endActivity()
+        }
+        .onChange(of: optionsModel.options.liveActivityEnabled) { enabled in
+            if !enabled {
+                liveActivityManager.endActivity()
+            } else if timerModel.started {
+                liveActivityManager.startActivity(
+                    isWorkTime: timerModel.isWorkTime,
+                    timeRemaining: timerModel.currentTimeRemaining,
+                    totalSeconds: timerModel.totalSecondsForCurrentMode,
+                    actionPreview: nextActionPreview()
+                )
+            }
         }
         .onOpenURL { url in
             guard url.scheme == "timeforabreak", url.host == "voice" else { return }

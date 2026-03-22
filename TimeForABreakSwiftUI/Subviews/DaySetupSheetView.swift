@@ -72,7 +72,7 @@ struct DaySetupSheetView: View {
                         .cornerRadius(12)
                     }
 
-                    Text("You can edit this in Options → Manage break actions → Suggestion set.")
+                    Text("You can edit this in Options → Planning → Set a default day’s actions.")
                         .font(.footnote)
                         .foregroundColor(.secondary)
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -109,7 +109,7 @@ struct DaySetupSheetView: View {
             .alert("No suggested actions yet", isPresented: $showNoSuggestionsAlert) {
                 Button("OK", role: .cancel) { }
             } message: {
-                Text("Add some break actions in Options, then configure your suggestion set.")
+                Text("Add some break actions, then choose Set a default day’s actions under Options → Planning.")
             }
         }
     }
